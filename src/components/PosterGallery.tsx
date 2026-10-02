@@ -158,6 +158,7 @@ function Detail({ m, source, opener, onClosed }: DetailProps) {
             </div>
             <p data-dlg className="mp-dlg-overview">{m.overview[st.lang]}</p>
             <div data-dlg className="mp-watch"><WatchOn m={m} big label={t.watchNow} /></div>
+            <p data-dlg className="mp-label">{t.availability} <a href="https://www.justwatch.com" target="_blank" rel="noopener noreferrer" translate="no" style={{ color: 'inherit', textDecoration: 'underline' }}>JustWatch</a></p>
           </div>
         </div>
       </div>

@@ -1,9 +1,8 @@
 import { useState, type FormEvent } from 'react';
-import { PaperPlaneRight } from '@phosphor-icons/react';
-import LogoLoop from '../components/LogoLoop';
-import Button from '../components/Button';
-import WavesBg, { interactive } from '../components/WavesBg';
-import { socialLogos } from '../data';
+import { ArrowRight, ArrowUpRight } from '@phosphor-icons/react';
+import StudioPage, { Section } from '../components/Studio';
+import Credits from '../components/Credits';
+import { contactInfo } from '../data';
 import { useApp } from '../store';
 
 export default function Contact() {
@@ -13,24 +12,42 @@ export default function Contact() {
   const send = (e: FormEvent) => { e.preventDefault(); setSug(''); flash(t.thanksSug); };
 
   return (
-    <section className="mp-screen" style={{ display: 'grid', placeItems: 'center' }}>
-      <WavesBg {...interactive} speed={0.32} />
-      <div className="mp-content mp-container mp-page mp-stack" style={{ maxWidth: 520, gap: 12, textAlign: 'center' }}>
-        <span data-reveal className="mp-kicker">{t.aboutKick}</span>
-        <h1 data-reveal className="mp-title">{t.authorName}</h1>
-        <p data-reveal className="mp-lead" style={{ margin: '0 auto' }}>{t.authorBio}</p>
-        <div data-reveal style={{ height: 76, position: 'relative', overflow: 'hidden', margin: '20px 0 28px' }}>
-          <LogoLoop logos={socialLogos} speed={36} direction="left" logoHeight={40} gap={56} fadeOut fadeOutColor="#07061a" scaleOnHover />
-        </div>
-        <form data-reveal onSubmit={send} className="mp-stack" style={{ gap: 8, textAlign: 'left' }}>
-          <label htmlFor="sug" className="mp-label" style={{ color: 'var(--text-muted)' }}>{t.sugLabel}</label>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <input id="sug" value={sug} onChange={e => setSug(e.target.value)} placeholder={t.sugPh} autoComplete="off"
-              style={{ flex: 1, minWidth: 0, height: 48, padding: '0 18px', borderRadius: 999, border: '1px solid var(--border-strong)', background: 'rgba(7,6,26,.6)', color: 'var(--text)', font: 'inherit', fontSize: '1rem' }} />
-            <Button type="submit" disabled={!sug.trim()} icon={<PaperPlaneRight size={18} weight="bold" aria-hidden />}>{t.send}</Button>
+    <StudioPage>
+      <div className="mp-601-body">
+        <Section label={t.aboutBrand} level={1} delay={0.1}>
+          <p data-reveal className="mp-601-statement">{t.studioStatement}</p>
+        </Section>
+
+        <Section label={t.aboutKick} delay={0.2}>
+          <div data-reveal className="mp-601-author">
+            <p className="mp-601-name" translate="no">{t.authorName}</p>
+            <p className="mp-601-bio">{t.authorBio}</p>
           </div>
-        </form>
+        </Section>
+
+        <Section label={t.contactLabel} delay={0.25}>
+          <div className="mp-601-cols">
+            <div data-reveal>
+              <p className="mp-601-colLabel">{t.colMail}</p>
+              <a className="mp-601-a" href={`mailto:${contactInfo.email}`} translate="no">{contactInfo.email}</a>
+            </div>
+            <div data-reveal>
+              <p className="mp-601-colLabel">{t.colSocial}</p>
+              <ul className="mp-601-list">
+                <li><a className="mp-601-a" href={contactInfo.github} target="_blank" rel="noopener noreferrer" translate="no">GitHub<ArrowUpRight size={12} weight="bold" aria-hidden /></a></li>
+                <li><a className="mp-601-a" href={contactInfo.linkedin} target="_blank" rel="noopener noreferrer" translate="no">LinkedIn<ArrowUpRight size={12} weight="bold" aria-hidden /></a></li>
+              </ul>
+            </div>
+            <form data-reveal onSubmit={send} className="mp-601-form">
+              <label htmlFor="sug" className="mp-601-colLabel">{t.sugLabel}</label>
+              <input id="sug" name="suggestion" className="mp-601-input" value={sug} onChange={e => setSug(e.target.value)} placeholder={t.sugPh} autoComplete="off" />
+              <button type="submit" className="mp-601-out" disabled={!sug.trim()}>{t.send}<ArrowRight size={14} weight="bold" aria-hidden /></button>
+            </form>
+          </div>
+        </Section>
+
+        <Credits />
       </div>
-    </section>
+    </StudioPage>
   );
 }

@@ -25,7 +25,9 @@ export default function App() {
   const mainRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
   const navItems = useMemo(() => [{ label: t.navHome, href: '#home' }, { label: 'FAQ', href: '#faq' }, { label: t.navContact, href: '#contacto' }], [t]);
-  const activeHref = st.screen === 'faq' ? '#faq' : st.screen === 'contacto' ? '#contacto' : st.screen === 'home' ? '#home' : undefined;
+  // Contacto y FAQ traen su propia barra superior (estilo editorial) y la carga va a pantalla completa
+  const ownChrome = st.screen === 'loading' || st.screen === 'faq' || st.screen === 'contacto';
+  const activeHref = st.screen === 'home' ? '#home' : undefined;
 
   // Cada pantalla nueva empieza arriba y con el foco en el contenido (lectores de pantalla)
   useLayoutEffect(() => {
@@ -36,7 +38,7 @@ export default function App() {
 
   return (
     <StoreContext.Provider value={store}>
-      {st.screen !== 'loading' && (
+      {!ownChrome && (
         <header className="mp-header">
           {st.screen !== 'welcome' && (
             <PillNav items={navItems} activeHref={activeHref} logoHref="#home" brand="MP" baseColor="#2a1670" pillColor="#f4f2ff" pillTextColor="#160c3d" hoveredPillTextColor="#ffffff" />

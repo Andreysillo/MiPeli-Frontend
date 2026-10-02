@@ -28,7 +28,7 @@ function initialState(): State {
   let saved: Partial<State> = {};
   try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { /* storage bloqueado o corrupto */ }
   return {
-    screen: 'welcome',
+    screen: routes[location.hash] ?? 'welcome', // enlaces directos a /#faq, /#contacto…
     loggedIn: !!saved.loggedIn, user: saved.user || 'Kevin', lang: saved.lang || 'es',
     surveyType: saved.surveyType || null,
     rec: saved.rec || { movies: true, genres: true, director: true },

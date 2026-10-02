@@ -47,10 +47,16 @@ const es = {
   homeH1: 'Elige con la mirada', homeDesc: 'Pasa el cursor por el muro: el póster que toques se enciende. ¿Prefieres que elijamos nosotros?',
   startSurvey: 'Empezar encuesta', continueSurvey: 'Continuar encuesta',
 
-  faqTitle: 'Preguntas frecuentes', faqMore: '¿Te quedó otra duda?', faqWrite: 'Escríbenos',
+  faqTitle: 'Preguntas frecuentes', faqMore: '¿Te quedó otra duda?', faqWrite: 'Escríbenos', faqKick: 'Ayuda',
+  studioTag: 'MiPeli es un recomendador de películas para tu noche', emailUs: 'Escríbenos',
+  aboutBrand: 'Sobre MiPeli', studioStatement: 'MiPeli es un recomendador de películas. Respondes unas preguntas y te decimos qué ver esta noche, y dónde verlo.',
+  contactLabel: 'Contacto', colMail: 'Correo', colSocial: 'Redes', creditsLabel: 'Créditos',
+  colMovies: 'Datos de películas', colProviders: 'Dónde ver', colRatings: 'Calificaciones',
+  creditProviders: 'Datos de disponibilidad en plataformas de', creditRatings: 'Notas de IMDb obtenidas con', creditLicense: ', licencia CC BY-NC 4.0.',
+  tmdbNotice: 'This product uses the TMDB API but is not endorsed or certified by TMDB.', availability: 'Disponibilidad:',
 
   aboutKick: 'Sobre el autor', authorName: 'xxx', authorBio: 'Estudiante de xxx, estudiando en xxx, con una gran pasión por las películas y el software.',
-  sugLabel: '¿Alguna sugerencia para MiPeli?', sugPh: 'Escríbela aquí', send: 'Enviar',
+  sugLabel: '¿Alguna sugerencia para MiPeli?', sugPh: 'Escríbela aquí…', send: 'Enviar',
 
   freshPick: 'Nueva recomendación con tus gustos guardados', thanksSug: '¡Gracias! Tu sugerencia llegó a Kevin.', linkCopied: 'Enlace copiado', shareFallback: 'Comparte: ',
 };
@@ -106,10 +112,16 @@ const en: Strings = {
   homeH1: 'Choose with your eyes', homeDesc: 'Hover the wall: the poster you touch lights up. Rather have us pick?',
   startSurvey: 'Start survey', continueSurvey: 'Continue survey',
 
-  faqTitle: 'Frequently asked questions', faqMore: 'Still have a question?', faqWrite: 'Write to us',
+  faqTitle: 'Frequently asked questions', faqMore: 'Still have a question?', faqWrite: 'Write to us', faqKick: 'Help',
+  studioTag: 'MiPeli is a movie recommender for your night in', emailUs: 'Email us',
+  aboutBrand: 'About MiPeli', studioStatement: 'MiPeli is a movie recommender. Answer a few questions and we tell you what to watch tonight, and where to stream it.',
+  contactLabel: 'Contact', colMail: 'Email', colSocial: 'Social', creditsLabel: 'Credits',
+  colMovies: 'Movie data', colProviders: 'Where to watch', colRatings: 'Ratings',
+  creditProviders: 'Streaming availability data from', creditRatings: 'IMDb scores fetched with', creditLicense: ', CC BY-NC 4.0 license.',
+  tmdbNotice: 'This product uses the TMDB API but is not endorsed or certified by TMDB.', availability: 'Availability:',
 
   aboutKick: 'About the author', authorName: 'xxx', authorBio: 'A xxx student, studying at xxx, with a deep passion for film and software.',
-  sugLabel: 'Any suggestion for MiPeli?', sugPh: 'Write it here', send: 'Send',
+  sugLabel: 'Any suggestion for MiPeli?', sugPh: 'Write it here…', send: 'Send',
 
   freshPick: 'Fresh pick from your saved taste', thanksSug: 'Thanks! Your suggestion reached Kevin.', linkCopied: 'Link copied', shareFallback: 'Share: ',
 };

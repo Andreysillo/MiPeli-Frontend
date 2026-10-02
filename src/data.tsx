@@ -1,6 +1,4 @@
 // Datos de demo: aún no hay backend, todo lo que ve el usuario sale de aquí.
-import type { ReactNode } from 'react';
-import { EnvelopeSimple, GithubLogo, LinkedinLogo } from '@phosphor-icons/react';
 import { siAppletv, siCrunchyroll, siHbomax, siMubi, siNetflix, siParamountplus, type SimpleIcon } from 'simple-icons';
 import type { Lang } from './i18n';
 import type { State } from './store';
@@ -230,12 +228,8 @@ export const moodGallery = ['Thriller', 'Comedia', 'Terror', 'Drama', 'Ciencia f
 
 export const maskedHeadingSrc = stripes(1600, 440, [[0, '#0f1f6b'], [0.5, '#5227ff'], [1, '#b18cff']], 'rgba(255,255,255,.14)', 26, 70);
 
-const icon = (node: ReactNode) => <span style={{ display: 'flex', color: '#eef1ff' }}>{node}</span>;
-export const socialLogos = [
-  { href: 'https://github.com/', title: 'GitHub', node: icon(<GithubLogo size={40} weight="fill" />) },
-  { href: 'https://www.linkedin.com/', title: 'LinkedIn', node: icon(<LinkedinLogo size={40} weight="fill" />) },
-  { href: 'mailto:kevin@mipeli.app', title: 'Correo', node: icon(<EnvelopeSimple size={40} />) },
-];
+// ponytail: datos de contacto de ejemplo; reemplazar por los reales del autor
+export const contactInfo = { email: 'kevin@mipeli.app', github: 'https://github.com/', linkedin: 'https://www.linkedin.com/' };
 
 export const faqData: Record<Lang, { q: string; a: string }[]> = {
   es: [{ q: '¿De dónde salen las recomendaciones?', a: 'De tus respuestas, cruzadas con nuestra base de títulos.' }, { q: '¿Necesito cuenta?', a: 'No para probar. Con Google guardas tu progreso y repites encuestas sin límite.' }, { q: '¿De dónde sale la calificación?', a: 'Es la nota de IMDb, sobre 10.' }, { q: '¿Dónde veo la peli?', a: 'Cada recomendación muestra en qué plataformas está, con un botón que te lleva directo a cada una.' }],
