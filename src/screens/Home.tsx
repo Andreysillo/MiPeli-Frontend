@@ -7,7 +7,8 @@ import { useApp } from '../store';
 
 export default function Home() {
   const { st, go, t, name } = useApp();
-  const wall = useMemo(() => catalog.map(driftItem), []);
+  // 24 bastan para llenar el muro; generar el arte de todo el catálogo trabaría la entrada
+  const wall = useMemo(() => catalog.slice(0, 24).map(driftItem), []);
   return (
     <section className="mp-screen" style={{ display: 'flex', alignItems: 'flex-end' }}>
       <div className="mp-bg">

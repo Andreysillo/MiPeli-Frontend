@@ -21,12 +21,15 @@ src/
   App.tsx             shell: idioma, nav, pantalla actual, toast
   store.ts            estado global (pantalla, respuestas, persistencia en localStorage, rutas #hash)
   i18n.ts             textos es/en
-  data.tsx            catálogo de demo (nota IMDb, plataformas de streaming) + arte de póster en canvas; lo reemplazará el backend (TMDB)
+  data.tsx            catálogo de demo con forma de TMDB (director, reparto, géneros, sinopsis, nota IMDb, plataformas),
+                      recomendador local recommend() y arte de póster en canvas; lo reemplazará el backend
   screens/            una pantalla por archivo (Welcome, SurveyType, RecTypes, Quest, Loading, Results, Home, Faq, Contact)
-  components/         Button, Reveal (transiciones GSAP + ScrollTrigger), WavesBg y componentes animados de React Bits (.jsx)
+  components/         Button, Reveal (transiciones GSAP + ScrollTrigger), PosterGallery (galería de pósters + ficha en <dialog>),
+                      Movie (póster enmarcado, IMDb, plataformas), WavesBg y componentes animados de React Bits (.jsx)
   styles/global.css   tokens de diseño (color, radios, tipografía) y clases mp-*
 ```
 
 Los componentes `.jsx` de `src/components/` vienen de [React Bits](https://github.com/DavidHDev/react-bits) adaptados; usan `gsap` y `ogl` (WebGL).
-Íconos: [Phosphor](https://phosphoricons.com); logos de plataformas de streaming: [simple-icons](https://simpleicons.org) (monograma con los colores de la marca cuando no hay logo). Tipografía: Geist (auto-hospedada vía `@fontsource-variable/geist`).
+Íconos: [Phosphor](https://phosphoricons.com); logos de plataformas de streaming: [simple-icons](https://simpleicons.org) (monograma con los colores de la marca cuando no hay logo). Tipografía: Geist para la interfaz y Bodoni Moda para títulos de película (ambas auto-hospedadas vía `@fontsource-variable`).
+La galería de resultados toma como referencia [a24.raviklaassens.com](https://a24.raviklaassens.com/).
 Todas las animaciones respetan `prefers-reduced-motion`.

@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { L, type Lang } from './i18n';
+import { genres } from './data';
 
 export type Screen = 'welcome' | 'type' | 'rectypes' | 'quest' | 'loading' | 'results' | 'home' | 'faq' | 'contacto';
 export type Step = 'genres' | 'director' | 'duel' | 'movies' | 'personal';
@@ -32,7 +33,8 @@ function initialState(): State {
     surveyType: saved.surveyType || null,
     rec: saved.rec || { movies: true, genres: true, director: true },
     length: saved.length || 'med', numMovies: saved.numMovies || 5,
-    picks: saved.picks || { genre: 'Noir', director: 'Park Chan-wook' },
+    // Un género guardado que ya no está en la rueda (p. ej. el antiguo 'Noir') vuelve al valor por defecto
+    picks: saved.picks && genres.includes(saved.picks.genre) ? saved.picks : { genre: 'Thriller', director: 'Park Chan-wook' },
     moodSel: ['Thriller'], movieSel: [], duelWins: {},
     useful: saved.useful || null,
     questSteps: [], qi: 0, duelIdx: 0, questActive: false,

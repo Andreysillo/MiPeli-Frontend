@@ -1,15 +1,16 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import { Check } from '@phosphor-icons/react';
-import { poster, recommended } from '../data';
+import { poster, recommend } from '../data';
 import { LOADING_MS, useApp } from '../store';
 
 // Fases: barajar el mazo mientras avanzan los pasos → abrirlo en abanico con las películas elegidas
 // → desvanecerse justo antes de que el store pase a resultados (a los LOADING_MS).
 const TICK_MS = 520, FAN_AT = LOADING_MS - 1150, EXIT_AT = LOADING_MS - 420;
-const deck = recommended.slice(0, 5);
 
 export default function Loading() {
   const { st, t } = useApp();
+  // El mazo son tus primeras recomendaciones: el abanico final adelanta lo que verás en resultados
+  const deck = recommend(st).slice(0, 5);
   const shown = Math.min(st.numMovies, deck.length);
   const [tick, setTick] = useState(0);
   const [phase, setPhase] = useState<'shuffle' | 'fan' | 'exit'>('shuffle');

@@ -1,4 +1,5 @@
 @import '@fontsource-variable/geist/wght.css';
+@import '@fontsource-variable/bodoni-moda/wght.css';
 
 /* Tokens. Tema oscuro único: la marca vive sobre fondos WebGL oscuros.
    Forma: controles interactivos en píldora, superficies 20px, pósters 14px. */
@@ -6,6 +7,7 @@
   --font-sans: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-body: var(--font-sans);
   --font-heading: var(--font-sans);
+  --font-serif: 'Bodoni Moda Variable', 'Bodoni 72', Didot, Georgia, serif;
 
   --bg: #07061a;
   --surface: rgba(18, 14, 46, .62);
@@ -29,6 +31,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; }
+html { color-scheme: dark; scrollbar-gutter: stable; }
 body {
   background: var(--bg);
   color: var(--text);
@@ -199,26 +202,136 @@ button { font: inherit; color: inherit; }
 .mp-rec-posters img { width: 64px; aspect-ratio: 2 / 3; border-radius: 10px; object-fit: cover; box-shadow: 0 12px 28px -10px rgba(0, 0, 0, .7); border: 1px solid var(--border); }
 .mp-rec-posters img + img { margin-left: -14px; }
 .mp-rec-posters img:nth-child(1) { transform: rotate(-6deg); } .mp-rec-posters img:nth-child(3) { transform: rotate(6deg); }
-.mp-pick { display: grid; grid-template-columns: 1fr; gap: 32px; align-items: center; }
-.mp-pick-poster { width: clamp(200px, 60vw, 300px); aspect-ratio: 2 / 3; margin: 0 auto; }
 .mp-bento { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .mp-bento .lead, .mp-bento > :last-child { grid-column: span 2; }
-.mp-movies { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 16px; }
-.mp-movie-card { position: relative; overflow: hidden; display: flex; flex-direction: column; transition: transform .35s var(--ease-out), border-color .3s ease, box-shadow .35s ease; }
-.mp-movie-card::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s ease;
-  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 30%), rgba(160, 135, 255, .16), transparent 70%); }
-.mp-movie-poster { overflow: hidden; aspect-ratio: 2 / 3; }
-.mp-movie-poster img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease-out); }
+/* ---------- Resultados: galería de pósters (inspirada en a24.raviklaassens.com) ----------
+   La serif Didone (Bodoni Moda) se usa solo en títulos de película y etiquetas de ficha, como en la referencia. */
+.mp-results-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; }
+.mp-results-head .mp-title { text-wrap: balance; }
+.mp-cap { font-family: var(--font-serif); font-size: .6875rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--text-subtle); }
+
+/* Luz de sala: halo con el color del póster activo. --tint es animable gracias a @property */
+@property --tint { syntax: '<color>'; inherits: true; initial-value: #7b5cff; }
+.mp-gallery { position: relative; margin-top: 8px; transition: --tint .9s ease; }
+.mp-gallery::before {
+  content: ''; position: absolute; inset: 0 0 auto; height: 640px; pointer-events: none;
+  background: radial-gradient(42% 55% at 50% 42%, color-mix(in oklab, var(--tint) 30%, transparent), transparent 72%);
+}
+
+/* Carril horizontal con snap: el póster centrado es el activo */
+.mp-track {
+  /* El ancho también depende del alto de pantalla para que póster + ficha quepan en un portátil */
+  --pw: clamp(170px, min(21vw, 30vh), 270px);
+  position: relative; display: flex; align-items: flex-start; gap: clamp(20px, 3vw, 48px);
+  overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+  padding: 28px calc(50% - var(--pw) / 2) 52px; cursor: grab;
+}
+.mp-track::-webkit-scrollbar { display: none; }
+.mp-track.dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; }
+
+.mp-gp {
+  flex: none; width: var(--pw); padding: 0; border: 0; background: none; color: inherit; cursor: pointer; scroll-snap-align: center;
+  perspective: 900px; transform: scale(.84); filter: brightness(.55) saturate(.8); -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: transform .7s var(--ease-out), filter .6s ease;
+}
+.mp-gp.is-active { transform: none; filter: none; }
+.mp-gp:not(.is-active):hover { filter: brightness(.85) saturate(.95); }
+.mp-gp:focus-visible { outline: none; }
+.mp-gp:focus-visible .mp-frame { outline: 2px solid var(--accent-text); outline-offset: 8px; }
+/* Fila escalonada como la de A24: cada póster cuelga a una altura distinta */
+.mp-gp:nth-child(4n+1) { margin-top: 28px; }
+.mp-gp:nth-child(4n+3) { margin-top: 44px; }
+.mp-gp:nth-child(4n) { margin-top: 10px; }
+
+.mp-in { display: block; animation: mp-gp-in .9s var(--ease-out) backwards; animation-delay: calc(var(--i) * 80ms + 150ms); }
+.mp-float { --r: 1.2deg; display: block; animation: mp-float 6s ease-in-out infinite alternate; animation-delay: calc(var(--i) * -1.7s); }
+.mp-gp:nth-child(even) .mp-float { --r: -1.4deg; }
+.mp-tilt { position: relative; display: block; transform-style: preserve-3d; }
+/* Reflejo del vidrio que sigue al cursor */
+.mp-tilt::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, .2), transparent 55%);
+}
+/* Trazo a mano que se dibuja alrededor del póster */
+.mp-scribble { position: absolute; inset: -6% -9%; overflow: visible; pointer-events: none; }
+/* opacity 0 en reposo: la punta redonda de un guion de largo 0 dejaría un punto visible */
+.mp-scribble path { fill: none; stroke: var(--accent-text); stroke-width: .7; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; transition: stroke-dashoffset .8s var(--ease-out), opacity .2s ease; }
+.mp-gp:focus-visible .mp-scribble path { stroke-dashoffset: 0; opacity: 1; }
 @media (hover: hover) {
-  .mp-movie-card:hover { transform: translateY(-4px); border-color: rgba(123, 92, 255, .55); box-shadow: 0 24px 50px -24px rgba(82, 39, 255, .7); }
-  .mp-movie-card:hover::after { opacity: 1; }
-  .mp-movie-card:hover .mp-movie-poster img { transform: scale(1.05); }
+  .mp-gp:hover .mp-scribble path { stroke-dashoffset: 0; opacity: 1; }
+  .mp-gp:hover .mp-tilt::after { opacity: 1; }
 }
-.mp-movie-card a { position: relative; z-index: 1; }
-@media (max-width: 639px) {
-  .mp-movie-card { flex-direction: row; }
-  .mp-movie-poster { width: 36%; flex: none; align-self: flex-start; }
+@keyframes mp-float { from { transform: translateY(-7px) rotate(calc(var(--r) * -1)); } to { transform: translateY(9px) rotate(var(--r)); } }
+@keyframes mp-gp-in { from { opacity: 0; transform: translateY(70px) rotate(-5deg) scale(.92); } }
+
+/* Póster enmarcado: marco negro fino + paspartú claro */
+.mp-frame {
+  margin: 0; padding: 4.5%; border-radius: 3px; background: linear-gradient(150deg, #26242d, #0c0b10 55%, #18161d);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .12), inset 0 1px 0 rgba(255, 255, 255, .12), 0 34px 60px -24px rgba(0, 0, 0, .9), 0 14px 26px -14px rgba(0, 0, 0, .7);
 }
+.mp-frame-mat { padding: 9% 9% 10%; background: #ece9e3; box-shadow: inset 0 1px 4px rgba(0, 0, 0, .4); }
+.mp-frame-mat img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; box-shadow: 0 0 0 1px rgba(0, 0, 0, .3); user-select: none; }
+
+/* Ficha técnica bajo la galería */
+.mp-spec { position: relative; display: grid; gap: 28px; }
+.mp-spec-title {
+  margin: 0; font-family: var(--font-serif); font-weight: 500; text-transform: uppercase; text-wrap: balance;
+  font-size: clamp(2.2rem, 4.6vw, 4.4rem); line-height: .95; letter-spacing: -.01em; animation: mp-rise .6s var(--ease-out) both;
+}
+@keyframes mp-rise { from { opacity: 0; transform: translateY(14px); } }
+.mp-rows { margin: 0; display: grid; }
+.mp-rows > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-top: 1px solid var(--border-strong); }
+.mp-rows > div:last-child { border-bottom: 1px solid var(--border-strong); }
+.mp-rows dt { flex: none; font-family: var(--font-serif); font-size: .6875rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--text-subtle); }
+.mp-rows dd { margin: 0; min-width: 0; text-align: right; overflow-wrap: anywhere; }
+.mp-arrow {
+  width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; cursor: pointer; touch-action: manipulation;
+  background: rgba(255, 255, 255, .06); border: 1px solid var(--border-strong); color: var(--text);
+  transition: background-color .2s ease, opacity .2s ease, transform .15s var(--ease-out);
+}
+.mp-arrow:hover:not(:disabled) { background: rgba(255, 255, 255, .14); }
+.mp-arrow:active:not(:disabled) { transform: scale(.95); }
+.mp-arrow:disabled { opacity: .35; cursor: not-allowed; }
+
+/* Ficha completa (<dialog>): título enorme centrado, créditos entre líneas, póster + datos */
+html:has(dialog[open]) { overflow: hidden; }
+.mp-dlg {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
+  background: transparent; color: var(--text); overflow-y: auto; overscroll-behavior: contain;
+}
+.mp-dlg::backdrop { background: transparent; }
+.mp-dlg-bg {
+  position: fixed; inset: 0; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  background: radial-gradient(60% 55% at 28% 60%, color-mix(in oklab, var(--tint) 24%, transparent), transparent 70%), rgba(6, 5, 20, .94);
+}
+.mp-dlg-close { position: fixed; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); z-index: 2; }
+.mp-dlg-inner { position: relative; z-index: 1; width: 100%; max-width: 1180px; min-height: 100%; margin: 0 auto; padding: 84px 24px 64px; }
+.mp-dlg-head { display: grid; justify-items: center; gap: 14px; text-align: center; }
+.mp-dlg-title {
+  margin: 0; font-family: var(--font-serif); font-weight: 500; text-transform: uppercase; text-wrap: balance;
+  font-size: clamp(2.6rem, 8vw, 7rem); line-height: .92; letter-spacing: -.015em;
+}
+.mp-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .04em; }
+.mp-mask > span { display: inline-block; }
+.mp-rule { display: block; width: 100%; height: 1px; background: var(--border-strong); }
+.mp-credits { margin: 0; max-width: 72ch; line-height: 1.7; }
+.mp-credits .mp-cap { margin: 0 6px 0 14px; }
+.mp-credits .mp-cap:first-child { margin-left: 0; }
+.mp-dlg-grid { display: grid; gap: 32px; margin-top: 40px; }
+.mp-dlg-poster { width: min(64vw, 300px); justify-self: center; }
+.mp-dlg-overview { margin: 0; max-width: 60ch; font-size: 1.125rem; line-height: 1.6; }
+/* "Ver ahora en" enmarcado entre líneas gruesas, como el WATCH ONLINE de A24 */
+.mp-watch { padding: 18px 0 20px; border-top: 3px solid var(--text); border-bottom: 3px solid var(--text); }
+.mp-watch .mp-label { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 500; text-transform: uppercase; letter-spacing: -.005em; color: var(--text); }
+
+/* Extras: índice compacto al final del feed */
+.mp-index { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--border-strong); }
+.mp-index-row { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 14px 20px; align-items: start; padding: 18px 0; border-top: 1px solid var(--border-strong); }
+.mp-index-thumb { width: 72px; height: auto; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 4px; box-shadow: 0 0 0 1px var(--border); }
+.mp-index-title { margin: 0; font-family: var(--font-serif); font-weight: 600; text-transform: uppercase; font-size: 1.375rem; line-height: 1.05; }
+.mp-index-overview { margin: 0; max-width: 65ch; color: var(--text-muted); font-size: .9375rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mp-index-side { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+
 /* Botón de plataforma de streaming: baldosa con logo + nombre */
 .mp-platform {
   display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px 0 6px; border-radius: 14px;
@@ -247,7 +360,11 @@ button { font: inherit; color: inherit; }
   .mp-types { grid-template-columns: 1.25fr 1fr; grid-template-rows: 1fr 1fr; }
   .mp-types > :first-child { grid-row: span 2; }
   .mp-wheel-step { grid-template-columns: 1fr 300px; align-items: center; }
-  .mp-pick { grid-template-columns: auto 1fr; gap: 56px; }
+  .mp-spec { grid-template-columns: minmax(0, 1fr) minmax(320px, 420px); align-items: end; gap: 48px; }
+  .mp-dlg-grid { grid-template-columns: minmax(260px, 380px) minmax(0, 1fr); gap: 64px; align-items: start; }
+  .mp-dlg-poster { width: 100%; }
+  .mp-index-row { grid-template-columns: 72px minmax(0, 1fr) auto; }
+  .mp-index-side { grid-column: auto; flex-direction: column; align-items: flex-end; }
   .mp-bento { grid-template-columns: 1.4fr 1fr 1fr; }
   .mp-bento .lead { grid-column: auto; grid-row: span 2; }
 }

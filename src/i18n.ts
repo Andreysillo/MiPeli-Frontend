@@ -30,10 +30,13 @@ const es = {
   loadingTitle: 'Calculando tu perfil…', loadingDone: (n: number) => (n === 1 ? 'Listo, encontramos tu película' : `Listo, encontramos ${n} películas`), loadingSteps: ['Analizando tus respuestas', 'Cruzando géneros y directores', 'Eligiendo tu película'],
 
   tonightKick: 'Tu película para esta noche', yourMovies: (n: number) => `Tus ${n} películas para esta noche`,
-  because: (genre: string, director: string) => `Porque te va el ${genre.toLowerCase()} y el cine de ${director}.`,
+  because: (genre: string, director?: string) => `Porque te va ${/^(Comedia|Ciencia ficción|Animación)$/.test(genre) ? 'la' : 'el'} ${genre.toLowerCase()}${director ? ` y el cine de ${director}` : ''}.`,
+  galleryHint: (n: number): string => (n === 1 ? 'Toca el póster para ver su ficha.' : 'Desliza, arrastra o usa las flechas. Toca un póster para ver su ficha.'),
+  seeDetails: 'Ver ficha', posterOf: (title: string) => `Ver ficha de ${title}`, prev: 'Anterior', close: 'Cerrar',
+  directedBy: 'Dirigida por', starring: 'Reparto', yearL: 'Año', genresL: 'Géneros', runtimeL: 'Duración', countryL: 'País', watchNow: 'Ver ahora en',
   whereToWatch: 'Puedes verla en:', openIn: (p: string) => `Ver en ${p} (abre en otra pestaña)`, imdbOf: (n: number) => `Calificación en IMDb: ${n} de 10`, share: 'Compartir',
   moreForYou: 'Más para ti', moreHint: 'Extras que también encajan con tus respuestas.',
-  wrappedTitle: 'Tu Wrapped de esta sesión', wGenre: 'Género dominante', wRareza: 'Rareza cinéfila', wCine: 'Cine favorito', wNota: 'Nota media en IMDb',
+  wrappedTitle: 'Tu Wrapped de esta sesión', wGenre: 'Género dominante', wRareza: 'Fuera de Hollywood', wCine: 'Cine favorito', wNota: 'Nota media en IMDb',
   usefulAsk: '¿Te sirvieron las recomendaciones?', useful: 'Sí, me sirvieron', notUseful: 'No mucho', thanksFeedback: 'Gracias, lo tendremos en cuenta.',
   redoTitle: '¿Otra ronda?', redoSame: 'Mismas preguntas', redoDiff: 'Otro tipo de encuesta', quickRec: 'Recomendación sin encuesta',
 
@@ -83,10 +86,13 @@ const en: Strings = {
   loadingTitle: 'Computing your profile…', loadingDone: (n: number) => (n === 1 ? 'Done, we found your movie' : `Done, we found ${n} movies`), loadingSteps: ['Analyzing your answers', 'Matching genres and directors', 'Picking your movie'],
 
   tonightKick: 'Your movie for tonight', yourMovies: (n: number) => `Your ${n} movies for tonight`,
-  because: (genre: string, director: string) => `Because you like ${genre.toLowerCase()} and ${director}’s films.`,
+  because: (genre: string, director?: string) => `Because you like ${genre.toLowerCase()}${director ? ` and ${director}’s films` : ''}.`,
+  galleryHint: (n: number) => (n === 1 ? 'Tap the poster to see its details.' : 'Swipe, drag or use the arrows. Tap a poster to see its details.'),
+  seeDetails: 'View details', posterOf: (title: string) => `View details for ${title}`, prev: 'Previous', close: 'Close',
+  directedBy: 'Directed by', starring: 'Starring', yearL: 'Year', genresL: 'Genres', runtimeL: 'Runtime', countryL: 'Country', watchNow: 'Watch now on',
   whereToWatch: 'You can watch it on:', openIn: (p: string) => `Watch on ${p} (opens in a new tab)`, imdbOf: (n: number) => `IMDb rating: ${n} out of 10`, share: 'Share',
   moreForYou: 'More for you', moreHint: 'Extras that also fit your answers.',
-  wrappedTitle: 'Your Wrapped for this session', wGenre: 'Top genre', wRareza: 'Cinephile rarity', wCine: 'Favorite cinema', wNota: 'Average IMDb rating',
+  wrappedTitle: 'Your Wrapped for this session', wGenre: 'Top genre', wRareza: 'Outside Hollywood', wCine: 'Favorite cinema', wNota: 'Average IMDb rating',
   usefulAsk: 'Were the recommendations useful?', useful: 'Yes, they helped', notUseful: 'Not really', thanksFeedback: 'Thanks, we’ll keep it in mind.',
   redoTitle: 'Another round?', redoSame: 'Same questions', redoDiff: 'Another survey type', quickRec: 'Pick without survey',
 
