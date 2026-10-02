@@ -1,22 +1,102 @@
-import { ArrowsClockwise, DiceFive, Lightning, ListPlus, ShareNetwork, Star, Television, ThumbsDown, ThumbsUp } from '@phosphor-icons/react';
+import { useLayoutEffect, useRef, type PointerEvent } from 'react';
+import gsap from 'gsap';
+import { ArrowsClockwise, Lightning, ShareNetwork, ThumbsDown, ThumbsUp } from '@phosphor-icons/react';
 import MoltenMetal from '../components/MoltenMetal';
 import TiltedCard from '../components/TiltedCard';
-import ChromaGrid from '../components/ChromaGrid';
 import Button from '../components/Button';
-import { chromaItem, listIdeas, poster, recommended } from '../data';
+import { platforms, poster, recommended, type Movie, type Platform, type PlatformInfo } from '../data';
 import { useApp } from '../store';
+
+function Imdb({ m }: { m: Movie }) {
+  const { t } = useApp();
+  return <span className="mp-tag tnum" aria-label={t.imdbOf(m.imdb)}><span className="mp-imdb" aria-hidden>IMDb</span><span aria-hidden>{m.imdb}</span></span>;
+}
+
+// Botón de plataforma: logo en su baldosa de color + nombre
+function PlatformLink({ p, big }: { p: Platform; big?: boolean }) {
+  const { t } = useApp();
+  const { url, tile, fg, icon, mark }: PlatformInfo = platforms[p];
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer" aria-label={t.openIn(p)} className={`mp-platform${big ? ' big' : ''}`}>
+      <span className="mp-platform-logo" style={{ background: tile, color: fg }} aria-hidden>
+        {icon ? <svg viewBox="0 0 24 24" fill="currentColor"><path d={icon.path} /></svg> : <b>{mark}</b>}
+      </span>
+      {p}
+    </a>
+  );
+}
+
+// "Puedes verla en:" + un botón por plataforma que abre su web en otra pestaña
+function WatchOn({ m, big }: { m: Movie; big?: boolean }) {
+  const { t } = useApp();
+  return (
+    <div className="mp-stack" style={{ gap: 10 }}>
+      <span className="mp-label">{t.whereToWatch}</span>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        {m.platforms.map(p => <PlatformLink key={p} p={p} big={big} />)}
+      </div>
+    </div>
+  );
+}
+
+// Número que sube desde 0 cuando entra en pantalla. El texto lo escribe GSAP, no React.
+function CountUp({ value, decimals = 0, suffix = '' }: { value: number; decimals?: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const el = ref.current!;
+    const fmt = (v: number) => v.toFixed(decimals) + suffix;
+    el.textContent = fmt(value);
+    const mm = gsap.matchMedia();
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const o = { v: 0 };
+      el.textContent = fmt(0);
+      gsap.to(o, { v: value, duration: 1.4, ease: 'power3.out', onUpdate: () => { el.textContent = fmt(o.v); }, scrollTrigger: { trigger: el, start: 'top 92%', once: true } });
+    });
+    return () => mm.revert();
+  }, [value, decimals, suffix]);
+  return <span ref={ref} />;
+}
+
+// Brillo que sigue al puntero sobre la tarjeta (CSS lee --mx/--my)
+const spotlight = (e: PointerEvent<HTMLElement>) => {
+  const r = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
+  e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
+};
+
+function MovieCard({ m }: { m: Movie }) {
+  return (
+    <li data-reveal className="mp-card mp-movie-card" onPointerMove={spotlight}>
+      <div className="mp-movie-poster"><img src={poster(m)} alt={`${m.title} (${m.year})`} loading="lazy" /></div>
+      <div className="mp-stack" style={{ gap: 12, padding: 16, flex: 1 }}>
+        <div className="mp-stack" style={{ gap: 4 }}>
+          <h3 className="mp-h3">{m.title}</h3>
+          <span className="mp-label tnum">{m.year} · {m.genre} · {m.director}</span>
+        </div>
+        <div><Imdb m={m} /></div>
+        <WatchOn m={m} />
+      </div>
+    </li>
+  );
+}
+
+// ponytail: el pool de demo tiene 10 recomendaciones; el backend dará cuantas haga falta.
+const MAX_EXTRAS = 4;
 
 export default function Results() {
   const { st, set, go, flash, t } = useApp();
-  const { genre, director, theme } = st.picks;
+  const { genre, director } = st.picks;
+  // Exactamente las que pidió el usuario, todas al mismo nivel. Si pidió menos que el pool, se añaden unos extras aparte.
   const recs = recommended.slice(0, st.numMovies);
-  const [top, ...rest] = recs;
+  const extras = recommended.slice(st.numMovies, st.numMovies + MAX_EXTRAS);
+  const [top] = recs;
   const cine = /Bong|Park|Wong/.test(director) ? 'Corea' : 'Autoral';
-  const rareza = /Noir|Distop|Nicho/.test(genre + theme) ? '73%' : '48%';
+  const rareza = /Noir|Misterio/.test(genre) ? 73 : 48;
+  const avgImdb = recs.reduce((sum, m) => sum + m.imdb, 0) / recs.length;
 
   const share = () => {
     const url = location.href;
-    if (navigator.share) navigator.share({ title: 'MiPeli', text: `${t.tonightKick}: ${top.title}`, url }).catch(() => {});
+    if (navigator.share) navigator.share({ title: 'MiPeli', text: recs.map(m => m.title).join(', '), url }).catch(() => {});
     else if (navigator.clipboard) { navigator.clipboard.writeText(url).catch(() => {}); flash(t.linkCopied); }
     else flash(t.shareFallback + url);
   };
@@ -31,38 +111,43 @@ export default function Results() {
       <div className="mp-scrim" style={{ background: 'linear-gradient(180deg,rgba(7,6,26,.2),rgba(7,6,26,.55) 50%,rgba(7,6,26,.85))' }} />
 
       <div className="mp-content mp-container mp-page mp-stack" style={{ gap: 72 }}>
-        {/* La recomendación principal */}
-        <div className="mp-pick">
-          <div data-reveal className="mp-pick-poster">
-            <TiltedCard imageSrc={poster(top)} altText={`${top.title} (${top.year})`} captionText={`★ ${top.rating}`} containerHeight="100%" containerWidth="100%"
-              imageHeight="100%" imageWidth="100%" rotateAmplitude={12} scaleOnHover={1.04} showTooltip />
-          </div>
-          <div className="mp-stack" style={{ gap: 16 }}>
-            <span data-reveal className="mp-kicker">{t.tonightKick}</span>
-            <h1 data-reveal className="mp-display">{top.title}</h1>
-            <p data-reveal className="mp-lead tnum">{top.year} · {top.director}</p>
-            <div data-reveal style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <span className="mp-tag">{top.genre}</span>
-              <span className="mp-tag tnum"><Star size={14} weight="fill" color="var(--star)" aria-hidden />{top.rating}</span>
-              {top.platforms && <span className="mp-tag"><Television size={14} aria-hidden /><span className="sr-only">{t.whereToWatch}: </span>{top.platforms.join(', ')}</span>}
+        {recs.length === 1 ? (
+          <div className="mp-pick">
+            <div data-reveal className="mp-pick-poster">
+              <TiltedCard imageSrc={poster(top)} altText={`${top.title} (${top.year})`} captionText={`IMDb ${top.imdb}`} containerHeight="100%" containerWidth="100%"
+                imageHeight="100%" imageWidth="100%" rotateAmplitude={12} scaleOnHover={1.04} showTooltip />
             </div>
-            <p data-reveal style={{ color: 'var(--text-muted)', maxWidth: '48ch' }}>{t.because(genre, director)}</p>
-            <div data-reveal style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 8 }}>
-              <Button icon={<DiceFive size={20} weight="bold" aria-hidden />} onClick={() => set({ showRoulette: true })}>{t.chooseForMe}</Button>
-              <Button variant="secondary" icon={<ShareNetwork size={20} aria-hidden />} onClick={share}>{t.share}</Button>
+            <div className="mp-stack" style={{ gap: 16 }}>
+              <span data-reveal className="mp-kicker">{t.tonightKick}</span>
+              <h1 data-reveal className="mp-display">{top.title}</h1>
+              <p data-reveal className="mp-lead tnum">{top.year} · {top.director}</p>
+              <div data-reveal style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <span className="mp-tag">{top.genre}</span>
+                <Imdb m={top} />
+              </div>
+              <p data-reveal style={{ color: 'var(--text-muted)', maxWidth: '48ch' }}>{t.because(genre, director)}</p>
+              <div data-reveal style={{ marginTop: 8 }}><WatchOn m={top} big /></div>
+              <div data-reveal><Button variant="ghost" size="sm" icon={<ShareNetwork size={18} aria-hidden />} onClick={share} style={{ marginLeft: -14 }}>{t.share}</Button></div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="mp-stack" style={{ gap: 24 }}>
+            <div className="mp-stack" style={{ gap: 12 }}>
+              <h1 data-reveal className="mp-display" style={{ fontSize: 'clamp(2.25rem, 3vw + 1rem, 3.75rem)' }}>{t.yourMovies(recs.length)}</h1>
+              <p data-reveal style={{ color: 'var(--text-muted)', maxWidth: '56ch' }}>{t.because(genre, director)}</p>
+              <div data-reveal><Button variant="ghost" size="sm" icon={<ShareNetwork size={18} aria-hidden />} onClick={share} style={{ marginLeft: -14 }}>{t.share}</Button></div>
+            </div>
+            <ul className="mp-movies">{recs.map(m => <MovieCard key={m.title} m={m} />)}</ul>
+          </div>
+        )}
 
-        {rest.length > 0 && (
+        {extras.length > 0 && (
           <div className="mp-stack" style={{ gap: 16 }}>
             <div data-reveal className="mp-stack" style={{ gap: 6 }}>
               <h2 className="mp-title">{t.moreForYou}</h2>
               <p className="mp-label">{t.moreHint}</p>
             </div>
-            <div data-reveal className="mp-rest-grid">
-              <ChromaGrid items={rest.map(chromaItem)} radius={300} damping={0.45} fadeOut={0.6} ease="power3.out" />
-            </div>
+            <ul className="mp-movies">{extras.map(m => <MovieCard key={m.title} m={m} />)}</ul>
           </div>
         )}
 
@@ -73,27 +158,13 @@ export default function Results() {
               <span className="mp-display">{genre}</span>
               <span className="mp-label" style={{ color: 'var(--text-muted)' }}>{t.wGenre}</span>
             </div>
-            {[[rareza, t.wRareza], [cine, t.wCine], ['4.4★', t.wNota]].map(([value, label]) => (
+            {([[<CountUp value={rareza} suffix="%" />, t.wRareza], [cine, t.wCine], [<CountUp value={avgImdb} decimals={1} />, t.wNota]] as const).map(([value, label]) => (
               <div key={label} data-reveal className="mp-card mp-stack" style={{ padding: 20, gap: 4, justifyContent: 'flex-end' }}>
                 <span className="mp-title tnum">{value}</span>
                 <span className="mp-label">{label}</span>
               </div>
             ))}
           </div>
-        </div>
-
-        <div className="mp-stack" style={{ gap: 16 }}>
-          <div data-reveal className="mp-stack" style={{ gap: 6 }}>
-            <h2 className="mp-title">{t.listIdeasTitle}</h2>
-            <p className="mp-label">{t.listIdeasDesc}</p>
-          </div>
-          <ul className="mp-ideas" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-            {listIdeas[st.lang].map(idea => (
-              <li key={idea} data-reveal className="mp-card" style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px' }}>
-                <span className="mp-icon-tile" style={{ width: 36, height: 36 }}><ListPlus size={18} aria-hidden /></span>{idea}
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div data-reveal className="mp-card mp-stack" style={{ padding: 24, gap: 24 }}>

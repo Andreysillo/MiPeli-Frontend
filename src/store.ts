@@ -2,8 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { L, type Lang } from './i18n';
 
 export type Screen = 'welcome' | 'type' | 'rectypes' | 'quest' | 'loading' | 'results' | 'home' | 'faq' | 'contacto';
-export type Step = 'genres' | 'director' | 'themes' | 'duel' | 'movies' | 'personal';
-export type RecKey = 'movies' | 'genres' | 'themes' | 'director';
+export type Step = 'genres' | 'director' | 'duel' | 'movies' | 'personal';
+export type RecKey = 'movies' | 'genres' | 'director';
 export type SurveyType = 'full' | 'short' | 'custom';
 export type Length = 'short' | 'med' | 'long';
 
@@ -11,11 +11,11 @@ export type State = {
   screen: Screen;
   loggedIn: boolean; user: string; lang: Lang;
   surveyType: SurveyType | null; rec: Record<RecKey, boolean>; length: Length; numMovies: number;
-  picks: { genre: string; director: string; theme: string };
+  picks: { genre: string; director: string };
   moodSel: string[]; movieSel: string[]; duelWins: Record<string, number>;
   useful: 'up' | 'down' | null;
   questSteps: Step[]; qi: number; duelIdx: number; questActive: boolean;
-  showRoulette: boolean; toast: string | null;
+  toast: string | null;
 };
 
 const KEY = 'mipeli:v1';
@@ -30,13 +30,13 @@ function initialState(): State {
     screen: 'welcome',
     loggedIn: !!saved.loggedIn, user: saved.user || 'Kevin', lang: saved.lang || 'es',
     surveyType: saved.surveyType || null,
-    rec: saved.rec || { movies: true, genres: true, themes: false, director: true },
+    rec: saved.rec || { movies: true, genres: true, director: true },
     length: saved.length || 'med', numMovies: saved.numMovies || 5,
-    picks: saved.picks || { genre: 'Noir', director: 'Park Chan-wook', theme: 'Venganza' },
+    picks: saved.picks || { genre: 'Noir', director: 'Park Chan-wook' },
     moodSel: ['Thriller'], movieSel: [], duelWins: {},
     useful: saved.useful || null,
     questSteps: [], qi: 0, duelIdx: 0, questActive: false,
-    showRoulette: false, toast: null,
+    toast: null,
   };
 }
 

@@ -1,4 +1,5 @@
-import { ArrowLeft, ArrowRight, Check, FilmSlate, MaskHappy, Popcorn, Sparkle } from '@phosphor-icons/react';
+import { ArrowLeft, ArrowRight, Check, FilmSlate, MaskHappy, Popcorn } from '@phosphor-icons/react';
+import { poster, welcomePosters } from '../data';
 import SplitText from '../components/SplitText';
 import Button from '../components/Button';
 import WavesBg, { interactive } from '../components/WavesBg';
@@ -9,7 +10,6 @@ export function buildSteps(rec: Record<RecKey, boolean>): Step[] {
   const steps: Step[] = [];
   if (rec.genres) steps.push('genres');
   if (rec.director) steps.push('director');
-  if (rec.themes) steps.push('themes');
   if (rec.movies) steps.push('duel', 'movies');
   return steps.length ? [...steps, 'personal'] : [];
 }
@@ -20,7 +20,6 @@ export default function RecTypes() {
     { key: 'movies', Icon: Popcorn, title: t.recMovies, desc: t.recMoviesD },
     { key: 'genres', Icon: MaskHappy, title: t.recGenres, desc: t.recGenresD },
     { key: 'director', Icon: FilmSlate, title: t.recDirector, desc: t.recDirectorD },
-    { key: 'themes', Icon: Sparkle, title: t.recThemes, desc: t.recThemesD },
   ];
   const lengths: [Length, string][] = [['short', t.lenShort], ['med', t.lenMed], ['long', t.lenLong]];
   const steps = buildSteps(st.rec);
@@ -35,7 +34,21 @@ export default function RecTypes() {
         <p data-reveal className="mp-lead" style={{ margin: '10px 0 28px' }}>{t.recDesc}</p>
 
         <div className="mp-recs" role="group" aria-label={t.recTitle}>
-          {options.map(({ key, Icon, title, desc }) => (
+          {options.map(({ key, Icon, title, desc }, i) => i === 0 ? (
+            // Películas: la opción estrella, más grande y con pósters de muestra
+            <button key={key} data-reveal className="mp-option mp-rec-hero" aria-pressed={st.rec[key]} onClick={() => set({ rec: { ...st.rec, [key]: !st.rec[key] } })}>
+              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, width: '100%' }}>
+                <span className="mp-icon-tile" style={{ width: 52, height: 52 }}><Icon size={28} weight="duotone" aria-hidden /></span>
+                <span className="mp-check"><Check size={14} weight="bold" aria-hidden /></span>
+              </span>
+              <span className="mp-rec-posters" aria-hidden>{welcomePosters.map(m => <img key={m.title} src={poster(m)} alt="" />)}</span>
+              <span className="mp-stack" style={{ gap: 8 }}>
+                <span className="mp-tag" style={{ color: 'var(--text)', borderColor: 'var(--accent)', alignSelf: 'flex-start' }}>{t.bestTag}</span>
+                <span className="mp-title">{title}</span>
+                <span className="mp-label" style={{ color: 'var(--text-muted)', maxWidth: '40ch' }}>{desc}</span>
+              </span>
+            </button>
+          ) : (
             <button key={key} data-reveal className="mp-option" aria-pressed={st.rec[key]} onClick={() => set({ rec: { ...st.rec, [key]: !st.rec[key] } })}
               style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
               <span className="mp-icon-tile"><Icon size={22} weight="duotone" aria-hidden /></span>

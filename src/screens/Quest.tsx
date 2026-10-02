@@ -7,7 +7,7 @@ import CircularGallery from '../components/CircularGallery';
 import Button from '../components/Button';
 import Reveal from '../components/Reveal';
 import WavesBg from '../components/WavesBg';
-import { chromaItem, directors, duels, genres, moodGallery, poster, questMovies, themes } from '../data';
+import { chromaItem, directors, duels, genres, moodGallery, poster, questMovies } from '../data';
 import { useApp } from '../store';
 
 const toggle = (list: string[], item: string) => list.includes(item) ? list.filter(x => x !== item) : [...list, item];
@@ -117,7 +117,6 @@ export default function Quest() {
         <Reveal key={kind + (kind === 'duel' ? st.duelIdx : '')} style={{ marginTop: 36 }}>
           {kind === 'genres' && <WheelStep title={t.qGenres} items={genres} value={st.picks.genre} onPick={pick('genre')} size={2.6} />}
           {kind === 'director' && <WheelStep title={t.qDirector} items={directors} value={st.picks.director} onPick={pick('director')} size={2.3} />}
-          {kind === 'themes' && <WheelStep title={t.qThemes} items={themes} value={st.picks.theme} onPick={pick('theme')} size={2.4} />}
           {kind === 'duel' && <Duel onDone={next} />}
 
           {kind === 'movies' && (

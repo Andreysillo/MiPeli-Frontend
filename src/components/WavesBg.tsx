@@ -8,7 +8,6 @@ const base = {
 
 // Variantes usadas por las pantallas
 export const interactive = { speed: 0.4, brightness: 0.8, opacity: 0.55, grainIntensity: 0.05, mouseInteraction: true, parallaxStrength: 0.4 };
-export const loading = { speed: 0.5, amplitude: 3.6, turbulence: 20, fogDepth: 15, brightness: 1, opacity: 1, grainIntensity: 0.05 };
 
 export default function WavesBg(overrides: Partial<typeof base> & { parallaxStrength?: number }) {
   return (

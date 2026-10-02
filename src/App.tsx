@@ -12,7 +12,6 @@ import Results from './screens/Results';
 import Home from './screens/Home';
 import Faq from './screens/Faq';
 import Contact from './screens/Contact';
-import Roulette from './screens/Roulette';
 
 const screens: Record<Screen, ComponentType> = {
   welcome: Welcome, type: SurveyType, rectypes: RecTypes, quest: Quest, loading: Loading,
@@ -52,7 +51,6 @@ export default function App() {
         <Reveal key={st.screen}><Current /></Reveal>
       </main>
 
-      {st.showRoulette && <Roulette />}
       <div role="status" aria-live="polite">
         {st.toast && <div className="mp-toast"><CheckCircle size={20} weight="fill" aria-hidden />{st.toast}</div>}
       </div>

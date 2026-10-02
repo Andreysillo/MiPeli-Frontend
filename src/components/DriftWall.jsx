@@ -193,7 +193,7 @@ const DriftWall = props => {
         : React.createElement('span', { className: 'drift-wall__poster', 'aria-hidden': 'true' }),
       !item.image && React.createElement('span', { className: 'drift-wall__sprocket l', 'aria-hidden': 'true' }),
       !item.image && React.createElement('span', { className: 'drift-wall__sprocket r', 'aria-hidden': 'true' }),
-      item.rating && React.createElement('span', { className: 'drift-wall__badge' }, `★ ${item.rating}`),
+      item.rating && React.createElement('span', { className: 'drift-wall__badge' }, `IMDb ${item.rating}`),
       React.createElement('span', { className: 'drift-wall__meta' },
         React.createElement('span', { className: 'drift-wall__title' }, item.title || 'Película'),
         (item.year || item.subtitle) && React.createElement('span', { className: 'drift-wall__sub' }, item.subtitle || `${item.year}`)

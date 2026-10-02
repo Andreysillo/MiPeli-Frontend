@@ -1,39 +1,59 @@
-import { useEffect, useState } from 'react';
-import WavesBg, { loading } from '../components/WavesBg';
+import { useEffect, useState, type CSSProperties } from 'react';
+import { Check } from '@phosphor-icons/react';
+import { poster, recommended } from '../data';
 import { LOADING_MS, useApp } from '../store';
 
-// Anillos cónicos concéntricos: [ángulo inicial, gradiente, máscara (radios %), opacidad, animación]
-const rings = [
-  ['0deg', 'transparent 0deg, #ffffff 90deg, transparent 180deg', [35, 37, 39, 41], 0.8, 'mp-ring-rot 3s linear infinite'],
-  ['0deg', 'transparent 0deg, #ffffff 120deg, rgba(255,255,255,.5) 240deg, transparent 360deg', [42, 44, 48, 50], 0.9, 'mp-ring-rot 2.5s cubic-bezier(.4,0,.6,1) infinite'],
-  ['180deg', 'transparent 0deg, rgba(255,255,255,.6) 45deg, transparent 90deg', [52, 54, 56, 58], 0.35, 'mp-ring-rot-rev 4s cubic-bezier(.4,0,.6,1) infinite'],
-  ['270deg', 'transparent 0deg, rgba(255,255,255,.4) 20deg, transparent 40deg', [61, 62, 63, 64], 0.5, 'mp-ring-rot 3.5s linear infinite'],
-] as const;
-
-const DURATION = LOADING_MS / 1000;
+// Fases: barajar el mazo mientras avanzan los pasos → abrirlo en abanico con las películas elegidas
+// → desvanecerse justo antes de que el store pase a resultados (a los LOADING_MS).
+const TICK_MS = 520, FAN_AT = LOADING_MS - 1150, EXIT_AT = LOADING_MS - 420;
+const deck = recommended.slice(0, 5);
 
 export default function Loading() {
-  const { t } = useApp();
-  const [msg, setMsg] = useState(0);
+  const { st, t } = useApp();
+  const shown = Math.min(st.numMovies, deck.length);
+  const [tick, setTick] = useState(0);
+  const [phase, setPhase] = useState<'shuffle' | 'fan' | 'exit'>('shuffle');
   useEffect(() => {
-    const id = setInterval(() => setMsg(m => Math.min(m + 1, t.loadingSteps.length - 1)), (DURATION * 1000) / t.loadingSteps.length);
-    return () => clearInterval(id);
-  }, [t]);
+    const shuffle = setInterval(() => setTick(n => n + 1), TICK_MS);
+    const fan = setTimeout(() => { clearInterval(shuffle); setPhase('fan'); }, FAN_AT);
+    const exit = setTimeout(() => setPhase('exit'), EXIT_AT);
+    return () => { clearInterval(shuffle); clearTimeout(fan); clearTimeout(exit); };
+  }, []);
+
+  const shuffling = phase === 'shuffle';
+  const step = shuffling ? Math.min(t.loadingSteps.length - 1, Math.floor(tick / 2)) : t.loadingSteps.length;
+  const mid = (shown - 1) / 2;
+
+  const cardStyle = (i: number): CSSProperties => {
+    if (shuffling) {
+      // Cada tick la carta de adelante se va al fondo (animación mp-deck-tuck)
+      const slot = (i - (tick % deck.length) + deck.length) % deck.length;
+      const pose = `translateY(${slot * -10}px) scale(${1 - slot * 0.06})`;
+      return { '--pose': pose, transform: pose, zIndex: deck.length - slot, filter: `brightness(${1 - slot * 0.14})`,
+        animation: slot === deck.length - 1 && tick > 0 ? `mp-deck-tuck ${TICK_MS}ms var(--ease-out)` : undefined } as CSSProperties;
+    }
+    if (i >= shown) return { transform: 'translateY(30px) scale(.8)', opacity: 0, zIndex: 0 };
+    const k = i - mid;
+    return { transform: `translateX(calc(${k} * var(--fan-step))) translateY(${Math.abs(k) * 12}px) rotate(${k * 6}deg)${shown === 1 ? ' scale(1.08)' : ''}`, zIndex: 10 - Math.abs(k) };
+  };
 
   return (
-    <section className="mp-screen" style={{ display: 'grid', placeItems: 'center', textAlign: 'center' }}>
-      <WavesBg {...loading} />
-      <div className="mp-content mp-stack" style={{ alignItems: 'center', padding: 24 }}>
-        <div style={{ position: 'relative', width: 128, height: 128, animation: 'mp-scale-pulse 4s cubic-bezier(.4,0,.6,1) infinite' }} aria-hidden>
-          {rings.map(([from, stops, [a, b, c, d], opacity, animation], i) => {
-            const mask = `radial-gradient(circle at 50% 50%, transparent ${a}%, #000 ${b}%, #000 ${c}%, transparent ${d}%)`;
-            return <div key={i} style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: `conic-gradient(from ${from}, ${stops})`, WebkitMaskImage: mask, maskImage: mask, opacity, animation }} />;
-          })}
+    <section className={`mp-screen mp-loading${phase === 'exit' ? ' exit' : ''}`}>
+      <div className="mp-aura" aria-hidden>{deck.slice(0, 3).map(m => <span key={m.title} style={{ background: m.color }} />)}</div>
+      <div className="mp-content mp-loading-inner">
+        <div className={`mp-deck${shuffling ? '' : ' fanned'}`} aria-hidden>
+          {deck.map((m, i) => <img key={m.title} src={poster(m)} alt="" style={cardStyle(i)} />)}
         </div>
-        <h1 className="mp-title" style={{ marginTop: 44 }}>{t.loadingTitle}</h1>
-        <p className="mp-lead" style={{ marginTop: 10, minHeight: '1.6em' }} aria-live="polite">{t.loadingSteps[msg]}</p>
-        <div className="mp-progress" style={{ width: 240, marginTop: 24 }} role="progressbar" aria-label={t.loadingTitle}>
-          <span style={{ animation: `mp-fill ${DURATION}s cubic-bezier(.3,.6,.4,1) both` }} />
+        <h1 className="mp-title" aria-live="polite">{shuffling ? t.loadingTitle : t.loadingDone(st.numMovies)}</h1>
+        <ol className="mp-load-steps">
+          {t.loadingSteps.map((s, i) => (
+            <li key={s} className={i < step ? 'done' : i === step ? 'active' : ''}>
+              <span className="mp-load-dot">{i < step && <Check size={12} weight="bold" aria-hidden />}</span>{s}
+            </li>
+          ))}
+        </ol>
+        <div className="mp-progress" style={{ width: 260 }} role="progressbar" aria-label={t.loadingTitle}>
+          <span style={{ animation: `mp-fill ${FAN_AT}ms cubic-bezier(.3,.6,.4,1) both` }} />
         </div>
       </div>
     </section>

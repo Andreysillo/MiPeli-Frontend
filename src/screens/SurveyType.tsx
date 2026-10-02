@@ -5,9 +5,9 @@ import { maskedHeadingSrc } from '../data';
 import { useApp, type State, type SurveyType as Kind } from '../store';
 
 const presets: Record<Kind, Partial<State>> = {
-  full: { surveyType: 'full', length: 'long', rec: { movies: true, genres: true, themes: true, director: true } },
-  short: { surveyType: 'short', length: 'short', rec: { movies: true, genres: true, themes: false, director: false } },
-  custom: { surveyType: 'custom', length: 'med', rec: { movies: false, genres: true, themes: false, director: false } },
+  full: { surveyType: 'full', length: 'long', rec: { movies: true, genres: true, director: true } },
+  short: { surveyType: 'short', length: 'short', rec: { movies: true, genres: true, director: false } },
+  custom: { surveyType: 'custom', length: 'med', rec: { movies: false, genres: true, director: false } },
 };
 
 export default function SurveyType() {

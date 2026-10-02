@@ -1,26 +1,46 @@
 // Datos de demo: aún no hay backend, todo lo que ve el usuario sale de aquí.
 import type { ReactNode } from 'react';
 import { EnvelopeSimple, GithubLogo, LinkedinLogo } from '@phosphor-icons/react';
+import { siAppletv, siCrunchyroll, siHbomax, siMubi, siNetflix, siParamountplus, type SimpleIcon } from 'simple-icons';
 import type { Lang } from './i18n';
 
-export type Movie = { title: string; year: number; director: string; genre: string; rating: number; color: string; platforms?: string[] };
+// imdb: calificación de IMDb sobre 10. platforms: claves de `platforms` (abajo).
+export type Movie = { title: string; year: number; director: string; genre: string; imdb: number; color: string; platforms: Platform[] };
+
+// Plataformas disponibles en Costa Rica. Logo de simple-icons cuando existe; si no (marcas que no lo permiten), un monograma con sus colores.
+// Los botones llevan a la página de inicio de cada plataforma. Qué película está en cuál lo dirá el backend (TMDB watch/providers, region=CR).
+export type PlatformInfo = { url: string; tile: string; fg: string; icon?: SimpleIcon; mark?: string };
+export const platforms = {
+  'Netflix': { url: 'https://www.netflix.com/', tile: '#000000', fg: '#E50914', icon: siNetflix },
+  'Prime Video': { url: 'https://www.primevideo.com/', tile: '#00A8E1', fg: '#ffffff', mark: 'prime' },
+  'Disney+': { url: 'https://www.disneyplus.com/', tile: '#0B1E5B', fg: '#ffffff', mark: 'D+' },
+  'HBO Max': { url: 'https://www.hbomax.com/', tile: '#000000', fg: '#ffffff', icon: siHbomax },
+  'Apple TV': { url: 'https://tv.apple.com/', tile: '#000000', fg: '#ffffff', icon: siAppletv },
+  'Paramount+': { url: 'https://www.paramountplus.com/', tile: '#0064FF', fg: '#ffffff', icon: siParamountplus },
+  'Mubi': { url: 'https://mubi.com/', tile: '#000000', fg: '#ffffff', icon: siMubi },
+  'Crunchyroll': { url: 'https://www.crunchyroll.com/', tile: '#FF5E00', fg: '#ffffff', icon: siCrunchyroll },
+  'ViX': { url: 'https://vix.com/', tile: '#FF4E00', fg: '#ffffff', mark: 'ViX' },
+  'Claro video': { url: 'https://www.clarovideo.com/', tile: '#DA291C', fg: '#ffffff', mark: 'claro' },
+  'Pluto TV': { url: 'https://pluto.tv/', tile: '#000000', fg: '#FFF200', mark: 'P' },
+} satisfies Record<string, PlatformInfo>;
+export type Platform = keyof typeof platforms;
 
 export const catalog: Movie[] = [
-  { title: 'Parasite', year: 2019, director: 'Bong Joon-ho', genre: 'Drama', rating: 4.8, color: '#3b82f6', platforms: ['Netflix', 'Max'] },
-  { title: 'Oldboy', year: 2003, director: 'Park Chan-wook', genre: 'Thriller', rating: 4.6, color: '#8b5cf6', platforms: ['Mubi'] },
-  { title: 'Burning', year: 2018, director: 'Lee Chang-dong', genre: 'Misterio', rating: 4.3, color: '#06b6d4', platforms: ['Prime Video'] },
-  { title: 'Memories of Murder', year: 2003, director: 'Bong Joon-ho', genre: 'Crimen', rating: 4.7, color: '#ec4899', platforms: ['Max'] },
-  { title: 'Drive', year: 2011, director: 'Nicolas Winding Refn', genre: 'Noir', rating: 4.3, color: '#f59e0b', platforms: ['Prime Video'] },
-  { title: 'Whiplash', year: 2014, director: 'Damien Chazelle', genre: 'Drama', rating: 4.6, color: '#10b981', platforms: ['Netflix'] },
-  { title: 'Zodiac', year: 2007, director: 'David Fincher', genre: 'Thriller', rating: 4.4, color: '#ef4444', platforms: ['Max'] },
-  { title: 'Seven', year: 1995, director: 'David Fincher', genre: 'Crimen', rating: 4.5, color: '#6366f1', platforms: ['Netflix'] },
-  { title: 'Prisoners', year: 2013, director: 'Denis Villeneuve', genre: 'Thriller', rating: 4.3, color: '#0ea5e9', platforms: ['Prime Video'] },
-  { title: 'In the Mood for Love', year: 2000, director: 'Wong Kar-wai', genre: 'Romance', rating: 4.7, color: '#e11d48', platforms: ['Mubi'] },
-  { title: 'Heat', year: 1995, director: 'Michael Mann', genre: 'Acción', rating: 4.4, color: '#2563eb' },
-  { title: 'The Chaser', year: 2008, director: 'Na Hong-jin', genre: 'Thriller', rating: 4.2, color: '#7c3aed' },
-  { title: 'Nightcrawler', year: 2014, director: 'Dan Gilroy', genre: 'Thriller', rating: 4.4, color: '#d97706' },
-  { title: 'Mother', year: 2009, director: 'Bong Joon-ho', genre: 'Drama', rating: 4.4, color: '#0891b2' },
-  { title: 'I Saw the Devil', year: 2010, director: 'Kim Jee-woon', genre: 'Thriller', rating: 4.3, color: '#be123c' },
+  { title: 'Parasite', year: 2019, director: 'Bong Joon-ho', genre: 'Drama', imdb: 8.5, color: '#3b82f6', platforms: ['Netflix', 'Prime Video'] },
+  { title: 'Oldboy', year: 2003, director: 'Park Chan-wook', genre: 'Thriller', imdb: 8.3, color: '#8b5cf6', platforms: ['Mubi', 'Prime Video', 'Paramount+'] },
+  { title: 'Burning', year: 2018, director: 'Lee Chang-dong', genre: 'Misterio', imdb: 7.5, color: '#06b6d4', platforms: ['Prime Video'] },
+  { title: 'Memories of Murder', year: 2003, director: 'Bong Joon-ho', genre: 'Crimen', imdb: 8.1, color: '#ec4899', platforms: ['HBO Max', 'Mubi'] },
+  { title: 'Drive', year: 2011, director: 'Nicolas Winding Refn', genre: 'Noir', imdb: 7.8, color: '#f59e0b', platforms: ['Prime Video', 'Apple TV'] },
+  { title: 'Whiplash', year: 2014, director: 'Damien Chazelle', genre: 'Drama', imdb: 8.5, color: '#10b981', platforms: ['Netflix', 'Claro video'] },
+  { title: 'Zodiac', year: 2007, director: 'David Fincher', genre: 'Thriller', imdb: 7.7, color: '#ef4444', platforms: ['HBO Max', 'Disney+'] },
+  { title: 'Seven', year: 1995, director: 'David Fincher', genre: 'Crimen', imdb: 8.6, color: '#6366f1', platforms: ['Netflix', 'HBO Max'] },
+  { title: 'Prisoners', year: 2013, director: 'Denis Villeneuve', genre: 'Thriller', imdb: 8.1, color: '#0ea5e9', platforms: ['Paramount+', 'Prime Video'] },
+  { title: 'In the Mood for Love', year: 2000, director: 'Wong Kar-wai', genre: 'Romance', imdb: 8.1, color: '#e11d48', platforms: ['Mubi'] },
+  { title: 'Heat', year: 1995, director: 'Michael Mann', genre: 'Acción', imdb: 8.3, color: '#2563eb', platforms: ['Disney+'] },
+  { title: 'The Chaser', year: 2008, director: 'Na Hong-jin', genre: 'Thriller', imdb: 7.8, color: '#7c3aed', platforms: ['Pluto TV'] },
+  { title: 'Nightcrawler', year: 2014, director: 'Dan Gilroy', genre: 'Thriller', imdb: 7.8, color: '#d97706', platforms: ['Netflix'] },
+  { title: 'Mother', year: 2009, director: 'Bong Joon-ho', genre: 'Drama', imdb: 7.8, color: '#0891b2', platforms: ['Mubi'] },
+  { title: 'I Saw the Devil', year: 2010, director: 'Kim Jee-woon', genre: 'Thriller', imdb: 7.8, color: '#be123c', platforms: ['ViX', 'Prime Video'] },
 ];
 
 const byTitle = (title: string) => catalog.find(m => m.title === title)!;
@@ -31,7 +51,6 @@ export const welcomePosters = ['In the Mood for Love', 'Parasite', 'Oldboy'].map
 
 export const genres = ['Thriller', 'Drama', 'Noir', 'Ciencia ficción', 'Terror', 'Comedia', 'Romance', 'Animación', 'Documental'];
 export const directors = ['Bong Joon-ho', 'Denis Villeneuve', 'David Fincher', 'Park Chan-wook', 'Wong Kar-wai', 'Christopher Nolan', 'Céline Sciamma', 'Kelly Reichardt'];
-export const themes = ['Venganza', 'Soledad urbana', 'Memoria', 'Familia', 'Identidad', 'Distopía', 'Mayoría de edad', 'Amor imposible'];
 export const auroraStops = ['#0f4fb8', '#ffffff', '#3300ff'];
 
 const canvas = (w: number, h: number) => {
@@ -85,8 +104,8 @@ export function poster(m: Movie): string {
 }
 
 // Formatos que esperan los componentes de React Bits
-export const chromaItem = (m: Movie) => ({ title: m.title, subtitle: `${m.year} · ${m.genre}`, handle: `★ ${m.rating}`, image: poster(m), borderColor: m.color, gradient: '#141030' });
-export const driftItem = (m: Movie) => ({ title: m.title, year: m.year, rating: String(m.rating), subtitle: `${m.year} · ★ ${m.rating}`, image: poster(m) });
+export const chromaItem = (m: Movie) => ({ title: m.title, subtitle: `${m.year} · ${m.genre}`, handle: `IMDb ${m.imdb}`, image: poster(m), borderColor: m.color, gradient: '#141030' });
+export const driftItem = (m: Movie) => ({ title: m.title, year: m.year, rating: String(m.imdb), subtitle: `${m.year} · IMDb ${m.imdb}`, image: poster(m) });
 
 function stripes(w: number, h: number, stops: [number, string][], line: string, lineWidth: number, step: number) {
   const [c, ctx] = canvas(w, h);
@@ -111,12 +130,7 @@ export const socialLogos = [
   { href: 'mailto:kevin@mipeli.app', title: 'Correo', node: icon(<EnvelopeSimple size={40} />) },
 ];
 
-export const listIdeas: Record<Lang, string[]> = {
-  es: ['Tu ranking definitivo de Bong Joon-ho', 'Neo-noir para noches de insomnio', 'Coreanas que te volaron la cabeza', 'Directoras que necesitas ver'],
-  en: ['Your definitive Bong Joon-ho ranking', 'Neo-noir for sleepless nights', 'Korean films that blew your mind', 'Women directors you must watch'],
-};
-
 export const faqData: Record<Lang, { q: string; a: string }[]> = {
-  es: [{ q: '¿De dónde salen las recomendaciones?', a: 'De tus respuestas, cruzadas con nuestra base de títulos.' }, { q: '¿Necesito cuenta?', a: 'No para probar. Con Google guardas tu progreso y repites encuestas sin límite.' }, { q: '¿Qué es el botón "Elegir por mí"?', a: 'Toma tus recomendaciones y te muestra una sola, con 10 segundos para ir a verla. Cero parálisis.' }, { q: '¿Dónde veo la peli?', a: 'Junto a cada recomendación mostramos en qué plataforma está.' }],
-  en: [{ q: 'Where do recommendations come from?', a: 'Your answers, matched against our title base.' }, { q: 'Do I need an account?', a: 'Not to try. With Google you save progress and repeat surveys with no limit.' }, { q: 'What is the "Choose for me" button?', a: 'It takes your recommendations and shows a single one, with 10 seconds to go watch it. Zero paralysis.' }, { q: 'Where can I watch it?', a: 'Next to each recommendation we show which platform has it.' }],
+  es: [{ q: '¿De dónde salen las recomendaciones?', a: 'De tus respuestas, cruzadas con nuestra base de títulos.' }, { q: '¿Necesito cuenta?', a: 'No para probar. Con Google guardas tu progreso y repites encuestas sin límite.' }, { q: '¿De dónde sale la calificación?', a: 'Es la nota de IMDb, sobre 10.' }, { q: '¿Dónde veo la peli?', a: 'Cada recomendación muestra en qué plataformas está, con un botón que te lleva directo a cada una.' }],
+  en: [{ q: 'Where do recommendations come from?', a: 'Your answers, matched against our title base.' }, { q: 'Do I need an account?', a: 'Not to try. With Google you save progress and repeat surveys with no limit.' }, { q: 'Where does the rating come from?', a: 'It is the IMDb score, out of 10.' }, { q: 'Where can I watch it?', a: 'Every recommendation shows which platforms have it, with a button that takes you straight to each one.' }],
 };
