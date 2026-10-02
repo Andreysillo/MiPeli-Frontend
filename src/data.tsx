@@ -156,7 +156,7 @@ export function recommend(a: Answers): Movie[] {
 }
 
 export const directors = ['Bong Joon-ho', 'Denis Villeneuve', 'David Fincher', 'Park Chan-wook', 'Wong Kar-wai', 'Christopher Nolan', 'Céline Sciamma', 'Kelly Reichardt'];
-export const auroraStops = ['#0f4fb8', '#ffffff', '#3300ff'];
+export const auroraStops = ['#1f1f2e', '#8c8ca3', '#2d2d42'];
 
 const canvas = (w: number, h: number) => {
   const c = document.createElement('canvas'); c.width = w; c.height = h;
@@ -172,7 +172,7 @@ export function poster(m: Movie): string {
   const W = 400, H = 600, pad = 30;
   const [c, ctx] = canvas(W, H);
   const bg = ctx.createLinearGradient(0, 0, W * 0.4, H);
-  bg.addColorStop(0, m.color); bg.addColorStop(0.62, '#120d33'); bg.addColorStop(1, '#07061a');
+  bg.addColorStop(0, m.color); bg.addColorStop(0.62, '#1a1a26'); bg.addColorStop(1, '#0f0f14');
   ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
   const glow = ctx.createRadialGradient(W * 0.8, H * 0.12, 0, W * 0.8, H * 0.12, W * 0.9);
   glow.addColorStop(0, 'rgba(255,255,255,.28)'); glow.addColorStop(1, 'rgba(255,255,255,0)');
@@ -209,7 +209,7 @@ export function poster(m: Movie): string {
 }
 
 // Formatos que esperan los componentes de React Bits
-export const chromaItem = (m: Movie) => ({ title: m.title, subtitle: `${m.year} · ${m.genres[0]}`, handle: `IMDb ${m.imdb}`, image: poster(m), borderColor: m.color, gradient: '#141030' });
+export const chromaItem = (m: Movie) => ({ title: m.title, subtitle: `${m.year} · ${m.genres[0]}`, handle: `IMDb ${m.imdb}`, image: poster(m), borderColor: m.color, gradient: '#1f1f2e' });
 export const driftItem = (m: Movie) => ({ title: m.title, year: m.year, rating: String(m.imdb), subtitle: `${m.year} · IMDb ${m.imdb}`, image: poster(m) });
 
 function stripes(w: number, h: number, stops: [number, string][], line: string, lineWidth: number, step: number) {
@@ -224,9 +224,9 @@ function stripes(w: number, h: number, stops: [number, string][], line: string, 
 
 const moodColors = ['#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#10b981'];
 export const moodGallery = ['Thriller', 'Comedia', 'Terror', 'Drama', 'Ciencia ficción', 'Romance', 'Animación']
-  .map((text, i) => ({ text, image: stripes(600, 450, [[0, moodColors[i]], [1, '#0a0a1e']], 'rgba(255,255,255,.08)', 14, 42) }));
+  .map((text, i) => ({ text, image: stripes(600, 450, [[0, moodColors[i]], [1, '#0f0f14']], 'rgba(255,255,255,.08)', 14, 42) }));
 
-export const maskedHeadingSrc = stripes(1600, 440, [[0, '#0f1f6b'], [0.5, '#5227ff'], [1, '#b18cff']], 'rgba(255,255,255,.14)', 26, 70);
+export const maskedHeadingSrc = stripes(1600, 440, [[0, '#a3a3b8'], [0.5, '#f4f4f4'], [1, '#c9c9d6']], 'rgba(15,15,20,.1)', 26, 70);
 
 // ponytail: datos de contacto de ejemplo; reemplazar por los reales del autor
 export const contactInfo = { email: 'kevin@mipeli.app', github: 'https://github.com/', linkedin: 'https://www.linkedin.com/' };

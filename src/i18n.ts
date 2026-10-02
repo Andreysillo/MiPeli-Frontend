@@ -3,6 +3,8 @@ const es = {
   heroTitle: 'Tu película de esta noche, en dos minutos.',
   heroDesc: 'Responde unas preguntas rápidas y te recomendamos qué ver. Sin scrollear 40 minutos.',
   google: 'Continuar con Google', guest: 'Entrar como invitado', guestName: 'invitado', faq: 'Preguntas frecuentes', sug: 'Sugerencias',
+  continueAs: (user: string) => `Continuar como ${user}`, signOut: 'Cerrar sesión',
+  loginError: 'No pudimos iniciar sesión con Google. Inténtalo de nuevo.', popupBlocked: 'Tu navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo de nuevo.',
   hi: (user: string) => `Hola, ${user}`,
 
   typeTitle: '¿Cómo quieres hacerlo?', typeDesc: 'Elige un tipo de encuesta. Puedes repetirla cuando quieras.',
@@ -47,10 +49,9 @@ const es = {
   homeH1: 'Elige con la mirada', homeDesc: 'Pasa el cursor por el muro: el póster que toques se enciende. ¿Prefieres que elijamos nosotros?',
   startSurvey: 'Empezar encuesta', continueSurvey: 'Continuar encuesta',
 
-  faqTitle: 'Preguntas frecuentes', faqMore: '¿Te quedó otra duda?', faqWrite: 'Escríbenos', faqKick: 'Ayuda',
-  studioTag: 'MiPeli es un recomendador de películas para tu noche', emailUs: 'Escríbenos',
+  faqTitle: 'Preguntas frecuentes', faqMore: '¿Te quedó otra duda?', faqMoreD: 'Escríbenos y te respondemos lo antes posible.', faqWrite: 'Escríbenos', faqKick: 'Ayuda',
   aboutBrand: 'Sobre MiPeli', studioStatement: 'MiPeli es un recomendador de películas. Respondes unas preguntas y te decimos qué ver esta noche, y dónde verlo.',
-  contactLabel: 'Contacto', colMail: 'Correo', colSocial: 'Redes', creditsLabel: 'Créditos',
+  contactLabel: 'Escríbenos', creditsLabel: 'Créditos',
   colMovies: 'Datos de películas', colProviders: 'Dónde ver', colRatings: 'Calificaciones',
   creditProviders: 'Datos de disponibilidad en plataformas de', creditRatings: 'Notas de IMDb obtenidas con', creditLicense: ', licencia CC BY-NC 4.0.',
   tmdbNotice: 'This product uses the TMDB API but is not endorsed or certified by TMDB.', availability: 'Disponibilidad:',
@@ -69,6 +70,8 @@ const en: Strings = {
   heroTitle: 'Tonight’s movie, in two minutes.',
   heroDesc: 'Answer a few quick questions and we tell you what to watch. No more 40 minutes of scrolling.',
   google: 'Continue with Google', guest: 'Continue as guest', guestName: 'guest', faq: 'FAQ', sug: 'Suggestions',
+  continueAs: (user: string) => `Continue as ${user}`, signOut: 'Sign out',
+  loginError: 'We couldn’t sign you in with Google. Please try again.', popupBlocked: 'Your browser blocked the Google window. Allow pop-ups and try again.',
   hi: (user: string) => `Hi, ${user}`,
 
   typeTitle: 'How do you want to do it?', typeDesc: 'Pick a survey type. Repeat it whenever you like.',
@@ -112,10 +115,9 @@ const en: Strings = {
   homeH1: 'Choose with your eyes', homeDesc: 'Hover the wall: the poster you touch lights up. Rather have us pick?',
   startSurvey: 'Start survey', continueSurvey: 'Continue survey',
 
-  faqTitle: 'Frequently asked questions', faqMore: 'Still have a question?', faqWrite: 'Write to us', faqKick: 'Help',
-  studioTag: 'MiPeli is a movie recommender for your night in', emailUs: 'Email us',
+  faqTitle: 'Frequently asked questions', faqMore: 'Still have a question?', faqMoreD: 'Write to us and we’ll get back to you soon.', faqWrite: 'Write to us', faqKick: 'Help',
   aboutBrand: 'About MiPeli', studioStatement: 'MiPeli is a movie recommender. Answer a few questions and we tell you what to watch tonight, and where to stream it.',
-  contactLabel: 'Contact', colMail: 'Email', colSocial: 'Social', creditsLabel: 'Credits',
+  contactLabel: 'Get in touch', creditsLabel: 'Credits',
   colMovies: 'Movie data', colProviders: 'Where to watch', colRatings: 'Ratings',
   creditProviders: 'Streaming availability data from', creditRatings: 'IMDb scores fetched with', creditLicense: ', CC BY-NC 4.0 license.',
   tmdbNotice: 'This product uses the TMDB API but is not endorsed or certified by TMDB.', availability: 'Availability:',

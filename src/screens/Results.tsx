@@ -97,7 +97,7 @@ export default function Results() {
           <div className="mp-stack" style={{ gap: 16 }}>
             <h2 data-reveal className="mp-title">{t.wrappedTitle}</h2>
             <div className="mp-bento">
-              <div data-reveal className="mp-card lead mp-stack" style={{ padding: 24, justifyContent: 'flex-end', minHeight: 180, background: 'linear-gradient(150deg,rgba(82,39,255,.6),rgba(18,14,46,.75) 70%)' }}>
+              <div data-reveal className="mp-card mp-raised lead mp-stack" style={{ padding: 24, justifyContent: 'flex-end', minHeight: 180 }}>
                 <span className="mp-display">{genreName(topGenre, st.lang)}</span>
                 <span className="mp-label" style={{ color: 'var(--text-muted)' }}>{t.wGenre}</span>
               </div>
@@ -121,8 +121,8 @@ export default function Results() {
             <div className="mp-stack" style={{ gap: 12 }}>
               <h2 className="mp-h3">{t.usefulAsk}</h2>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-                <Button variant={st.useful === 'up' ? 'primary' : 'secondary'} size="sm" aria-pressed={st.useful === 'up'} icon={<ThumbsUp size={18} weight={st.useful === 'up' ? 'fill' : 'regular'} aria-hidden />} onClick={() => rate('up')}>{t.useful}</Button>
-                <Button variant={st.useful === 'down' ? 'primary' : 'secondary'} size="sm" aria-pressed={st.useful === 'down'} icon={<ThumbsDown size={18} weight={st.useful === 'down' ? 'fill' : 'regular'} aria-hidden />} onClick={() => rate('down')}>{t.notUseful}</Button>
+                <Button variant="secondary" size="sm" aria-pressed={st.useful === 'up'} icon={<ThumbsUp size={18} weight={st.useful === 'up' ? 'fill' : 'regular'} aria-hidden />} onClick={() => rate('up')}>{t.useful}</Button>
+                <Button variant="secondary" size="sm" aria-pressed={st.useful === 'down'} icon={<ThumbsDown size={18} weight={st.useful === 'down' ? 'fill' : 'regular'} aria-hidden />} onClick={() => rate('down')}>{t.notUseful}</Button>
                 {st.useful && <span className="mp-label" role="status">{t.thanksFeedback}</span>}
               </div>
             </div>

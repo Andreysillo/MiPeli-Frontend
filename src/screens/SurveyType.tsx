@@ -13,7 +13,7 @@ const presets: Record<Kind, Partial<State>> = {
 export default function SurveyType() {
   const { set, t, name } = useApp();
   const types = [
-    { key: 'full' as const, title: t.typeFull, desc: t.typeFullD, time: `~5 ${t.min}`, Icon: Star, grad: 'linear-gradient(150deg,rgba(82,39,255,.55),rgba(18,14,46,.7) 60%)' },
+    { key: 'full' as const, title: t.typeFull, desc: t.typeFullD, time: `~5 ${t.min}`, Icon: Star },
     { key: 'short' as const, title: t.typeShort, desc: t.typeShortD, time: `~2 ${t.min}`, Icon: Lightning },
     { key: 'custom' as const, title: t.typeCustom, desc: t.typeCustomD, time: t.youChoose, Icon: SlidersHorizontal },
   ];
@@ -28,12 +28,12 @@ export default function SurveyType() {
         <p data-reveal className="mp-lead" style={{ margin: '8px 0 28px' }}>{t.typeDesc}</p>
 
         <div className="mp-types">
-          {types.map(({ key, title, desc, time, Icon, grad }, i) => (
-            <button key={key} data-reveal className="mp-option" onClick={() => set({ ...presets[key], screen: 'rectypes' })}
-              style={{ gap: 12, padding: i === 0 ? 28 : 22, justifyContent: 'space-between', minHeight: i === 0 ? 260 : 0, background: grad }}>
+          {types.map(({ key, title, desc, time, Icon }, i) => (
+            <button key={key} data-reveal className={i === 0 ? 'mp-option mp-raised' : 'mp-option'} onClick={() => set({ ...presets[key], screen: 'rectypes' })}
+              style={{ gap: 12, padding: i === 0 ? 28 : 22, justifyContent: 'space-between', minHeight: i === 0 ? 260 : 0 }}>
               <span style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
                 <span className="mp-icon-tile"><Icon size={22} weight="duotone" aria-hidden /></span>
-                {i === 0 && <span className="mp-tag" style={{ color: 'var(--text)', borderColor: 'var(--accent)' }}>{t.recommendedTag}</span>}
+                {i === 0 && <span className="mp-tag" style={{ color: 'var(--text)', borderColor: 'var(--border-strong)' }}>{t.recommendedTag}</span>}
               </span>
               <span className="mp-stack" style={{ gap: 6 }}>
                 <span className={i === 0 ? 'mp-title' : 'mp-h3'}>{title}</span>

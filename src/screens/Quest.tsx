@@ -36,7 +36,7 @@ function Question({ title, hint, extra }: { title: string; hint: string; extra?:
   return (
     <div className="mp-stack" style={{ gap: 8, marginBottom: 24 }}>
       <h1 data-reveal className="mp-title">{title}</h1>
-      <p data-reveal className="mp-label">{hint}{extra && <span className="tnum" style={{ color: 'var(--accent-text)' }}> {extra}</span>}</p>
+      <p data-reveal className="mp-label">{hint}{extra && <span className="tnum" style={{ color: 'var(--text)' }}> {extra}</span>}</p>
     </div>
   );
 }
@@ -51,11 +51,11 @@ function WheelStep({ title, items, value, onPick, size }: { title: string; items
           <div style={{ position: 'absolute', top: '50%', left: 24, right: 12, height: 1, background: 'linear-gradient(90deg,rgba(255,255,255,.35),transparent)', pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', top: '50%', left: 20, width: 10, height: 10, borderRadius: '50%', background: '#fff', boxShadow: '0 0 12px rgba(255,255,255,.7)', transform: 'translateY(-50%)' }} />
           <OptionWheel items={items} defaultSelected={Math.max(0, items.indexOf(value))} onChange={(_i: number, item: string) => onPick(item)}
-            textColor="rgba(196,181,255,0.5)" activeColor="#ffffff" side="left" fontSize={small() ? size * 0.75 : size} spacing={1.5} curve={1} tilt={7} blur={1.6} fade={0.42} smoothing={220} inset={40} draggable />
+            textColor="rgba(244,244,244,0.4)" activeColor="#f4f4f4" side="left" fontSize={small() ? size * 0.75 : size} spacing={1.5} curve={1} tilt={7} blur={1.6} fade={0.42} smoothing={220} inset={40} draggable />
         </div>
         <div data-reveal className="mp-card mp-stack mp-wheel-pick" style={{ padding: 24, gap: 6 }}>
           <span className="mp-label">{t.yourPick}</span>
-          <span className="mp-title" style={{ color: 'var(--accent-text)' }} aria-live="polite">{value}</span>
+          <span className="mp-title" aria-live="polite">{value}</span>
         </div>
       </div>
     </>

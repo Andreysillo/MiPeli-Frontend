@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { ArrowRight, ArrowUpRight } from '@phosphor-icons/react';
-import StudioPage, { Section } from '../components/Studio';
+import { ArrowRight, GithubLogo, LinkedinLogo } from '@phosphor-icons/react';
 import Credits from '../components/Credits';
 import { contactInfo } from '../data';
 import { useApp } from '../store';
@@ -12,42 +11,41 @@ export default function Contact() {
   const send = (e: FormEvent) => { e.preventDefault(); setSug(''); flash(t.thanksSug); };
 
   return (
-    <StudioPage>
-      <div className="mp-601-body">
-        <Section label={t.aboutBrand} level={1} delay={0.1}>
-          <p data-reveal className="mp-601-statement">{t.studioStatement}</p>
-        </Section>
+    <section className="mp-screen">
+      <div className="mp-content mp-container mp-page">
+        <div className="mp-stack" style={{ gap: 10 }}>
+          <p data-reveal className="mp-kicker">{t.navContact}</p>
+          <h1 data-reveal className="mp-title">{t.aboutBrand}</h1>
+          <p data-reveal className="mp-lead">{t.studioStatement}</p>
+        </div>
 
-        <Section label={t.aboutKick} delay={0.2}>
-          <div data-reveal className="mp-601-author">
-            <p className="mp-601-name" translate="no">{t.authorName}</p>
-            <p className="mp-601-bio">{t.authorBio}</p>
-          </div>
-        </Section>
+        <div className="mp-contact">
+          <article data-reveal className="mp-card">
+            <h2 className="mp-label">{t.aboutKick}</h2>
+            <p className="mp-h3" translate="no">{t.authorName}</p>
+            <p style={{ color: 'var(--text-muted)' }}>{t.authorBio}</p>
+          </article>
 
-        <Section label={t.contactLabel} delay={0.25}>
-          <div className="mp-601-cols">
-            <div data-reveal>
-              <p className="mp-601-colLabel">{t.colMail}</p>
-              <a className="mp-601-a" href={`mailto:${contactInfo.email}`} translate="no">{contactInfo.email}</a>
+          <article data-reveal className="mp-card">
+            <h2 className="mp-label">{t.contactLabel}</h2>
+            <a className="mp-mail" href={`mailto:${contactInfo.email}`} translate="no">{contactInfo.email}</a>
+            <div className="mp-row" translate="no">
+              <a className="btn btn-secondary btn-sm" href={contactInfo.github} target="_blank" rel="noopener noreferrer"><GithubLogo size={18} aria-hidden />GitHub</a>
+              <a className="btn btn-secondary btn-sm" href={contactInfo.linkedin} target="_blank" rel="noopener noreferrer"><LinkedinLogo size={18} aria-hidden />LinkedIn</a>
             </div>
-            <div data-reveal>
-              <p className="mp-601-colLabel">{t.colSocial}</p>
-              <ul className="mp-601-list">
-                <li><a className="mp-601-a" href={contactInfo.github} target="_blank" rel="noopener noreferrer" translate="no">GitHub<ArrowUpRight size={12} weight="bold" aria-hidden /></a></li>
-                <li><a className="mp-601-a" href={contactInfo.linkedin} target="_blank" rel="noopener noreferrer" translate="no">LinkedIn<ArrowUpRight size={12} weight="bold" aria-hidden /></a></li>
-              </ul>
-            </div>
-            <form data-reveal onSubmit={send} className="mp-601-form">
-              <label htmlFor="sug" className="mp-601-colLabel">{t.sugLabel}</label>
-              <input id="sug" name="suggestion" className="mp-601-input" value={sug} onChange={e => setSug(e.target.value)} placeholder={t.sugPh} autoComplete="off" />
-              <button type="submit" className="mp-601-out" disabled={!sug.trim()}>{t.send}<ArrowRight size={14} weight="bold" aria-hidden /></button>
-            </form>
-          </div>
-        </Section>
+          </article>
 
-        <Credits />
+          <form data-reveal className="mp-card mp-span-2" onSubmit={send}>
+            <label htmlFor="sug" className="mp-h3">{t.sugLabel}</label>
+            <div className="mp-field">
+              <input id="sug" name="suggestion" className="mp-input" value={sug} onChange={e => setSug(e.target.value)} placeholder={t.sugPh} autoComplete="off" />
+              <button type="submit" className="btn btn-primary" disabled={!sug.trim()}>{t.send}<ArrowRight size={18} weight="bold" aria-hidden /></button>
+            </div>
+          </form>
+
+          <Credits />
+        </div>
       </div>
-    </StudioPage>
+    </section>
   );
 }

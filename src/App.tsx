@@ -1,8 +1,9 @@
 import { useLayoutEffect, useMemo, useRef, type ComponentType } from 'react';
-import { CheckCircle, Globe } from '@phosphor-icons/react';
+import { CheckCircle, Globe, SignOut } from '@phosphor-icons/react';
 import PillNav from './components/PillNav';
 import Reveal from './components/Reveal';
 import { StoreContext, useStore, type Screen } from './store';
+import { signOutUser } from './auth';
 import Welcome from './screens/Welcome';
 import SurveyType from './screens/SurveyType';
 import RecTypes from './screens/RecTypes';
@@ -20,14 +21,13 @@ const screens: Record<Screen, ComponentType> = {
 
 export default function App() {
   const store = useStore();
-  const { st, set, t } = store;
+  const { st, set, go, t } = store;
   const Current = screens[st.screen];
   const mainRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
   const navItems = useMemo(() => [{ label: t.navHome, href: '#home' }, { label: 'FAQ', href: '#faq' }, { label: t.navContact, href: '#contacto' }], [t]);
-  // Contacto y FAQ traen su propia barra superior (estilo editorial) y la carga va a pantalla completa
-  const ownChrome = st.screen === 'loading' || st.screen === 'faq' || st.screen === 'contacto';
-  const activeHref = st.screen === 'home' ? '#home' : undefined;
+  const activeHref = navItems.find(i => i.href === `#${st.screen}`)?.href;
+  const signOut = () => { signOutUser().catch(console.error); go('welcome'); };
 
   // Cada pantalla nueva empieza arriba y con el foco en el contenido (lectores de pantalla)
   useLayoutEffect(() => {
@@ -38,14 +38,22 @@ export default function App() {
 
   return (
     <StoreContext.Provider value={store}>
-      {!ownChrome && (
+      {/* La carga va a pantalla completa, sin header */}
+      {st.screen !== 'loading' && (
         <header className="mp-header">
           {st.screen !== 'welcome' && (
-            <PillNav items={navItems} activeHref={activeHref} logoHref="#home" brand="MP" baseColor="#2a1670" pillColor="#f4f2ff" pillTextColor="#160c3d" hoveredPillTextColor="#ffffff" />
+            <PillNav items={navItems} activeHref={activeHref} logoHref="#home" brand="MP" baseColor="#1f1f2e" pillColor="#f4f4f4" pillTextColor="#0f0f14" hoveredPillTextColor="#f4f4f4" />
           )}
-          <button className="mp-lang" onClick={() => set({ lang: st.lang === 'es' ? 'en' : 'es' })} title={t.langHint} aria-label={t.langHint}>
-            <Globe size={18} weight="bold" aria-hidden /> {st.lang === 'es' ? 'EN' : 'ES'}
-          </button>
+          <div className="mp-header-actions">
+            {st.loggedIn && (
+              <button className="mp-lang mp-signout" onClick={signOut} title={t.signOut} aria-label={t.signOut}>
+                <SignOut size={18} weight="bold" aria-hidden /><span className="mp-hide-sm">{t.signOut}</span>
+              </button>
+            )}
+            <button className="mp-lang" onClick={() => set({ lang: st.lang === 'es' ? 'en' : 'es' })} title={t.langHint} aria-label={t.langHint}>
+              <Globe className="mp-hide-xs" size={18} weight="bold" aria-hidden /> {st.lang === 'es' ? 'EN' : 'ES'}
+            </button>
+          </div>
         </header>
       )}
 

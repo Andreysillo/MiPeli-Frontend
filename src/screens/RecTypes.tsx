@@ -36,14 +36,14 @@ export default function RecTypes() {
         <div className="mp-recs" role="group" aria-label={t.recTitle}>
           {options.map(({ key, Icon, title, desc }, i) => i === 0 ? (
             // Películas: la opción estrella, más grande y con pósters de muestra
-            <button key={key} data-reveal className="mp-option mp-rec-hero" aria-pressed={st.rec[key]} onClick={() => set({ rec: { ...st.rec, [key]: !st.rec[key] } })}>
+            <button key={key} data-reveal className="mp-option mp-raised mp-rec-hero" aria-pressed={st.rec[key]} onClick={() => set({ rec: { ...st.rec, [key]: !st.rec[key] } })}>
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, width: '100%' }}>
                 <span className="mp-icon-tile" style={{ width: 52, height: 52 }}><Icon size={28} weight="duotone" aria-hidden /></span>
                 <span className="mp-check"><Check size={14} weight="bold" aria-hidden /></span>
               </span>
               <span className="mp-rec-posters" aria-hidden>{welcomePosters.map(m => <img key={m.title} src={poster(m)} alt="" />)}</span>
               <span className="mp-stack" style={{ gap: 8 }}>
-                <span className="mp-tag" style={{ color: 'var(--text)', borderColor: 'var(--accent)', alignSelf: 'flex-start' }}>{t.bestTag}</span>
+                <span className="mp-tag" style={{ color: 'var(--text)', borderColor: 'var(--border-strong)', alignSelf: 'flex-start' }}>{t.bestTag}</span>
                 <span className="mp-title">{title}</span>
                 <span className="mp-label" style={{ color: 'var(--text-muted)', maxWidth: '40ch' }}>{desc}</span>
               </span>

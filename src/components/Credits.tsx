@@ -1,5 +1,4 @@
 import { ArrowUpRight } from '@phosphor-icons/react';
-import { Section } from './Studio';
 import { useApp } from '../store';
 
 // Logo oficial de TMDB (versión corta, themoviedb.org/about/logos-attribution). Se usa tal cual:
@@ -20,7 +19,7 @@ function TmdbLogo() {
 }
 
 function Ext({ href, children }: Readonly<{ href: string; children: string }>) {
-  return <a className="mp-601-a" href={href} target="_blank" rel="noopener noreferrer" translate="no">{children}<ArrowUpRight size={12} weight="bold" aria-hidden /></a>;
+  return <a href={href} target="_blank" rel="noopener noreferrer" translate="no">{children}<ArrowUpRight size={12} weight="bold" aria-hidden /></a>;
 }
 
 // Créditos que exigen las fuentes de datos: TMDB (logo + aviso), JustWatch (plataformas) y OMDb (notas de IMDb, CC BY-NC 4.0).
@@ -28,22 +27,23 @@ function Ext({ href, children }: Readonly<{ href: string; children: string }>) {
 export default function Credits() {
   const { t } = useApp();
   return (
-    <Section label={t.creditsLabel} delay={0.3}>
-      <div className="mp-601-cols mp-601-cols-credits">
-        <div data-reveal>
-          <p className="mp-601-colLabel">{t.colMovies}</p>
-          <a href="https://www.themoviedb.org" target="_blank" rel="noopener noreferrer" className="mp-tmdb-link" aria-label="TMDB"><TmdbLogo /></a>
-          <p className="mp-601-note">{t.tmdbNotice}</p>
+    <section data-reveal className="mp-card mp-span-2">
+      <h2 className="mp-label">{t.creditsLabel}</h2>
+      <div className="mp-attrib">
+        <div>
+          <h3 className="mp-h3">{t.colMovies}</h3>
+          <a href="https://www.themoviedb.org" target="_blank" rel="noopener noreferrer" aria-label="TMDB"><TmdbLogo /></a>
+          <p className="mp-note">{t.tmdbNotice}</p>
         </div>
-        <div data-reveal>
-          <p className="mp-601-colLabel">{t.colProviders}</p>
-          <p className="mp-601-note">{t.creditProviders} <Ext href="https://www.justwatch.com">JustWatch</Ext></p>
+        <div>
+          <h3 className="mp-h3">{t.colProviders}</h3>
+          <p className="mp-note">{t.creditProviders} <Ext href="https://www.justwatch.com">JustWatch</Ext></p>
         </div>
-        <div data-reveal>
-          <p className="mp-601-colLabel">{t.colRatings}</p>
-          <p className="mp-601-note">{t.creditRatings} <Ext href="https://www.omdbapi.com">OMDb API</Ext>{t.creditLicense}</p>
+        <div>
+          <h3 className="mp-h3">{t.colRatings}</h3>
+          <p className="mp-note">{t.creditRatings} <Ext href="https://www.omdbapi.com">OMDb API</Ext>{t.creditLicense}</p>
         </div>
       </div>
-    </Section>
+    </section>
   );
 }
