@@ -1,0 +1,8 @@
+node_modules/
+dist/
+CLAUDE.md
+.claude/
+
+
+# graphify: caché y rutas locales de cada máquina
+graphify-out/

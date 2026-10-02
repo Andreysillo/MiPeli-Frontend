@@ -1,0 +1,23 @@
+{
+  "name": "mipeli-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "esbuild src/main.tsx index.html --bundle --loader:.html=copy --entry-names=[name] --outdir=dist --sourcemap --servedir=dist",
+    "build": "esbuild src/main.tsx index.html --bundle --loader:.html=copy --entry-names=[name] --outdir=dist --minify",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "ogl": "^1.0.11",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}
