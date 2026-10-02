@@ -1,6 +1,7 @@
-import type { ComponentType } from 'react';
+import { useLayoutEffect, useMemo, useRef, type ComponentType } from 'react';
+import { CheckCircle, Globe } from '@phosphor-icons/react';
 import PillNav from './components/PillNav';
-import { navItems } from './data';
+import Reveal from './components/Reveal';
 import { StoreContext, useStore, type Screen } from './store';
 import Welcome from './screens/Welcome';
 import SurveyType from './screens/SurveyType';
@@ -22,34 +23,38 @@ export default function App() {
   const store = useStore();
   const { st, set, t } = store;
   const Current = screens[st.screen];
-  const showNav = st.screen !== 'welcome' && st.screen !== 'loading';
-  const activeHref = st.screen === 'faq' ? '#faq' : st.screen === 'contacto' ? '#contacto' : '#home';
+  const mainRef = useRef<HTMLElement>(null);
+  const firstRender = useRef(true);
+  const navItems = useMemo(() => [{ label: t.navHome, href: '#home' }, { label: 'FAQ', href: '#faq' }, { label: t.navContact, href: '#contacto' }], [t]);
+  const activeHref = st.screen === 'faq' ? '#faq' : st.screen === 'contacto' ? '#contacto' : st.screen === 'home' ? '#home' : undefined;
+
+  // Cada pantalla nueva empieza arriba y con el foco en el contenido (lectores de pantalla)
+  useLayoutEffect(() => {
+    if (firstRender.current) { firstRender.current = false; return; }
+    window.scrollTo(0, 0);
+    mainRef.current?.focus({ preventScroll: true });
+  }, [st.screen]);
 
   return (
     <StoreContext.Provider value={store}>
-      <div style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
-        <button onClick={() => set({ lang: st.lang === 'es' ? 'en' : 'es' })} title={t.langHint} className="mp-lang">
-          <span className="mp-lang-shim" />
-          <svg className="mp-lang-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ stroke: '#DCDDE5' }}>
-            <circle cx="12" cy="12" r="10" /><path d="M2 12h20" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-          </svg>
-          <span>{st.lang === 'es' ? 'EN' : 'ES'}</span>
-        </button>
+      {st.screen !== 'loading' && (
+        <header className="mp-header">
+          {st.screen !== 'welcome' && (
+            <PillNav items={navItems} activeHref={activeHref} logoHref="#home" brand="MP" baseColor="#2a1670" pillColor="#f4f2ff" pillTextColor="#160c3d" hoveredPillTextColor="#ffffff" />
+          )}
+          <button className="mp-lang" onClick={() => set({ lang: st.lang === 'es' ? 'en' : 'es' })} title={t.langHint} aria-label={t.langHint}>
+            <Globe size={18} weight="bold" aria-hidden /> {st.lang === 'es' ? 'EN' : 'ES'}
+          </button>
+        </header>
+      )}
 
-        {showNav && (
-          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 60, pointerEvents: 'none' }}>
-            <div style={{ position: 'absolute', inset: 0, height: 84, background: 'linear-gradient(180deg,rgba(4,3,15,.92),rgba(4,3,15,.55) 55%,transparent)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', WebkitMaskImage: 'linear-gradient(180deg,#000 55%,transparent)', maskImage: 'linear-gradient(180deg,#000 55%,transparent)', pointerEvents: 'none' }} />
-            <div style={{ position: 'relative', height: 64, pointerEvents: 'auto' }}>
-              <PillNav items={navItems} activeHref={activeHref} logoHref="#home" brand="MP" baseColor="#3a1d7a" pillColor="#ffffff" pillTextColor="#1b0f45" hoveredPillTextColor="#ffffff" />
-            </div>
-          </div>
-        )}
+      <main ref={mainRef} tabIndex={-1} style={{ outline: 'none' }}>
+        <Reveal key={st.screen}><Current /></Reveal>
+      </main>
 
-        <Current />
-        {st.showRoulette && <Roulette />}
-        {st.toast && (
-          <div style={{ position: 'fixed', left: '50%', bottom: 28, transform: 'translateX(-50%)', zIndex: 120, background: '#fff', color: '#2a0d6b', fontWeight: 600, fontSize: 14, padding: '12px 20px', borderRadius: 999, boxShadow: '0 20px 50px rgba(0,0,0,.4)' }}>{st.toast}</div>
-        )}
+      {st.showRoulette && <Roulette />}
+      <div role="status" aria-live="polite">
+        {st.toast && <div className="mp-toast"><CheckCircle size={20} weight="fill" aria-hidden />{st.toast}</div>}
       </div>
     </StoreContext.Provider>
   );

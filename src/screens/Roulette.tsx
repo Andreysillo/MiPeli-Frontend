@@ -1,55 +1,59 @@
 import { useEffect, useRef, useState } from 'react';
-import GlowButton from '../components/GlowButton';
-import { driftMovies, type Movie } from '../data';
+import gsap from 'gsap';
+import { DiceFive, X } from '@phosphor-icons/react';
+import Button from '../components/Button';
+import { poster, recommended, type Movie } from '../data';
 import { useApp } from '../store';
 
-const random = () => driftMovies[Math.floor(Math.random() * driftMovies.length)];
-
-// Modal "Elegir por mí": baraja ~22 pósters y se queda con uno, con 10 s de cuenta atrás en la barra
+// Modal "Elegir por mí": baraja tus recomendaciones y se queda con una, con 10 s de cuenta atrás en la barra
 export default function Roulette() {
-  const { set, t } = useApp();
+  const { st, set, t } = useApp();
   const [spinning, setSpinning] = useState(false);
   const [pick, setPick] = useState<Movie | null>(null);
-  const bar = useRef<HTMLDivElement>(null);
+  const bar = useRef<HTMLSpanElement>(null);
+  const reel = useRef<HTMLImageElement>(null);
+  const closeBtn = useRef<HTMLButtonElement>(null);
   const timer = useRef<number>(undefined);
+  const pool = recommended.slice(0, Math.max(st.numMovies, 5));
+  const close = () => set({ showRoulette: false });
 
   const spin = () => {
     clearInterval(timer.current);
     setSpinning(true);
     let n = 0;
+    const random = () => pool[Math.floor(Math.random() * pool.length)];
     timer.current = window.setInterval(() => {
       setPick(random());
       if (++n <= 22) return;
       clearInterval(timer.current);
       setPick(random());
       setSpinning(false);
-      const el = bar.current;
-      if (el) { el.style.transition = 'none'; el.style.width = '100%'; void el.offsetWidth; el.style.transition = 'width 10s linear'; el.style.width = '0%'; }
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) gsap.fromTo(reel.current, { scale: 0.9 }, { scale: 1, duration: 0.5, ease: 'back.out(2)' });
+      gsap.fromTo(bar.current, { scaleX: 1 }, { scaleX: 0, duration: 10, ease: 'none' });
     }, 80);
   };
 
   useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    closeBtn.current?.focus();
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
+    window.addEventListener('keydown', onKey);
     const id = setTimeout(spin, 80);
-    return () => { clearTimeout(id); clearInterval(timer.current); };
+    return () => { clearTimeout(id); clearInterval(timer.current); gsap.killTweensOf(bar.current); window.removeEventListener('keydown', onKey); opener?.focus(); };
   }, []);
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(4,3,15,.82)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <div className="mp-card" style={{ width: '100%', maxWidth: 420, padding: 26, textAlign: 'center', background: 'rgba(20,16,44,.6)' }}>
-        <p className="mp-mono" style={{ fontSize: 11, letterSpacing: '.14em', color: '#a9c0ff', margin: 0 }}>{t.rouletteKick}</p>
-        <div style={{ margin: '18px auto 0', width: 170, aspectRatio: '2/3', borderRadius: 16, background: '#141a3a', backgroundImage: 'repeating-linear-gradient(135deg,rgba(255,255,255,.12) 0 8px,transparent 8px 16px)', border: '1px solid rgba(255,255,255,.25)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: 14, filter: spinning ? 'blur(2px)' : 'none', transition: 'filter .2s' }}>
-          <div>
-            <div className="mp-heading" style={{ fontSize: 22 }}>{pick ? pick.title : '—'}</div>
-            <div className="mp-mono" style={{ fontSize: 11, color: 'rgba(255,255,255,.7)' }}>{pick?.subtitle}</div>
-          </div>
+    <div className="mp-modal" onClick={e => { if (e.target === e.currentTarget) close(); }}>
+      <div role="dialog" aria-modal="true" aria-labelledby="roulette-title" className="mp-card mp-stack" style={{ position: 'relative', width: '100%', maxWidth: 400, padding: 28, gap: 6, alignItems: 'center', textAlign: 'center', background: 'rgba(20,16,48,.92)' }}>
+        <button ref={closeBtn} onClick={close} aria-label={t.close} className="btn btn-ghost btn-sm" style={{ position: 'absolute', top: 10, right: 10, width: 44, padding: 0 }}><X size={20} aria-hidden /></button>
+        <span className="mp-kicker">{t.rouletteKick}</span>
+        <div style={{ width: 180, aspectRatio: '2 / 3', margin: '14px 0 10px', borderRadius: 'var(--radius-poster)', overflow: 'hidden', border: '1px solid var(--border)', background: '#141030' }}>
+          {pick && <img ref={reel} src={poster(pick)} alt={spinning ? '' : `${pick.title} (${pick.year})`} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: spinning ? 'blur(3px)' : 'none', transition: 'filter .2s' }} />}
         </div>
-        <h2 className="mp-heading" style={{ fontSize: 24, margin: '20px 0 2px' }}>{spinning ? t.spinning : t.rouletteHeadline}</h2>
-        <p style={{ fontSize: 13, color: 'rgba(238,241,255,.78)', margin: '0 0 14px' }}>{!spinning && pick ? t.rouletteSub : ''}</p>
-        <div style={{ height: 6, borderRadius: 999, background: 'rgba(255,255,255,.2)', overflow: 'hidden', marginBottom: 16 }}><div ref={bar} style={{ height: '100%', background: '#fff', width: '100%' }} /></div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <div style={{ flex: 1 }}><GlowButton label={spinning ? t.spinning : t.spin} onClick={spin} /></div>
-          <div style={{ flex: 1 }}><GlowButton label={t.close} bg="#0a0a1e" color="#cdd7ff" onClick={() => set({ showRoulette: false })} /></div>
-        </div>
+        <h2 id="roulette-title" className="mp-h3" aria-live="polite">{spinning ? t.spinning : pick ? pick.title : t.rouletteHeadline}</h2>
+        <p className="mp-label" style={{ minHeight: '2.8em' }}>{!spinning && pick ? t.rouletteSub : ''}</p>
+        <div className="mp-progress" style={{ width: '100%', margin: '8px 0 18px' }}><span ref={bar} style={{ transition: 'none' }} /></div>
+        <Button block onClick={spin} disabled={spinning} icon={<DiceFive size={20} weight="bold" aria-hidden />}>{spinning ? t.spinning : t.spin}</Button>
       </div>
     </div>
   );

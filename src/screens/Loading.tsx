@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import WavesBg, { loading } from '../components/WavesBg';
-import { useApp } from '../store';
+import { LOADING_MS, useApp } from '../store';
 
 // Anillos cónicos concéntricos: [ángulo inicial, gradiente, máscara (radios %), opacidad, animación]
 const rings = [
@@ -9,24 +10,32 @@ const rings = [
   ['270deg', 'transparent 0deg, rgba(255,255,255,.4) 20deg, transparent 40deg', [61, 62, 63, 64], 0.5, 'mp-ring-rot 3.5s linear infinite'],
 ] as const;
 
+const DURATION = LOADING_MS / 1000;
+
 export default function Loading() {
   const { t } = useApp();
+  const [msg, setMsg] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setMsg(m => Math.min(m + 1, t.loadingSteps.length - 1)), (DURATION * 1000) / t.loadingSteps.length);
+    return () => clearInterval(id);
+  }, [t]);
+
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', background: '#04030f' }}>
+    <section className="mp-screen" style={{ display: 'grid', placeItems: 'center', textAlign: 'center' }}>
       <WavesBg {...loading} />
-      <div style={{ position: 'relative', zIndex: 2 }}>
-        <div style={{ position: 'relative', width: 128, height: 128, margin: '0 auto', animation: 'mp-scale-pulse 4s cubic-bezier(.4,0,.6,1) infinite' }}>
+      <div className="mp-content mp-stack" style={{ alignItems: 'center', padding: 24 }}>
+        <div style={{ position: 'relative', width: 128, height: 128, animation: 'mp-scale-pulse 4s cubic-bezier(.4,0,.6,1) infinite' }} aria-hidden>
           {rings.map(([from, stops, [a, b, c, d], opacity, animation], i) => {
             const mask = `radial-gradient(circle at 50% 50%, transparent ${a}%, #000 ${b}%, #000 ${c}%, transparent ${d}%)`;
             return <div key={i} style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: `conic-gradient(from ${from}, ${stops})`, WebkitMaskImage: mask, maskImage: mask, opacity, animation }} />;
           })}
         </div>
-        <h1 className="mp-heading" style={{ fontSize: 32, margin: '48px 0 0' }}><span style={{ display: 'inline-block', animation: 'mp-breathe-title 3s cubic-bezier(.4,0,.6,1) infinite' }}>{t.loadingTitle}</span></h1>
-        <p className="mp-mono" style={{ fontSize: 11, color: 'rgba(255,255,255,.82)', margin: '12px 0 22px' }}><span style={{ display: 'inline-block', animation: 'mp-breathe-sub 4s cubic-bezier(.4,0,.6,1) infinite' }}>{t.loadingSub}</span></p>
-        <div style={{ width: 220, height: 6, borderRadius: 999, background: 'rgba(255,255,255,.2)', overflow: 'hidden', margin: '0 auto' }}>
-          <div style={{ height: '100%', background: '#fff', width: '82%', animation: 'mp-fill 2.4s cubic-bezier(.2,.7,.2,1) both' }} />
+        <h1 className="mp-title" style={{ marginTop: 44 }}>{t.loadingTitle}</h1>
+        <p className="mp-lead" style={{ marginTop: 10, minHeight: '1.6em' }} aria-live="polite">{t.loadingSteps[msg]}</p>
+        <div className="mp-progress" style={{ width: 240, marginTop: 24 }} role="progressbar" aria-label={t.loadingTitle}>
+          <span style={{ animation: `mp-fill ${DURATION}s cubic-bezier(.3,.6,.4,1) both` }} />
         </div>
       </div>
-    </div>
+    </section>
   );
 }

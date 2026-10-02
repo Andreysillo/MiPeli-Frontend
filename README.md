@@ -21,10 +21,12 @@ src/
   App.tsx             shell: idioma, nav, pantalla actual, ruleta, toast
   store.ts            estado global (pantalla, respuestas, persistencia en localStorage, rutas #hash)
   i18n.ts             textos es/en
-  data.tsx            datos de demo (películas, géneros, FAQ...) — aún no hay backend
+  data.tsx            catálogo de películas de demo + arte de póster generado en canvas (aún no hay backend)
   screens/            una pantalla por archivo (Welcome, SurveyType, RecTypes, Quest, Loading, Results, Home, Faq, Contact, Roulette)
-  components/         GlowButton, WavesBg y componentes animados de React Bits (.jsx)
-  styles/global.css   estilos globales y clases mp-*
+  components/         Button, Reveal (transiciones GSAP), WavesBg y componentes animados de React Bits (.jsx)
+  styles/global.css   tokens de diseño (color, radios, tipografía) y clases mp-*
 ```
 
 Los componentes `.jsx` de `src/components/` vienen de [React Bits](https://github.com/DavidHDev/react-bits) adaptados; usan `gsap` y `ogl` (WebGL).
+Íconos: [Phosphor](https://phosphoricons.com). Tipografía: Geist (auto-hospedada vía `@fontsource-variable/geist`).
+Todas las animaciones respetan `prefers-reduced-motion`.

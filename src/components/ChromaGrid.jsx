@@ -99,6 +99,10 @@ const ChromaGrid = ({
       className: 'chroma-card' + (selectable && selected.indexOf(c.title) !== -1 ? ' is-selected' : ''),
       onMouseMove: handleCardMove,
       onClick: () => handleCardClick(c),
+      ...(selectable ? {
+        role: 'button', tabIndex: 0, 'aria-pressed': selected.indexOf(c.title) !== -1, 'aria-label': c.title,
+        onKeyDown: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCardClick(c); } }
+      } : {}),
       style: { '--card-border': c.borderColor || 'transparent', '--card-gradient': c.gradient, cursor: (selectable || c.url) ? 'pointer' : 'default' }
     },
       ce('div', { className: 'chroma-img-wrapper' },

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Clock, Lightning, SlidersHorizontal, Star, ArrowRight } from '@phosphor-icons/react';
 import MaskedHeading from '../components/MaskedHeading';
 import WavesBg, { interactive } from '../components/WavesBg';
 import { maskedHeadingSrc } from '../data';
@@ -11,46 +11,42 @@ const presets: Record<Kind, Partial<State>> = {
 };
 
 export default function SurveyType() {
-  const { st, set, t } = useApp();
-  const [active, setActive] = useState<Kind>(st.surveyType || 'full');
+  const { set, t, name } = useApp();
   const types = [
-    { key: 'full' as const, title: t.typeFull, desc: t.typeFullD, time: '~5 ' + t.min, grad: 'linear-gradient(150deg,#1b2a6b,#0a0a1e)' },
-    { key: 'short' as const, title: t.typeShort, desc: t.typeShortD, time: '~2 ' + t.min, grad: 'linear-gradient(150deg,#3a1d7a,#0a0a1e)' },
-    { key: 'custom' as const, title: t.typeCustom, desc: t.typeCustomD, time: t.youChoose, grad: 'linear-gradient(150deg,#0f3aa8,#120a2e)' },
+    { key: 'full' as const, title: t.typeFull, desc: t.typeFullD, time: `~5 ${t.min}`, Icon: Star, grad: 'linear-gradient(150deg,rgba(82,39,255,.55),rgba(18,14,46,.7) 60%)' },
+    { key: 'short' as const, title: t.typeShort, desc: t.typeShortD, time: `~2 ${t.min}`, Icon: Lightning },
+    { key: 'custom' as const, title: t.typeCustom, desc: t.typeCustomD, time: t.youChoose, Icon: SlidersHorizontal },
   ];
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', padding: '96px 24px 48px' }}>
+    <section className="mp-screen">
       <WavesBg {...interactive} />
-      <div className="mp-up" style={{ position: 'relative', zIndex: 2, maxWidth: 920, margin: '0 auto' }}>
-        <p className="mp-mono" style={{ letterSpacing: '.14em', fontSize: 11, color: '#a9c0ff', margin: 0 }}>{t.hi} {st.user}</p>
-        <MaskedHeading text={t.typeTitle} src={maskedHeadingSrc} tag="h1" className="mp-heading mp-type-heading" align="left" textScale={0.052} weight={700} tracking={-0.02}
-          reveal="rise" trigger="view" duration={1} stagger={0.06} fillScale={1.2} parallax={18} drift={10} />
-        <p style={{ fontSize: 15, color: 'rgba(238,241,255,.78)', margin: '0 0 26px' }}>{t.typeDesc}</p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 440 }}>
-          {types.map(tp => {
-            const on = active === tp.key;
-            return (
-              <div key={tp.key} onMouseEnter={() => setActive(tp.key)} onClick={() => set({ ...presets[tp.key], screen: 'rectypes' })}
-                style={{ position: 'relative', overflow: 'hidden', borderRadius: 22, cursor: 'pointer', flex: on ? 4 : 1, filter: on ? 'brightness(1)' : 'brightness(.5)', background: tp.grad, border: '1px solid rgba(255,255,255,.16)', transition: 'flex .42s cubic-bezier(.25,1,.5,1),filter .3s ease', minHeight: 56 }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(4,3,15,.82),rgba(4,3,15,.15) 55%,transparent)', opacity: on ? 1 : 0, transition: 'opacity .5s ease' }} />
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '22px 26px' }}>
-                  {on ? (
-                    <div>
-                      <span className="mp-mono" style={{ display: 'inline-block', fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', color: '#fff', background: 'rgba(255,255,255,.14)', border: '1px solid rgba(255,255,255,.3)', borderRadius: 999, padding: '4px 12px', backdropFilter: 'blur(6px)' }}>⏱ {tp.time}</span>
-                      <h3 className="mp-heading" style={{ fontSize: 'clamp(26px,4vw,40px)', color: '#fff', margin: '12px 0 6px' }}>{tp.title}</h3>
-                      <p style={{ fontSize: 14, color: 'rgba(255,255,255,.85)', margin: '0 0 12px', maxWidth: 440 }}>{tp.desc}</p>
-                      <span className="mp-mono" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, letterSpacing: '.14em', textTransform: 'uppercase', color: '#fff', fontWeight: 700 }}>{t.start} ↗</span>
-                    </div>
-                  ) : (
-                    <span className="mp-heading" style={{ fontSize: 18, color: '#fff', opacity: 0.9 }}>{tp.title}</span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+      <div className="mp-content mp-container mp-page">
+        <p data-reveal className="mp-kicker">{t.hi(name)}</p>
+        <MaskedHeading text={t.typeTitle} src={maskedHeadingSrc} tag="h1" align="left" textScale={window.innerWidth < 640 ? 0.09 : 0.046}
+          weight={700} tracking={-0.03} reveal="rise" trigger="view" duration={1} stagger={0.06} fillScale={1.2} parallax={18} drift={10} />
+        <p data-reveal className="mp-lead" style={{ margin: '8px 0 28px' }}>{t.typeDesc}</p>
+
+        <div className="mp-types">
+          {types.map(({ key, title, desc, time, Icon, grad }, i) => (
+            <button key={key} data-reveal className="mp-option" onClick={() => set({ ...presets[key], screen: 'rectypes' })}
+              style={{ gap: 12, padding: i === 0 ? 28 : 22, justifyContent: 'space-between', minHeight: i === 0 ? 260 : 0, background: grad }}>
+              <span style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                <span className="mp-icon-tile"><Icon size={22} weight="duotone" aria-hidden /></span>
+                {i === 0 && <span className="mp-tag" style={{ color: 'var(--text)', borderColor: 'var(--accent)' }}>{t.recommendedTag}</span>}
+              </span>
+              <span className="mp-stack" style={{ gap: 6 }}>
+                <span className={i === 0 ? 'mp-title' : 'mp-h3'}>{title}</span>
+                <span style={{ color: 'var(--text-muted)', maxWidth: '40ch' }}>{desc}</span>
+              </span>
+              <span style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span className="mp-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Clock size={16} aria-hidden />{time}</span>
+                <ArrowRight size={20} aria-hidden />
+              </span>
+            </button>
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -19,6 +19,8 @@ export type State = {
 };
 
 const KEY = 'mipeli:v1';
+export const LOADING_MS = 4600;
+const routes: Record<string, Screen> = { '#home': 'home', '#faq': 'faq', '#contacto': 'contacto' };
 const PERSISTED = ['loggedIn', 'user', 'surveyType', 'rec', 'length', 'numMovies', 'picks', 'useful', 'lang'] as const;
 
 function initialState(): State {
@@ -57,18 +59,24 @@ export function useStore() {
   // La pantalla de carga es simulada: pasa sola a resultados
   useEffect(() => {
     if (st.screen !== 'loading') return;
-    const id = setTimeout(() => go('results'), 4600);
+    const id = setTimeout(() => go('results'), LOADING_MS);
     return () => clearTimeout(id);
   }, [st.screen, go]);
 
   useEffect(() => {
-    const routes: Record<string, Screen> = { '#home': 'home', '#faq': 'faq', '#contacto': 'contacto' };
     const onHash = () => { const s = routes[location.hash]; if (s) go(s); };
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, [go]);
 
-  return { st, set, go, flash, t: L[st.lang] };
+  // El hash refleja la pantalla actual; si no, volver a pulsar un enlace del nav no dispararía hashchange
+  useEffect(() => {
+    const hash = Object.keys(routes).find(h => routes[h] === st.screen) ?? '';
+    if (location.hash !== hash) history.replaceState(null, '', hash || location.pathname + location.search);
+  }, [st.screen]);
+
+  const t = L[st.lang];
+  return { st, set, go, flash, t, name: st.loggedIn ? st.user : t.guestName };
 }
 
 export type Store = ReturnType<typeof useStore>;

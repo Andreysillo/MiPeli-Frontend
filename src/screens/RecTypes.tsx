@@ -1,86 +1,77 @@
+import { ArrowLeft, ArrowRight, Check, FilmSlate, MaskHappy, Popcorn, Sparkle } from '@phosphor-icons/react';
 import SplitText from '../components/SplitText';
-import GlowButton from '../components/GlowButton';
+import Button from '../components/Button';
 import WavesBg, { interactive } from '../components/WavesBg';
 import { useApp, type Length, type RecKey, type Step } from '../store';
 
-const cbxIcon = <svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-6" /></svg>;
-const pill = (on: boolean, padding: string, fontSize: number) => ({ height: 34, padding, fontSize, borderRadius: 999, border: '1px solid rgba(255,255,255,.3)', background: on ? '#fff' : 'transparent', color: on ? '#2a0d6b' : '#fff', cursor: 'pointer' });
-const rowCard = { marginTop: 18, padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' } as const;
-const rowLabel = { fontSize: 11, letterSpacing: '.1em', color: 'rgba(255,255,255,.6)' };
+// Orden de los pasos de la encuesta según lo elegido; "personal" (ánimo) siempre cierra
+export function buildSteps(rec: Record<RecKey, boolean>): Step[] {
+  const steps: Step[] = [];
+  if (rec.genres) steps.push('genres');
+  if (rec.director) steps.push('director');
+  if (rec.themes) steps.push('themes');
+  if (rec.movies) steps.push('duel', 'movies');
+  return steps.length ? [...steps, 'personal'] : [];
+}
 
 export default function RecTypes() {
-  const { st, set, flash, t } = useApp();
-  const surveyLabel = st.surveyType === 'full' ? t.surveyFull : st.surveyType === 'short' ? t.surveyShort : t.surveyCustom;
-  const recCount = Object.values(st.rec).filter(Boolean).length;
-  const options: { key: RecKey; icon: string; title: string; desc: string }[] = [
-    { key: 'movies', icon: '🍿', title: t.recMovies, desc: t.recMoviesD },
-    { key: 'genres', icon: '🎭', title: t.recGenres, desc: t.recGenresD },
-    { key: 'director', icon: '🎬', title: t.recDirector, desc: t.recDirectorD },
-    { key: 'themes', icon: '🌗', title: t.recThemes, desc: t.recThemesD },
+  const { st, set, go, t } = useApp();
+  const options: { key: RecKey; Icon: typeof Popcorn; title: string; desc: string }[] = [
+    { key: 'movies', Icon: Popcorn, title: t.recMovies, desc: t.recMoviesD },
+    { key: 'genres', Icon: MaskHappy, title: t.recGenres, desc: t.recGenresD },
+    { key: 'director', Icon: FilmSlate, title: t.recDirector, desc: t.recDirectorD },
+    { key: 'themes', Icon: Sparkle, title: t.recThemes, desc: t.recThemesD },
   ];
   const lengths: [Length, string][] = [['short', t.lenShort], ['med', t.lenMed], ['long', t.lenLong]];
-
-  const startQuest = () => {
-    const r = st.rec, steps: Step[] = [];
-    if (r.genres) steps.push('genres');
-    if (r.director) steps.push('director');
-    if (r.themes) steps.push('themes');
-    if (r.movies) steps.push('duel', 'movies');
-    if (!steps.length) { flash(t.pickAtLeastOne); return; }
-    set({ questSteps: [...steps, 'personal'], qi: 0, duelIdx: 0, screen: 'quest', questActive: true });
-  };
+  const steps = buildSteps(st.rec);
+  const minutes = Math.max(1, Math.round(steps.length * 0.6));
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', padding: '96px 24px 48px' }}>
+    <section className="mp-screen">
       <WavesBg {...interactive} />
-      <div className="mp-up" style={{ position: 'relative', zIndex: 2, maxWidth: 880, margin: '0 auto' }}>
-        <p className="mp-mono" style={{ letterSpacing: '.14em', fontSize: 11, color: '#a9c0ff', margin: 0 }}>{surveyLabel}</p>
-        <SplitText text={t.recTitle} tag="h1" className="mp-heading mp-rec-heading" splitType="chars" textAlign="left" delay={18} duration={0.7} ease="power3.out" threshold={0.1} rootMargin="-40px" />
-        <p style={{ fontSize: 15, color: 'rgba(238,241,255,.78)', margin: '0 0 24px' }}>{t.recDesc}</p>
+      <div className="mp-content mp-container mp-page mp-flow">
+        <div data-reveal><Button variant="ghost" size="sm" icon={<ArrowLeft size={18} aria-hidden />} onClick={() => go('type')} style={{ marginLeft: -14 }}>{t.changeType}</Button></div>
+        <SplitText text={t.recTitle} tag="h1" className="mp-title" splitType="chars" textAlign="left" delay={14} duration={0.6} ease="power3.out" threshold={0.1} rootMargin="-40px" />
+        <p data-reveal className="mp-lead" style={{ margin: '10px 0 28px' }}>{t.recDesc}</p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(190px,1fr))', gap: 14 }}>
-          {options.map(o => {
-            const on = st.rec[o.key];
-            return (
-              <div key={o.key} className="mp-card mp-pick" onClick={() => set({ rec: { ...st.rec, [o.key]: !on } })}
-                style={{ padding: 18, borderColor: on ? '#7ea6ff' : 'rgba(255,255,255,.18)', background: on ? 'rgba(122,140,255,.16)' : 'rgba(255,255,255,.08)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ fontSize: 22 }}>{o.icon}</span><span className={'mp-cbx' + (on ? ' on' : '')}>{cbxIcon}</span></div>
-                <div className="mp-heading" style={{ fontSize: 19, marginTop: 12 }}>{o.title}</div>
-                <div className="mp-mono" style={{ fontSize: 10.5, color: 'rgba(255,255,255,.6)' }}>{o.desc}</div>
-              </div>
-            );
-          })}
+        <div className="mp-recs" role="group" aria-label={t.recTitle}>
+          {options.map(({ key, Icon, title, desc }) => (
+            <button key={key} data-reveal className="mp-option" aria-pressed={st.rec[key]} onClick={() => set({ rec: { ...st.rec, [key]: !st.rec[key] } })}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+              <span className="mp-icon-tile"><Icon size={22} weight="duotone" aria-hidden /></span>
+              <span className="mp-stack" style={{ flex: 1, gap: 2 }}>
+                <span className="mp-h3" style={{ fontSize: '1.0625rem' }}>{title}</span>
+                <span className="mp-label">{desc}</span>
+              </span>
+              <span className="mp-check"><Check size={14} weight="bold" aria-hidden /></span>
+            </button>
+          ))}
         </div>
 
-        {st.rec.movies && (
-          <div className="mp-card" style={rowCard}>
-            <span className="mp-mono" style={rowLabel}>🍿 {t.numMoviesLabel}</span>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {[1, 3, 5, 8, 10].map(n => (
-                <button key={n} className={'mp-numbtn' + (st.numMovies === n ? ' on' : '')} style={pill(st.numMovies === n, '0 15px', 13)} onClick={() => set({ numMovies: n })}>{n}</button>
-              ))}
+        <div data-reveal className="mp-stack" style={{ gap: 20, marginTop: 28 }}>
+          <div className="mp-stack" style={{ gap: 10 }}>
+            <span id="num-label" className="mp-label">{t.numMoviesLabel}</span>
+            <div className="mp-seg tnum" role="group" aria-labelledby="num-label">
+              {[1, 3, 5, 8, 10].map(n => <button key={n} aria-pressed={st.numMovies === n} onClick={() => set({ numMovies: n })}>{n}</button>)}
             </div>
           </div>
-        )}
-
-        {st.surveyType === 'custom' && (
-          <div className="mp-card" style={rowCard}>
-            <span className="mp-mono" style={rowLabel}>{t.lengthLabel}</span>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {lengths.map(([l, label]) => (
-                <button key={l} className={'mp-numbtn' + (st.length === l ? ' on' : '')} style={pill(st.length === l, '0 14px', 12)} onClick={() => set({ length: l })}>{label}</button>
-              ))}
+          {st.surveyType === 'custom' && (
+            <div className="mp-stack" style={{ gap: 10 }}>
+              <span id="len-label" className="mp-label">{t.lengthLabel}</span>
+              <div className="mp-seg" role="group" aria-labelledby="len-label">
+                {lengths.map(([l, label]) => <button key={l} aria-pressed={st.length === l} onClick={() => set({ length: l })}>{label}</button>)}
+              </div>
             </div>
-            <span className="mp-mono" style={{ fontSize: 11, color: '#a9c0ff' }}>⏱ {{ short: '~2', med: '~4', long: '~7' }[st.length]} {t.min}</span>
-          </div>
-        )}
+          )}
+        </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 28, flexWrap: 'wrap' }}>
-          <span className="mp-mono" style={{ fontSize: 12, color: 'rgba(255,255,255,.6)' }}>{recCount} {t.selected}</span>
-          <div style={{ flex: 1, minWidth: 120 }} />
-          <div style={{ width: 220 }}><GlowButton label={t.start} onClick={startQuest} /></div>
+        <div className="mp-actionbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+          <span className="mp-label tnum" aria-live="polite">{steps.length ? t.summary(steps.length, minutes) : t.pickAtLeastOne}</span>
+          <Button disabled={!steps.length} icon={null} onClick={() => set({ questSteps: steps, qi: 0, duelIdx: 0, screen: 'quest', questActive: true })}>
+            {t.start}<ArrowRight size={18} weight="bold" aria-hidden />
+          </Button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

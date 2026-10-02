@@ -1,44 +1,112 @@
 const es = {
-  tag: 'Recomendador de cine', welcomeDesc: 'Basta de scrollear 40 minutos. Respondes, nosotros elegimos la de esta noche.', google: 'Continuar con Google', guest: 'Entrar como invitado', faq: 'FAQ', sug: 'Sugerencias', langHint: 'Cambiar idioma', hi: 'Hola de nuevo,',
-  typeTitle: '¿Cómo quieres hacerlo?', typeDesc: 'Elige el tipo de encuesta. Puedes repetirla las veces que quieras.', typeFull: 'Encuesta completa', typeFullD: 'Secuencia larga que clava tus gustos con certeza.', typeShort: 'Encuesta resumida', typeShortD: 'Versión corta para salir del paso rápido.', typeCustom: 'Personalizada', typeCustomD: 'Tú eliges qué responder, sin límite de tiempo.', min: 'min', youChoose: 'tú eliges',
-  recTitle: '¿Qué recomendación quieres?', recDesc: 'Elige una o varias. Cada una será su propia pantalla.', recMovies: 'Películas', recMoviesD: 'duelos y favoritas', recGenres: 'Géneros', recGenresD: 'rueda de opciones', recDirector: 'Director', recDirectorD: 'rueda de opciones', recThemes: 'Themes', recThemesD: 'rueda de opciones', start: 'Empezar →',
-  center: 'En el centro', moviesQ: 'De estas, ¿cuáles te laten?', moviesHint: 'el color revela lo que miras · toca para elegir', moodQ: '¿Qué se te antoja hoy?', moodHint: 'arrastra o usa scroll para pasar los géneros', moodPick: 'Toca una tarjeta para elegir — puedes escoger varios',
-  loadingTitle: 'Calculando tu perfil…', wrappedTitle: 'Tu Wrapped de esta sesión', chooseForMe: 'Elegir por mí', wGenre: 'GÉNERO DOMINANTE', wRareza: 'RAREZA · CINÉFILO', wCine: 'CINE FAVORITO', wNota: 'NOTA MEDIA',
-  usefulAsk: '¿Las recomendaciones te sirvieron?', useful: 'Sí, me sirvieron', notUseful: 'No mucho', sugAsk: '¿Alguna sugerencia para MiPeli?', sugPh: 'Escríbelo aquí…', send: 'Enviar', share: 'Compartir',
-  homeH1: 'Elige con la mirada', homeDesc: 'Pasa el cursor por el muro: el póster que toques se enciende. ¿Aún con pereza?', startSurvey: 'Empezar encuesta', scrollFeed: 'VER EL MURO',
-  faqTitle: 'Preguntas frecuentes', aboutKick: 'SOBRE EL AUTOR', authorName: 'xxx', authorBio: 'Estudiante de xxx, estudiando en xxx, con una gran pasión por las películas y el software.', close: 'Cerrar',
-  rouletteKick: 'RULETA RÁPIDA', rouletteHeadline: 'Tu película para hoy', rouletteSub: 'Tienes 10 segundos para cerrar la pestaña e ir a verla.', spin: '🎲 Girar', spinning: 'Girando…',
-  lengthLabel: 'Largo de la encuesta', lenShort: 'Corta', lenMed: 'Media', lenLong: 'Larga',
-  duelQ: '¿Con cuál te quedas?', duelHint: 'toca tu favorita · duelo', duelVs: 'vs', numMoviesLabel: '¿Cuántas películas?', recSetTitle: 'Tus películas recomendadas', recSetHint: 'en gris; se iluminan a color donde pasas el cursor',
-  listIdeasTitle: 'Ideas de listas para crear', listIdeasDesc: 'A partir de tus gustos, listas que valdría la pena crear:',
-  quickRec: 'Otra recomendación (sin encuesta)', redoTitle: 'Repetir encuesta', redoSame: 'Mismas preguntas', redoDiff: 'Unas diferentes',
-  surveyFull: 'ENCUESTA COMPLETA', surveyShort: 'ENCUESTA RESUMIDA', surveyCustom: 'ENCUESTA PERSONALIZADA', selected: 'seleccionadas',
-  next: 'Continuar', seeResult: 'Ver resultado', back: 'Volver', continueSurvey: 'Continuar encuesta',
-  loadingSub: 'cruzando 342 títulos · 12 respuestas', pickAtLeastOne: 'Elige al menos una opción',
-  freshPick: 'Nueva recomendación con tus gustos guardados', thanksSug: '¡Gracias! Tu sugerencia llegó a Kevin.', linkCopied: 'Enlace copiado 🔗', shareFallback: 'Comparte: ',
+  langHint: 'Cambiar idioma', navHome: 'Inicio', navContact: 'Contacto',
+  heroTitle: 'Tu película de esta noche, en dos minutos.',
+  heroDesc: 'Responde unas preguntas rápidas y te recomendamos qué ver. Sin scrollear 40 minutos.',
+  google: 'Continuar con Google', guest: 'Entrar como invitado', guestName: 'invitado', faq: 'Preguntas frecuentes', sug: 'Sugerencias',
+  hi: (user: string) => `Hola, ${user}`,
+
+  typeTitle: '¿Cómo quieres hacerlo?', typeDesc: 'Elige un tipo de encuesta. Puedes repetirla cuando quieras.',
+  typeFull: 'Encuesta completa', typeFullD: 'Secuencia larga que clava tus gustos con certeza.',
+  typeShort: 'Encuesta resumida', typeShortD: 'Versión corta para decidir rápido.',
+  typeCustom: 'Personalizada', typeCustomD: 'Tú eliges qué responder, sin límite de tiempo.',
+  recommendedTag: 'Recomendada', youChoose: 'Tú decides', min: 'min',
+
+  recTitle: '¿Qué quieres que te recomendemos?', recDesc: 'Elige una o varias. Cada una será su propia pantalla.',
+  recMovies: 'Películas', recMoviesD: 'Duelos y favoritas', recGenres: 'Géneros', recGenresD: 'Rueda de opciones',
+  recDirector: 'Director', recDirectorD: 'Rueda de opciones', recThemes: 'Temas', recThemesD: 'Rueda de opciones',
+  numMoviesLabel: '¿Cuántas películas quieres al final?', lengthLabel: 'Largo de la encuesta', lenShort: 'Corta', lenMed: 'Media', lenLong: 'Larga',
+  changeType: 'Cambiar tipo', start: 'Empezar', pickAtLeastOne: 'Elige al menos una opción para empezar.',
+  summary: (steps: number, mins: number) => `${steps} pasos, unos ${mins} min`,
+
+  stepNames: { genres: 'Género', director: 'Director', themes: 'Tema', duel: 'Duelos', movies: 'Películas', personal: 'Ánimo' },
+  stepOf: (i: number, n: number) => `Paso ${i} de ${n}`,
+  qGenres: '¿Qué género te apetece hoy?', qDirector: '¿Qué director te gusta más?', qThemes: '¿Qué tema te atrae?',
+  wheelHint: 'Desliza la rueda o toca una opción. En teclado, usa las flechas.', yourPick: 'Tu elección',
+  duelQ: '¿Con cuál te quedas?', duelHint: 'Toca tu favorita.', duelOf: (i: number, n: number) => `Duelo ${i} de ${n}`, duelVs: 'vs',
+  moviesQ: 'De estas, ¿cuáles te laten?', moviesHint: 'Toca para marcar. Puedes elegir varias.', picked: (n: number) => (n === 1 ? '1 elegida' : `${n} elegidas`),
+  moodQ: '¿Qué se te antoja hoy?', moodHint: 'Arrastra la galería y toca los géneros que quieras.', moodEmpty: 'Aún no elegiste ninguno.', remove: 'Quitar',
+  next: 'Siguiente', seeResult: 'Ver mis resultados', back: 'Atrás',
+
+  loadingTitle: 'Calculando tu perfil…', loadingSteps: ['Analizando tus respuestas', 'Cruzando géneros y directores', 'Eligiendo tu película'],
+
+  tonightKick: 'Tu película para esta noche',
+  because: (genre: string, director: string) => `Porque te va el ${genre.toLowerCase()} y el cine de ${director}.`,
+  whereToWatch: 'Dónde verla', chooseForMe: 'Elegir por mí', share: 'Compartir',
+  moreForYou: 'Más para ti', moreHint: 'Pasa el cursor por encima para verlas a color.',
+  wrappedTitle: 'Tu Wrapped de esta sesión', wGenre: 'Género dominante', wRareza: 'Rareza cinéfila', wCine: 'Cine favorito', wNota: 'Nota media',
+  listIdeasTitle: 'Ideas de listas para crear', listIdeasDesc: 'Según tus gustos, estas listas valdrían la pena:',
+  usefulAsk: '¿Te sirvieron las recomendaciones?', useful: 'Sí, me sirvieron', notUseful: 'No mucho', thanksFeedback: 'Gracias, lo tendremos en cuenta.',
+  redoTitle: '¿Otra ronda?', redoSame: 'Mismas preguntas', redoDiff: 'Otro tipo de encuesta', quickRec: 'Recomendación sin encuesta',
+
+  homeH1: 'Elige con la mirada', homeDesc: 'Pasa el cursor por el muro: el póster que toques se enciende. ¿Prefieres que elijamos nosotros?',
+  startSurvey: 'Empezar encuesta', continueSurvey: 'Continuar encuesta',
+
+  faqTitle: 'Preguntas frecuentes', faqMore: '¿Te quedó otra duda?', faqWrite: 'Escríbenos',
+
+  aboutKick: 'Sobre el autor', authorName: 'xxx', authorBio: 'Estudiante de xxx, estudiando en xxx, con una gran pasión por las películas y el software.',
+  sugLabel: '¿Alguna sugerencia para MiPeli?', sugPh: 'Escríbela aquí', send: 'Enviar',
+
+  rouletteKick: 'Ruleta rápida', rouletteHeadline: 'Tu película para hoy', rouletteSub: 'Tienes 10 segundos para cerrar la pestaña e ir a verla.',
+  spin: 'Girar otra vez', spinning: 'Girando…', close: 'Cerrar',
+
+  freshPick: 'Nueva recomendación con tus gustos guardados', thanksSug: '¡Gracias! Tu sugerencia llegó a Kevin.', linkCopied: 'Enlace copiado', shareFallback: 'Comparte: ',
 };
 
 export type Strings = typeof es;
 export type Lang = 'es' | 'en';
 
 const en: Strings = {
-  tag: 'Movie recommender', welcomeDesc: 'Stop scrolling for 40 minutes. You answer, we pick tonight’s film.', google: 'Continue with Google', guest: 'Continue as guest', faq: 'FAQ', sug: 'Suggestions', langHint: 'Switch language', hi: 'Welcome back,',
-  typeTitle: 'How do you want to do it?', typeDesc: 'Pick a survey type. Repeat it as many times as you like.', typeFull: 'Full survey', typeFullD: 'A long sequence that nails your taste for sure.', typeShort: 'Quick survey', typeShortD: 'Short version to decide fast.', typeCustom: 'Custom', typeCustomD: 'You choose what to answer, no time limit.', min: 'min', youChoose: 'you choose',
-  recTitle: 'What kind of recommendation?', recDesc: 'Pick one or several. Each becomes its own screen.', recMovies: 'Movies', recMoviesD: 'duels & favorites', recGenres: 'Genres', recGenresD: 'option wheel', recDirector: 'Director', recDirectorD: 'option wheel', recThemes: 'Themes', recThemesD: 'option wheel', start: 'Start →',
-  center: 'Centered', moviesQ: 'Which of these speak to you?', moviesHint: 'color reveals what you look at · tap to pick', moodQ: 'What are you in the mood for?', moodHint: 'drag or scroll to browse genres', moodPick: 'Tap a card to choose — you can pick several',
-  loadingTitle: 'Computing your profile…', wrappedTitle: 'Your Wrapped for this session', chooseForMe: 'Choose for me', wGenre: 'TOP GENRE', wRareza: 'RARITY · CINEPHILE', wCine: 'FAVORITE CINEMA', wNota: 'AVG RATING',
-  usefulAsk: 'Were the recommendations useful?', useful: 'Yes, they helped', notUseful: 'Not really', sugAsk: 'Any suggestion for MiPeli?', sugPh: 'Type it here…', send: 'Send', share: 'Share',
-  homeH1: 'Choose with your eyes', homeDesc: 'Hover the wall: the poster you touch lights up. Still too lazy?', startSurvey: 'Start survey', scrollFeed: 'SEE THE WALL',
-  faqTitle: 'Frequently asked', aboutKick: 'ABOUT THE AUTHOR', authorName: 'xxx', authorBio: 'A xxx student, studying at xxx, with a deep passion for film and software.', close: 'Close',
-  rouletteKick: 'QUICK ROULETTE', rouletteHeadline: 'Your movie for today', rouletteSub: 'You have 10 seconds to close the tab and go watch it.', spin: '🎲 Spin', spinning: 'Spinning…',
-  lengthLabel: 'Survey length', lenShort: 'Short', lenMed: 'Medium', lenLong: 'Long',
-  duelQ: 'Which one do you pick?', duelHint: 'tap your favorite · duel', duelVs: 'vs', numMoviesLabel: 'How many movies?', recSetTitle: 'Your recommended movies', recSetHint: 'grayscale; they light up in color where you hover',
-  listIdeasTitle: 'List ideas to create', listIdeasDesc: 'From your taste, lists worth creating:',
-  quickRec: 'Another recommendation (no survey)', redoTitle: 'Redo survey', redoSame: 'Same questions', redoDiff: 'Different ones',
-  surveyFull: 'FULL SURVEY', surveyShort: 'QUICK SURVEY', surveyCustom: 'CUSTOM SURVEY', selected: 'selected',
-  next: 'Continue', seeResult: 'See result', back: 'Back', continueSurvey: 'Continue survey',
-  loadingSub: 'crossing 342 titles · 12 answers', pickAtLeastOne: 'Pick at least one option',
-  freshPick: 'Fresh pick from your saved taste', thanksSug: 'Thanks! Your suggestion reached Kevin.', linkCopied: 'Link copied 🔗', shareFallback: 'Share: ',
+  langHint: 'Switch language', navHome: 'Home', navContact: 'Contact',
+  heroTitle: 'Tonight’s movie, in two minutes.',
+  heroDesc: 'Answer a few quick questions and we tell you what to watch. No more 40 minutes of scrolling.',
+  google: 'Continue with Google', guest: 'Continue as guest', guestName: 'guest', faq: 'FAQ', sug: 'Suggestions',
+  hi: (user: string) => `Hi, ${user}`,
+
+  typeTitle: 'How do you want to do it?', typeDesc: 'Pick a survey type. Repeat it whenever you like.',
+  typeFull: 'Full survey', typeFullD: 'A long sequence that nails your taste for sure.',
+  typeShort: 'Quick survey', typeShortD: 'Short version to decide fast.',
+  typeCustom: 'Custom', typeCustomD: 'You choose what to answer, no time limit.',
+  recommendedTag: 'Recommended', youChoose: 'You decide', min: 'min',
+
+  recTitle: 'What should we recommend?', recDesc: 'Pick one or several. Each becomes its own screen.',
+  recMovies: 'Movies', recMoviesD: 'Duels and favorites', recGenres: 'Genres', recGenresD: 'Option wheel',
+  recDirector: 'Director', recDirectorD: 'Option wheel', recThemes: 'Themes', recThemesD: 'Option wheel',
+  numMoviesLabel: 'How many movies do you want at the end?', lengthLabel: 'Survey length', lenShort: 'Short', lenMed: 'Medium', lenLong: 'Long',
+  changeType: 'Change type', start: 'Start', pickAtLeastOne: 'Pick at least one option to start.',
+  summary: (steps: number, mins: number) => `${steps} steps, about ${mins} min`,
+
+  stepNames: { genres: 'Genre', director: 'Director', themes: 'Theme', duel: 'Duels', movies: 'Movies', personal: 'Mood' },
+  stepOf: (i: number, n: number) => `Step ${i} of ${n}`,
+  qGenres: 'What genre are you in the mood for?', qDirector: 'Which director do you like most?', qThemes: 'What theme draws you in?',
+  wheelHint: 'Swipe the wheel or tap an option. On a keyboard, use the arrows.', yourPick: 'Your pick',
+  duelQ: 'Which one do you pick?', duelHint: 'Tap your favorite.', duelOf: (i: number, n: number) => `Duel ${i} of ${n}`, duelVs: 'vs',
+  moviesQ: 'Which of these speak to you?', moviesHint: 'Tap to mark. You can pick several.', picked: (n: number) => `${n} picked`,
+  moodQ: 'What are you in the mood for?', moodHint: 'Drag the gallery and tap the genres you want.', moodEmpty: 'Nothing picked yet.', remove: 'Remove',
+  next: 'Next', seeResult: 'See my results', back: 'Back',
+
+  loadingTitle: 'Computing your profile…', loadingSteps: ['Analyzing your answers', 'Matching genres and directors', 'Picking your movie'],
+
+  tonightKick: 'Your movie for tonight',
+  because: (genre: string, director: string) => `Because you like ${genre.toLowerCase()} and ${director}’s films.`,
+  whereToWatch: 'Where to watch', chooseForMe: 'Choose for me', share: 'Share',
+  moreForYou: 'More for you', moreHint: 'Hover over them to see them in color.',
+  wrappedTitle: 'Your Wrapped for this session', wGenre: 'Top genre', wRareza: 'Cinephile rarity', wCine: 'Favorite cinema', wNota: 'Average rating',
+  listIdeasTitle: 'List ideas to create', listIdeasDesc: 'Based on your taste, these lists are worth making:',
+  usefulAsk: 'Were the recommendations useful?', useful: 'Yes, they helped', notUseful: 'Not really', thanksFeedback: 'Thanks, we’ll keep it in mind.',
+  redoTitle: 'Another round?', redoSame: 'Same questions', redoDiff: 'Another survey type', quickRec: 'Pick without survey',
+
+  homeH1: 'Choose with your eyes', homeDesc: 'Hover the wall: the poster you touch lights up. Rather have us pick?',
+  startSurvey: 'Start survey', continueSurvey: 'Continue survey',
+
+  faqTitle: 'Frequently asked questions', faqMore: 'Still have a question?', faqWrite: 'Write to us',
+
+  aboutKick: 'About the author', authorName: 'xxx', authorBio: 'A xxx student, studying at xxx, with a deep passion for film and software.',
+  sugLabel: 'Any suggestion for MiPeli?', sugPh: 'Write it here', send: 'Send',
+
+  rouletteKick: 'Quick roulette', rouletteHeadline: 'Your movie for today', rouletteSub: 'You have 10 seconds to close the tab and go watch it.',
+  spin: 'Spin again', spinning: 'Spinning…', close: 'Close',
+
+  freshPick: 'Fresh pick from your saved taste', thanksSug: 'Thanks! Your suggestion reached Kevin.', linkCopied: 'Link copied', shareFallback: 'Share: ',
 };
 
 export const L: Record<Lang, Strings> = { es, en };

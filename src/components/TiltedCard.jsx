@@ -14,8 +14,8 @@ if (typeof document !== 'undefined' && !document.getElementById('tiltedcard-css'
 }
 
 const TiltedCard = ({
-  imageSrc = undefined,
-  gradient,
+  imageSrc = /** @type {any} */ (undefined),
+  gradient = undefined,
   altText = 'Tilted card image',
   captionText = '',
   containerHeight = '380px',
@@ -27,7 +27,7 @@ const TiltedCard = ({
   showTooltip = true,
   displayOverlayContent = false,
   overlayContent = null,
-  children
+  children = undefined
 }) => {
   const ref = useRef(null);
   const [tf, setTf] = useState('rotateX(0deg) rotateY(0deg) scale(1)');
