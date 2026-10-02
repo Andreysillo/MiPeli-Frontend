@@ -7,6 +7,11 @@ import { LOADING_MS, useApp } from '../store';
 // → desvanecerse justo antes de que el store pase a resultados (a los LOADING_MS).
 const TICK_MS = 520, FAN_AT = LOADING_MS - 1150, EXIT_AT = LOADING_MS - 420;
 
+const stepState = (i: number, current: number) => {
+  if (i < current) return 'done';
+  return i === current ? 'active' : '';
+};
+
 export default function Loading() {
   const { st, t } = useApp();
   // El mazo son tus primeras recomendaciones: el abanico final adelanta lo que verás en resultados
@@ -48,14 +53,12 @@ export default function Loading() {
         <h1 className="mp-title" aria-live="polite">{shuffling ? t.loadingTitle : t.loadingDone(st.numMovies)}</h1>
         <ol className="mp-load-steps">
           {t.loadingSteps.map((s, i) => (
-            <li key={s} className={i < step ? 'done' : i === step ? 'active' : ''}>
+            <li key={s} className={stepState(i, step)}>
               <span className="mp-load-dot">{i < step && <Check size={12} weight="bold" aria-hidden />}</span>{s}
             </li>
           ))}
         </ol>
-        <div className="mp-progress" style={{ width: 260 }} role="progressbar" aria-label={t.loadingTitle}>
-          <span style={{ animation: `mp-fill ${FAN_AT}ms cubic-bezier(.3,.6,.4,1) both` }} />
-        </div>
+        <progress className="mp-progress" max={1} value={shuffling ? Math.min(1, (tick * TICK_MS) / FAN_AT) : 1} aria-label={t.loadingTitle} />
       </div>
     </section>
   );

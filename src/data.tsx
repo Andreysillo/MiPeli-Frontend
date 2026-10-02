@@ -143,12 +143,16 @@ export function recommend(a: Answers): Movie[] {
   const liked = catalog.filter(m => a.movieSel.includes(m.title) || a.duelWins[m.title]);
   const likedGenres = new Set(liked.flatMap(m => m.genres));
   const likedDirectors = new Set(liked.map(m => m.director));
-  const score = (m: Movie) =>
-    (a.rec.genres && m.genres.includes(a.picks.genre) ? 6 : 0) +
-    (a.rec.director && m.director === a.picks.director ? 4 : 0) +
-    m.genres.filter(g => a.moodSel.includes(g)).length * 1.5 +
-    (a.rec.movies ? m.genres.filter(g => likedGenres.has(g)).length * 0.5 + (likedDirectors.has(m.director) ? 1.5 : 0) : 0) +
-    m.imdb / 10;
+  const score = (m: Movie) => {
+    let s = m.imdb / 10 + m.genres.filter(g => a.moodSel.includes(g)).length * 1.5;
+    if (a.rec.genres && m.genres.includes(a.picks.genre)) s += 6;
+    if (a.rec.director && m.director === a.picks.director) s += 4;
+    if (a.rec.movies) {
+      s += m.genres.filter(g => likedGenres.has(g)).length * 0.5;
+      if (likedDirectors.has(m.director)) s += 1.5;
+    }
+    return s;
+  };
   // Las que ya marcaste como favoritas no se recomiendan otra vez
   return catalog.filter(m => !liked.includes(m)).sort((x, y) => score(y) - score(x));
 }

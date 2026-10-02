@@ -30,7 +30,11 @@ const es = {
   loadingTitle: 'Calculando tu perfil…', loadingDone: (n: number) => (n === 1 ? 'Listo, encontramos tu película' : `Listo, encontramos ${n} películas`), loadingSteps: ['Analizando tus respuestas', 'Cruzando géneros y directores', 'Eligiendo tu película'],
 
   tonightKick: 'Tu película para esta noche', yourMovies: (n: number) => `Tus ${n} películas para esta noche`,
-  because: (genre: string, director?: string) => `Porque te va ${/^(Comedia|Ciencia ficción|Animación)$/.test(genre) ? 'la' : 'el'} ${genre.toLowerCase()}${director ? ` y el cine de ${director}` : ''}.`,
+  because: (genre: string, director?: string) => {
+    const article = /^(Comedia|Ciencia ficción|Animación)$/.test(genre) ? 'la' : 'el';
+    const by = director ? ` y el cine de ${director}` : '';
+    return `Porque te va ${article} ${genre.toLowerCase()}${by}.`;
+  },
   galleryHint: (n: number): string => (n === 1 ? 'Toca el póster para ver su ficha.' : 'Desliza, arrastra o usa las flechas. Toca un póster para ver su ficha.'),
   seeDetails: 'Ver ficha', posterOf: (title: string) => `Ver ficha de ${title}`, prev: 'Anterior', close: 'Cerrar',
   directedBy: 'Dirigida por', starring: 'Reparto', yearL: 'Año', genresL: 'Géneros', runtimeL: 'Duración', countryL: 'País', watchNow: 'Ver ahora en',
@@ -86,7 +90,10 @@ const en: Strings = {
   loadingTitle: 'Computing your profile…', loadingDone: (n: number) => (n === 1 ? 'Done, we found your movie' : `Done, we found ${n} movies`), loadingSteps: ['Analyzing your answers', 'Matching genres and directors', 'Picking your movie'],
 
   tonightKick: 'Your movie for tonight', yourMovies: (n: number) => `Your ${n} movies for tonight`,
-  because: (genre: string, director?: string) => `Because you like ${genre.toLowerCase()}${director ? ` and ${director}’s films` : ''}.`,
+  because: (genre: string, director?: string) => {
+    const by = director ? ` and ${director}’s films` : '';
+    return `Because you like ${genre.toLowerCase()}${by}.`;
+  },
   galleryHint: (n: number) => (n === 1 ? 'Tap the poster to see its details.' : 'Swipe, drag or use the arrows. Tap a poster to see its details.'),
   seeDetails: 'View details', posterOf: (title: string) => `View details for ${title}`, prev: 'Previous', close: 'Close',
   directedBy: 'Directed by', starring: 'Starring', yearL: 'Year', genresL: 'Genres', runtimeL: 'Runtime', countryL: 'Country', watchNow: 'Watch now on',

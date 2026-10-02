@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import gsap from 'gsap';
 import { ArrowsClockwise, Lightning, ShareNetwork, ThumbsDown, ThumbsUp } from '@phosphor-icons/react';
 import Button from '../components/Button';
@@ -8,7 +8,7 @@ import { poster, recommend, type Movie } from '../data';
 import { useApp } from '../store';
 
 // Número que sube desde 0 cuando entra en pantalla. El texto lo escribe GSAP, no React.
-function CountUp({ value, decimals = 0, suffix = '' }: { value: number; decimals?: number; suffix?: string }) {
+function CountUp({ value, decimals = 0, suffix = '' }: Readonly<{ value: number; decimals?: number; suffix?: string }>) {
   const ref = useRef<HTMLSpanElement>(null);
   useLayoutEffect(() => {
     const el = ref.current!;
@@ -26,7 +26,16 @@ function CountUp({ value, decimals = 0, suffix = '' }: { value: number; decimals
 }
 
 // Extra en formato índice: compacto, sin animación de ficha, pero con lo necesario para decidir
-function IndexRow({ m }: { m: Movie }) {
+function Stat({ label, children }: Readonly<{ label: string; children: ReactNode }>) {
+  return (
+    <div data-reveal className="mp-card mp-stack" style={{ padding: 20, gap: 4, justifyContent: 'flex-end' }}>
+      <span className="mp-title tnum">{children}</span>
+      <span className="mp-label">{label}</span>
+    </div>
+  );
+}
+
+function IndexRow({ m }: Readonly<{ m: Movie }>) {
   const { st, t } = useApp();
   return (
     <li data-reveal className="mp-index-row">
@@ -92,12 +101,9 @@ export default function Results() {
                 <span className="mp-display">{genreName(topGenre, st.lang)}</span>
                 <span className="mp-label" style={{ color: 'var(--text-muted)' }}>{t.wGenre}</span>
               </div>
-              {([[<CountUp value={outside} suffix="%" />, t.wRareza], [cine, t.wCine], [<CountUp value={avgImdb} decimals={1} />, t.wNota]] as const).map(([value, label]) => (
-                <div key={label} data-reveal className="mp-card mp-stack" style={{ padding: 20, gap: 4, justifyContent: 'flex-end' }}>
-                  <span className="mp-title tnum">{value}</span>
-                  <span className="mp-label">{label}</span>
-                </div>
-              ))}
+              <Stat label={t.wRareza}><CountUp value={outside} suffix="%" /></Stat>
+              <Stat label={t.wCine}>{cine}</Stat>
+              <Stat label={t.wNota}><CountUp value={avgImdb} decimals={1} /></Stat>
             </div>
           </div>
 

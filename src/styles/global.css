@@ -31,7 +31,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; }
-html { color-scheme: dark; scrollbar-gutter: stable; }
+html { color-scheme: dark; }
 body {
   background: var(--bg);
   color: var(--text);
@@ -162,8 +162,11 @@ button { font: inherit; color: inherit; }
 .mp-lang:hover { background: rgba(255, 255, 255, .12); }
 
 /* ---------- Encuesta ---------- */
-.mp-progress { height: 4px; border-radius: 999px; background: rgba(255, 255, 255, .12); overflow: hidden; }
-.mp-progress > span { display: block; height: 100%; background: var(--accent); border-radius: inherit; transform-origin: left; transition: transform .5s var(--ease-out); }
+/* <progress> nativo: se avanza por pasos y la barra se suaviza con una transición de ancho */
+.mp-progress { display: block; width: 260px; max-width: 100%; height: 4px; border: 0; border-radius: 999px; background: rgba(255, 255, 255, .12); -webkit-appearance: none; appearance: none; }
+.mp-progress::-webkit-progress-bar { background: transparent; border-radius: 999px; }
+.mp-progress::-webkit-progress-value { border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-text)); box-shadow: 0 0 16px var(--accent); transition: width .5s linear; }
+.mp-progress::-moz-progress-bar { border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-text)); }
 .mp-steps { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
 .mp-steps li { flex: 1; }
 .mp-steps button {
@@ -405,11 +408,9 @@ html:has(dialog[open]) { overflow: hidden; }
 .mp-load-dot { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--border-strong); transition: background-color .3s ease, border-color .3s ease, transform .3s var(--ease-out); }
 .mp-load-steps li.active .mp-load-dot { border-color: var(--accent); border-top-color: transparent; animation: mp-spin .8s linear infinite; }
 .mp-load-steps li.done .mp-load-dot { background: var(--accent); border-color: var(--accent); color: #fff; transform: scale(1.06); }
-.mp-loading .mp-progress > span { background: linear-gradient(90deg, var(--accent), var(--accent-text)); box-shadow: 0 0 16px var(--accent); }
 @keyframes mp-deck-tuck { 0% { transform: none; z-index: 9; } 45% { transform: translateX(82%) rotate(10deg) scale(.95); z-index: 9; } 46% { z-index: 0; } 100% { transform: var(--pose); z-index: 0; } }
 @keyframes mp-drift { to { transform: translate(6vmax, 4vmax) scale(1.12); } }
 @keyframes mp-spin { to { transform: rotate(360deg); } }
-@keyframes mp-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 /* ---------- Toast ---------- */
 .mp-toast {
