@@ -4,6 +4,8 @@ dist/
 CLAUDE.md
 .claude/
 
+.playwright-cli/
+
 
 # graphify: caché y rutas locales de cada máquina
 graphify-out/

@@ -1,7 +1,8 @@
 import { useRef, useState, type FormEvent } from 'react';
-import { ArrowLeft, ArrowRight, Eye, EyeSlash, WarningCircle } from '@phosphor-icons/react';
+import { ArrowLeft, ArrowRight, Eye, EyeSlash, UserCircle, WarningCircle } from '@phosphor-icons/react';
 import Button from '../components/Button';
-import { AuroraBg, GoogleG } from './Welcome';
+import GoogleG from '../components/GoogleG';
+import PosterWall from '../components/PosterWall';
 import { firstName, registerWithEmail, resetPassword, signInWithEmail } from '../auth';
 import { useGoogleSignIn } from '../useGoogleSignIn';
 import { useApp } from '../store';
@@ -50,8 +51,9 @@ export default function Login() {
 
   return (
     <section className="mp-screen">
-      <AuroraBg />
-      <div className="mp-content mp-container mp-page">
+      <PosterWall scrim="radial-gradient(60% 80% at 50% 52%,rgba(15,15,20,.94),rgba(15,15,20,.45) 68%,transparent)" />
+      {/* El contenedor deja pasar el cursor para que el mural reaccione; solo el formulario lo recibe */}
+      <div className="mp-content mp-container mp-page" style={{ pointerEvents: 'none' }}>
         <div className="mp-auth">
           <div data-reveal><Button variant="ghost" size="sm" icon={<ArrowLeft size={18} aria-hidden />} onClick={() => go('welcome')} style={{ marginLeft: -14 }}>{t.back}</Button></div>
           <h1 data-reveal className="mp-title">{register ? t.registerTitle : t.loginTitle}</h1>
@@ -91,7 +93,10 @@ export default function Login() {
           </form>
 
           <p data-reveal className="mp-or" aria-hidden>{t.or}</p>
-          <div data-reveal><Button variant="google" block icon={<GoogleG />} onClick={google} disabled={googleBusy} aria-busy={googleBusy}>{t.google}</Button></div>
+          <div data-reveal className="mp-stack" style={{ gap: 8 }}>
+            <Button variant="google" block icon={<GoogleG />} onClick={google} disabled={googleBusy} aria-busy={googleBusy}>{t.google}</Button>
+            <Button variant="ghost" block icon={<UserCircle size={20} aria-hidden />} onClick={() => set({ screen: 'type' })}>{t.guest}</Button>
+          </div>
         </div>
       </div>
     </section>

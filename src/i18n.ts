@@ -1,9 +1,7 @@
 const es = {
   langHint: 'Cambiar idioma', navHome: 'Inicio', navContact: 'Contacto',
-  heroTitle: 'Tu película de esta noche, en dos minutos.',
-  heroDesc: 'Responde unas preguntas rápidas y te recomendamos qué ver. Sin scrollear 40 minutos.',
-  google: 'Continuar con Google', guest: 'Entrar como invitado', guestName: 'invitado', faq: 'Preguntas frecuentes', sug: 'Sugerencias',
-  continueAs: (user: string) => `Continuar como ${user}`, signOut: 'Cerrar sesión', emailLogin: 'Usar correo',
+  google: 'Continuar con Google', guest: 'Entrar como invitado', guestName: 'invitado', faq: 'Preguntas frecuentes',
+  continueAs: (user: string) => `Continuar como ${user}`, signOut: 'Cerrar sesión',
   loginTitle: 'Inicia sesión', registerTitle: 'Crea tu cuenta', tabLogin: 'Iniciar sesión', tabRegister: 'Crear cuenta', submitLogin: 'Entrar', submitRegister: 'Crear cuenta',
   nameLabel: 'Nombre', emailLabel: 'Correo electrónico', passwordLabel: 'Contraseña', passwordHint: 'Mínimo 6 caracteres.', showPassword: 'Mostrar contraseña', hidePassword: 'Ocultar contraseña',
   forgot: '¿Olvidaste tu contraseña?', needEmail: 'Escribe tu correo arriba y vuelve a pulsar “¿Olvidaste tu contraseña?”.', resetSent: 'Si ese correo tiene una cuenta, te enviamos un enlace para cambiar la contraseña.', or: 'o',
@@ -15,6 +13,23 @@ const es = {
   },
   loginError: 'No pudimos iniciar sesión con Google. Inténtalo de nuevo.', popupBlocked: 'Tu navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo de nuevo.',
   hi: (user: string) => `Hola, ${user}`,
+
+  landing: {
+    kicker: 'Recomendador de películas', intro: 'Respondes unas preguntas y te decimos qué ver esta noche, y dónde verlo.',
+    headline: ['Tu película', 'de esta noche', 'en dos minutos'], scroll: 'Desliza',
+    statement: 'Cuarenta minutos eligiendo qué ver. Cero minutos viéndolo. MiPeli te hace unas preguntas rápidas y te dice qué ver esta noche, y dónde verlo.',
+    howLabel: 'Cómo funciona',
+    steps: [
+      { title: 'Responde', text: 'Unas preguntas rápidas: géneros, directores y duelos entre pósters. Sin listas infinitas.' },
+      { title: 'Recibe', text: 'De 1 a 10 películas pensadas para tu noche, cada una con su ficha completa.' },
+      { title: 'Mira', text: 'Cada recomendación te lleva directo a la plataforma donde puedes verla.' },
+    ],
+    showTitle: ['Pósters, fichas', 'y dónde verlas'],
+    statsLabel: 'En números',
+    stats: [{ value: 2, label: 'minutos de encuesta' }, { value: 10, label: 'películas como máximo por ronda' }, { value: 11, label: 'plataformas de streaming' }],
+    platformsLabel: 'Dónde verlas',
+    ctaTitle: ['¿Listo para', 'elegir?'], ctaText: 'Entra con Google, con tu correo o como invitado.', cta: 'Iniciar sesión',
+  },
 
   typeTitle: '¿Cómo quieres hacerlo?', typeDesc: 'Elige un tipo de encuesta. Puedes repetirla cuando quieras.',
   typeFull: 'Encuesta completa', typeFullD: 'Secuencia larga que clava tus gustos con certeza.',
@@ -84,10 +99,8 @@ export type Lang = 'es' | 'en';
 
 const en: Strings = {
   langHint: 'Switch language', navHome: 'Home', navContact: 'Contact',
-  heroTitle: 'Tonight’s movie, in two minutes.',
-  heroDesc: 'Answer a few quick questions and we tell you what to watch. No more 40 minutes of scrolling.',
-  google: 'Continue with Google', guest: 'Continue as guest', guestName: 'guest', faq: 'FAQ', sug: 'Suggestions',
-  continueAs: (user: string) => `Continue as ${user}`, signOut: 'Sign out', emailLogin: 'Use email',
+  google: 'Continue with Google', guest: 'Continue as guest', guestName: 'guest', faq: 'FAQ',
+  continueAs: (user: string) => `Continue as ${user}`, signOut: 'Sign out',
   loginTitle: 'Sign in', registerTitle: 'Create your account', tabLogin: 'Sign in', tabRegister: 'Create account', submitLogin: 'Sign in', submitRegister: 'Create account',
   nameLabel: 'Name', emailLabel: 'Email', passwordLabel: 'Password', passwordHint: 'At least 6 characters.', showPassword: 'Show password', hidePassword: 'Hide password',
   forgot: 'Forgot your password?', needEmail: 'Type your email above and press “Forgot your password?” again.', resetSent: 'If that email has an account, we sent you a link to reset the password.', or: 'or',
@@ -99,6 +112,23 @@ const en: Strings = {
   },
   loginError: 'We couldn’t sign you in with Google. Please try again.', popupBlocked: 'Your browser blocked the Google window. Allow pop-ups and try again.',
   hi: (user: string) => `Hi, ${user}`,
+
+  landing: {
+    kicker: 'Movie recommender', intro: 'Answer a few questions and we tell you what to watch tonight, and where to stream it.',
+    headline: ['Your movie', 'for tonight', 'in two minutes'], scroll: 'Scroll',
+    statement: 'Forty minutes choosing what to watch. Zero minutes watching it. MiPeli asks a few quick questions and tells you what to watch tonight, and where to stream it.',
+    howLabel: 'How it works',
+    steps: [
+      { title: 'Answer', text: 'A few quick questions: genres, directors and poster duels. No endless lists.' },
+      { title: 'Get', text: 'From 1 to 10 movies picked for your night, each with its full details.' },
+      { title: 'Watch', text: 'Every recommendation takes you straight to the platform where you can watch it.' },
+    ],
+    showTitle: ['Posters, details', 'and where to watch'],
+    statsLabel: 'In numbers',
+    stats: [{ value: 2, label: 'minutes of survey' }, { value: 10, label: 'movies at most per round' }, { value: 11, label: 'streaming platforms' }],
+    platformsLabel: 'Where to watch',
+    ctaTitle: ['Ready to', 'choose?'], ctaText: 'Sign in with Google, with your email or as a guest.', cta: 'Sign in',
+  },
 
   typeTitle: 'How do you want to do it?', typeDesc: 'Pick a survey type. Repeat it whenever you like.',
   typeFull: 'Full survey', typeFullD: 'A long sequence that nails your taste for sure.',

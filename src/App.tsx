@@ -42,6 +42,7 @@ export default function App() {
       {/* La carga va a pantalla completa, sin header */}
       {st.screen !== 'loading' && (
         <header className="mp-header">
+          {st.screen === 'welcome' && <span className="mp-wordmark" translate="no">MiPeli</span>}
           {st.screen !== 'welcome' && st.screen !== 'login' && (
             <PillNav items={navItems} activeHref={activeHref} logoHref="#home" brand="MP" baseColor="#1f1f2e" pillColor="#f4f4f4" pillTextColor="#0f0f14" hoveredPillTextColor="#f4f4f4" />
           )}

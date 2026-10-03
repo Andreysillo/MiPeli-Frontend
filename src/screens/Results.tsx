@@ -1,29 +1,11 @@
-import { useLayoutEffect, useRef, type ReactNode } from 'react';
-import gsap from 'gsap';
+import type { ReactNode } from 'react';
 import { ArrowsClockwise, Lightning, ShareNetwork, ThumbsDown, ThumbsUp } from '@phosphor-icons/react';
 import Button from '../components/Button';
+import CountUp from '../components/CountUp';
 import PosterGallery from '../components/PosterGallery';
 import { Imdb, WatchOn, countryName, genreName, runtime } from '../components/Movie';
 import { poster, recommend, type Movie } from '../data';
 import { useApp } from '../store';
-
-// Número que sube desde 0 cuando entra en pantalla. El texto lo escribe GSAP, no React.
-function CountUp({ value, decimals = 0, suffix = '' }: Readonly<{ value: number; decimals?: number; suffix?: string }>) {
-  const ref = useRef<HTMLSpanElement>(null);
-  useLayoutEffect(() => {
-    const el = ref.current!;
-    const fmt = (v: number) => v.toFixed(decimals) + suffix;
-    el.textContent = fmt(value);
-    const mm = gsap.matchMedia();
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
-      const o = { v: 0 };
-      el.textContent = fmt(0);
-      gsap.to(o, { v: value, duration: 1.4, ease: 'power3.out', onUpdate: () => { el.textContent = fmt(o.v); }, scrollTrigger: { trigger: el, start: 'top 92%', once: true } });
-    });
-    return () => mm.revert();
-  }, [value, decimals, suffix]);
-  return <span ref={ref} />;
-}
 
 // Extra en formato índice: compacto, sin animación de ficha, pero con lo necesario para decidir
 function Stat({ label, children }: Readonly<{ label: string; children: ReactNode }>) {

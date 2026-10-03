@@ -42,9 +42,9 @@ src/
   i18n.ts             textos es/en
   data.tsx            catálogo de demo con forma de TMDB (director, reparto, géneros, sinopsis, nota IMDb, plataformas),
                       recomendador local recommend() y arte de póster en canvas; lo reemplazará el backend
-  screens/            una pantalla por archivo (Welcome, Login, SurveyType, RecTypes, Quest, Loading, Results, Home, Faq, Contact)
+  screens/            una pantalla por archivo (Welcome = landing informativa con el acceso al final, Login, SurveyType, RecTypes, Quest, Loading, Results, Home, Faq, Contact)
   components/         Button, Reveal (transiciones GSAP + ScrollTrigger), PosterGallery (galería de pósters + ficha en <dialog>),
-                      Movie (póster enmarcado, IMDb, plataformas), Credits (atribuciones de TMDB, JustWatch y OMDb),
+                      Movie (póster enmarcado, IMDb, plataformas), PosterWall (mural de fondo de Home y Login), CountUp, GoogleG, Credits (atribuciones de TMDB, JustWatch y OMDb),
                       WavesBg y componentes animados de React Bits (.jsx)
   styles/global.css   tokens de diseño (color, radios, tipografía) y clases mp-*
 ```
@@ -59,7 +59,7 @@ El botón de Google sigue el tema oscuro de las [guías de marca de Sign in with
 
 Los componentes `.jsx` de `src/components/` vienen de [React Bits](https://github.com/DavidHDev/react-bits) adaptados; usan `gsap` y `ogl` (WebGL).
 Íconos: [Phosphor](https://phosphoricons.com); logos de las plataformas de streaming: archivos de `src/assets/platforms/` (se importan en `data.tsx`). Tipografía: Geist para la interfaz y Bodoni Moda para títulos de película (auto-hospedadas vía `@fontsource-variable`).
-La galería de resultados toma como referencia [a24.raviklaassens.com](https://a24.raviklaassens.com/).
+La galería de resultados toma como referencia [a24.raviklaassens.com](https://a24.raviklaassens.com/) y la landing, [14islands.com](https://www.14islands.com/) (tipografía enorme, tira de pósters, texto que se enciende al hacer scroll), con los colores de la app.
 
 ## Créditos de datos
 TMDB exige mostrar su logo y el aviso "This product uses the TMDB API but is not endorsed or certified by TMDB", además de atribuir a JustWatch los datos de plataformas; OMDb pide citar su licencia CC BY-NC 4.0. Todo eso está en la sección Créditos de Contacto (`src/components/Credits.tsx`) y no debe quitarse al conectar el backend.

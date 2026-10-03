@@ -166,7 +166,6 @@ export function recommend(a: Answers): Movie[] {
 }
 
 export const directors = ['Bong Joon-ho', 'Denis Villeneuve', 'David Fincher', 'Park Chan-wook', 'Wong Kar-wai', 'Christopher Nolan', 'Céline Sciamma', 'Kelly Reichardt'];
-export const auroraStops = ['#1f1f2e', '#8c8ca3', '#2d2d42'];
 
 const canvas = (w: number, h: number) => {
   const c = document.createElement('canvas'); c.width = w; c.height = h;
