@@ -163,11 +163,11 @@ button { font: inherit; color: inherit; }
 
 .mp-nav { display: flex; gap: clamp(20px, 3vw, 44px); margin: 0 auto; }
 .mp-nav ~ .mp-header-actions { margin-left: 0; }
-.mp-nav a { position: relative; font-size: 12px; letter-spacing: .02em; text-transform: uppercase; color: var(--stone); text-decoration: none; transition: color .2s ease; }
-.mp-nav[data-landing] a:last-child, .mp-nav a[aria-current] { color: var(--text); }
-.mp-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -5px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease-out); }
-.mp-nav a:hover, .mp-nav a:focus-visible { color: var(--text); }
-.mp-nav a:hover::after, .mp-nav a:focus-visible::after, .mp-nav a[aria-current]::after { transform: scaleX(1); }
+.mp-nav :is(a, button) { position: relative; padding: 0; border: 0; background: none; font: inherit; font-size: 12px; letter-spacing: .02em; text-transform: uppercase; color: var(--stone); text-decoration: none; cursor: pointer; transition: color .2s ease; }
+.mp-nav[data-landing] :is(a, button):last-child, .mp-nav a[aria-current], .mp-nav button { color: var(--text); }
+.mp-nav :is(a, button)::after { content: ''; position: absolute; left: 0; right: 0; bottom: -5px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease-out); }
+.mp-nav :is(a, button):hover, .mp-nav :is(a, button):focus-visible { color: var(--text); }
+.mp-nav :is(a, button):hover::after, .mp-nav :is(a, button):focus-visible::after, .mp-nav a[aria-current]::after { transform: scaleX(1); }
 .mp-menu-btn { display: none; }
 /* En teléfono los enlaces pasan a un menú a pantalla completa */
 @media (max-width: 899px) {
@@ -179,17 +179,37 @@ button { font: inherit; color: inherit; }
 .mp-menu[open] { display: flex; flex-direction: column; }
 .mp-menu-top { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); }
 .mp-menu nav { display: grid; margin-top: auto; }
-.mp-menu nav a { padding: .1em 0 .14em; font-size: clamp(2.25rem, 11vw, 4.5rem); font-weight: 500; line-height: 1; letter-spacing: -.055em; color: var(--text); text-decoration: none; }
-.mp-menu nav a:hover { color: var(--stone); }
-.mp-menu[open] nav a { animation: mp-menu-in .7s var(--ease-out) backwards; }
-.mp-menu[open] nav a:nth-child(2) { animation-delay: .07s; }
-.mp-menu[open] nav a:nth-child(3) { animation-delay: .14s; }
+.mp-menu nav :is(a, button) { padding: .1em 0 .14em; border: 0; background: none; font-family: inherit; text-align: left; cursor: pointer; font-size: clamp(2.25rem, 11vw, 4.5rem); font-weight: 500; line-height: 1; letter-spacing: -.055em; color: var(--text); text-decoration: none; }
+.mp-menu nav :is(a, button):hover { color: var(--stone); }
+.mp-menu[open] nav :is(a, button) { animation: mp-menu-in .7s var(--ease-out) backwards; }
+.mp-menu[open] nav :is(a, button):nth-child(2) { animation-delay: .07s; }
+.mp-menu[open] nav :is(a, button):nth-child(3) { animation-delay: .14s; }
 @keyframes mp-menu-in { from { opacity: 0; transform: translateY(32px); } }
 @media (max-width: 639px) { .mp-menu { padding-inline: 12px; } }
 
 /* Los enlaces de la landing bajan con desplazamiento suave y dejan libre el header; solo en la landing */
 html:has(.lp) { scroll-padding-top: calc(var(--header-h) + 8px); }
 @media (prefers-reduced-motion: no-preference) { html:has(.lp) { scroll-behavior: smooth; } }
+
+/* ---------- Aviso de confirmación ---------- */
+/* Tarjeta con un brillo suave arriba, entra subiendo y creciendo; el fondo se desenfoca */
+.mp-confirm { position: relative; width: min(440px, calc(100% - 32px)); margin: auto; padding: 28px; border: 1px solid var(--border-strong); border-radius: 28px; background: #1f1f2e; color: var(--text); overflow: hidden; box-shadow: 0 40px 100px -24px rgba(0, 0, 0, .8); }
+.mp-confirm[open] { display: grid; gap: 14px; animation: mp-pop .5s var(--ease-out); }
+.mp-confirm::before { content: ''; position: absolute; inset: 0 0 auto; height: 170px; background: radial-gradient(70% 100% at 18% 0%, rgba(255, 255, 255, .1), transparent); pointer-events: none; }
+.mp-confirm > * { position: relative; }
+.mp-confirm::backdrop { background: rgba(15, 15, 20, .62); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); animation: mp-fade .35s ease; }
+.mp-confirm-title { margin: 6px 0 0; padding-bottom: .08em; font-size: clamp(1.5rem, 5vw, 1.875rem); font-weight: 500; line-height: 1.02; letter-spacing: -.045em; text-wrap: balance; }
+.mp-confirm-text { margin: 0; line-height: 1.5; color: var(--text-muted); }
+.mp-confirm-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 12px; }
+@keyframes mp-pop { from { opacity: 0; transform: translateY(18px) scale(.96); } }
+@keyframes mp-fade { from { opacity: 0; } }
+
+/* Reiniciar: botón discreto junto al paso actual */
+.mp-step-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mp-restart { display: inline-flex; align-items: center; gap: 6px; padding: 6px 2px; border: 0; background: none; color: var(--stone); font-size: 12px; letter-spacing: .02em; text-transform: uppercase; cursor: pointer; transition: color .2s ease; }
+.mp-restart svg { transition: transform .5s var(--ease-out); }
+.mp-restart:hover { color: var(--text); }
+.mp-restart:hover svg { transform: rotate(-200deg); }
 
 /* ---------- Encuesta ---------- */
 /* <progress> nativo: se avanza por pasos y la barra se suaviza con una transición de ancho */

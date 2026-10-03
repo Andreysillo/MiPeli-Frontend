@@ -68,7 +68,7 @@ src/
                       recomendador local recommend() y arte de póster en canvas; lo reemplazará el backend
   screens/            una pantalla por archivo (Welcome = landing informativa con el acceso al final, Login, SurveyType, RecTypes, Quest, Loading, Results, Faq, Contact)
   components/         Button, Reveal (transiciones GSAP + ScrollTrigger), PosterGallery (galería de pósters + ficha en <dialog>),
-                      Movie (póster enmarcado, IMDb, plataformas), PosterWall (mural de fondo de Login), SiteNav (header de todo el sitio: "MiPeli" como enlace al inicio, enlaces a secciones en la landing o a Inicio/FAQ/Contacto en el resto, menú a pantalla completa en móvil), Ambient (fondo gris de las pantallas de elección), Rise (titular con entrada por máscara), CountUp, GoogleG, Credits (atribuciones de TMDB, JustWatch y OMDb),
+                      Movie (póster enmarcado, IMDb, plataformas), PosterWall (mural de fondo de Login), ConfirmDialog (aviso modal de confirmación: cerrar sesión y empezar de nuevo), SiteNav (header de todo el sitio: "MiPeli" como enlace al inicio, enlaces a secciones en la landing o a Inicio/FAQ/Contacto en el resto, menú a pantalla completa en móvil), Ambient (fondo gris de las pantallas de elección), Rise (titular con entrada por máscara), CountUp, GoogleG, Credits (atribuciones de TMDB, JustWatch y OMDb),
                       WavesBg y componentes animados de React Bits (.jsx)
   styles/global.css   tokens de diseño (color, radios, tipografía) y clases mp-*
 ```

@@ -13,6 +13,18 @@ const es = {
   },
   loginError: 'No pudimos iniciar sesión con Google. Inténtalo de nuevo.', popupBlocked: 'Tu navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo de nuevo.',
   hi: (user: string) => `Hola, ${user}`,
+  restart: 'Reiniciar', startNew: 'Empezar una nueva',
+  // Avisos antes de acciones que no se deshacen; `user` es el nombre de quien tiene sesión (null para invitados)
+  confirm: {
+    signout: {
+      title: (user: string | null) => user ? `${user}, ¿seguro que quieres cerrar sesión?` : '¿Seguro que quieres cerrar sesión?',
+      text: 'Puedes volver en cualquier momento si así lo deseas.', ok: 'Cerrar sesión', cancel: 'Quedarme',
+    },
+    restart: {
+      title: (user: string | null) => user ? `${user}, ¿seguro que quieres empezar de nuevo?` : '¿Seguro que quieres empezar de nuevo?',
+      text: 'Se borran tus respuestas hasta ahora y vuelves a elegir cómo hacer la encuesta.', ok: 'Empezar de nuevo', cancel: 'Cancelar',
+    },
+  },
 
   landing: {
     kicker: 'Recomendador de películas', intro: 'Respondes unas preguntas y te decimos qué ver esta noche, y dónde verlo.',
@@ -29,7 +41,7 @@ const es = {
     stats: [{ value: 2, label: 'minutos de encuesta' }, { value: 10, label: 'películas como máximo por ronda' }, { value: 11, label: 'plataformas de streaming' }],
     platformsLabel: 'Dónde verlas',
     ctaTitle: ['¿Listo para', 'elegir?'], ctaText: 'Entra con Google, con tu correo o como invitado.', cta: 'Iniciar sesión',
-    navLabel: 'Secciones', navStart: '¿Le entras a la recomendación?', menu: 'Menú', menuClose: 'Cerrar',
+    navLabel: 'Secciones', navStart: '¿Le entras a la recomendación?', navResume: '¡Continúa tu encuesta!', menu: 'Menú', menuClose: 'Cerrar',
   },
 
   typeTitle: '¿Cómo quieres hacerlo?', typeDesc: 'Elige un tipo de encuesta. Puedes repetirla cuando quieras.',
@@ -112,6 +124,17 @@ const en: Strings = {
   },
   loginError: 'We couldn’t sign you in with Google. Please try again.', popupBlocked: 'Your browser blocked the Google window. Allow pop-ups and try again.',
   hi: (user: string) => `Hi, ${user}`,
+  restart: 'Restart', startNew: 'Start a new one',
+  confirm: {
+    signout: {
+      title: (user: string | null) => user ? `${user}, are you sure you want to sign out?` : 'Are you sure you want to sign out?',
+      text: 'You can come back any time you like.', ok: 'Sign out', cancel: 'Stay signed in',
+    },
+    restart: {
+      title: (user: string | null) => user ? `${user}, are you sure you want to start over?` : 'Are you sure you want to start over?',
+      text: 'Your answers so far are cleared and you pick how to take the survey again.', ok: 'Start over', cancel: 'Cancel',
+    },
+  },
 
   landing: {
     kicker: 'Movie recommender', intro: 'Answer a few questions and we tell you what to watch tonight, and where to stream it.',
@@ -128,7 +151,7 @@ const en: Strings = {
     stats: [{ value: 2, label: 'minutes of survey' }, { value: 10, label: 'movies at most per round' }, { value: 11, label: 'streaming platforms' }],
     platformsLabel: 'Where to watch',
     ctaTitle: ['Ready to', 'choose?'], ctaText: 'Sign in with Google, with your email or as a guest.', cta: 'Sign in',
-    navLabel: 'Sections', navStart: 'Up for a recommendation?', menu: 'Menu', menuClose: 'Close',
+    navLabel: 'Sections', navStart: 'Up for a recommendation?', navResume: 'Continue your survey!', menu: 'Menu', menuClose: 'Close',
   },
 
   typeTitle: 'How do you want to do it?', typeDesc: 'Pick a survey type. Repeat it whenever you like.',

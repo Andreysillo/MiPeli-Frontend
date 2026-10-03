@@ -18,7 +18,17 @@ export type State = {
   useful: 'up' | 'down' | null;
   questSteps: Step[]; qi: number; duelIdx: number; questActive: boolean;
   toast: string | null;
+  confirm: 'signout' | 'restart' | null; // aviso abierto antes de una acción que no se deshace
 };
+
+// Avance de la encuesta en blanco: lo que se limpia al empezar de nuevo o al cerrar sesión
+export const blankSurvey = () => ({
+  questSteps: [] as Step[], qi: 0, duelIdx: 0, questActive: false,
+  moodSel: ['Thriller'], movieSel: [] as string[], duelWins: {} as Record<string, number>,
+});
+const defaultPicks = () => ({ genre: 'Thriller', director: 'Park Chan-wook' });
+// Empezar de nuevo también devuelve género y director a sus valores por defecto
+export const freshSurvey = () => ({ ...blankSurvey(), picks: defaultPicks() });
 
 const KEY = 'mipeli:v1';
 export const LOADING_MS = 4600;
@@ -36,11 +46,10 @@ function initialState(): State {
     rec: saved.rec || { movies: true, genres: true, director: true },
     length: saved.length || 'med', numMovies: saved.numMovies || 5,
     // Un género guardado que ya no está en la rueda (p. ej. el antiguo 'Noir') vuelve al valor por defecto
-    picks: saved.picks && genres.includes(saved.picks.genre) ? saved.picks : { genre: 'Thriller', director: 'Park Chan-wook' },
-    moodSel: ['Thriller'], movieSel: [], duelWins: {},
+    picks: saved.picks && genres.includes(saved.picks.genre) ? saved.picks : defaultPicks(),
     useful: saved.useful || null,
-    questSteps: [], qi: 0, duelIdx: 0, questActive: false,
-    toast: null,
+    ...blankSurvey(),
+    toast: null, confirm: null,
   };
 }
 

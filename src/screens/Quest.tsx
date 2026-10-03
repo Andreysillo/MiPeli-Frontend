@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import gsap from 'gsap';
-import { ArrowLeft, ArrowRight, X } from '@phosphor-icons/react';
+import { ArrowCounterClockwise, ArrowLeft, ArrowRight, X } from '@phosphor-icons/react';
 import OptionWheel from '../components/OptionWheel';
 import ChromaGrid from '../components/ChromaGrid';
 import CircularGallery from '../components/CircularGallery';
@@ -17,18 +17,23 @@ function Stepper() {
   const { st, set, t } = useApp();
   const kind = st.questSteps[st.qi];
   return (
-    <nav aria-label={t.stepOf(st.qi + 1, st.questSteps.length)} className="mp-stack" style={{ gap: 12 }}>
-      <span className="mp-kicker tnum">{t.stepOf(st.qi + 1, st.questSteps.length)}<span className="mp-mobile-only"> · {t.stepNames[kind]}</span></span>
-      <ol className="mp-steps">
-        {st.questSteps.map((step, i) => (
-          <li key={step} className={i < st.qi ? 'done' : i === st.qi ? 'current' : ''}>
-            <button disabled={i > st.qi} aria-current={i === st.qi ? 'step' : undefined} onClick={() => set({ qi: i })}>
-              <span className="bar" /><span className="label">{t.stepNames[step]}</span>
-            </button>
-          </li>
-        ))}
-      </ol>
-    </nav>
+    <div className="mp-stack" style={{ gap: 12 }}>
+      <div className="mp-step-head">
+        <span className="mp-kicker tnum">{t.stepOf(st.qi + 1, st.questSteps.length)}<span className="mp-mobile-only"> · {t.stepNames[kind]}</span></span>
+        <button className="mp-restart" onClick={() => set({ confirm: 'restart' })}><ArrowCounterClockwise size={14} weight="bold" aria-hidden />{t.restart}</button>
+      </div>
+      <nav aria-label={t.stepOf(st.qi + 1, st.questSteps.length)}>
+        <ol className="mp-steps">
+          {st.questSteps.map((step, i) => (
+            <li key={step} className={i < st.qi ? 'done' : i === st.qi ? 'current' : ''}>
+              <button disabled={i > st.qi} aria-current={i === st.qi ? 'step' : undefined} onClick={() => set({ qi: i })}>
+                <span className="bar" /><span className="label">{t.stepNames[step]}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </div>
   );
 }
 

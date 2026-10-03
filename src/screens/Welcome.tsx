@@ -190,13 +190,17 @@ function Numbers() {
 // Aquí está el único acceso: sin sesión lleva a la pantalla de inicio; con sesión abierta, directo a la encuesta
 // (o a retomarla si había una a medias). Un invitado con la encuesta a medias también puede volver a ella.
 function Cta() {
-  const { st, go, t, name } = useApp();
+  const { st, set, go, t, name } = useApp();
   const [title, dim] = t.landing.ctaTitle;
   const root = useRef<HTMLElement>(null);
   let target: Screen = 'login';
   let label = t.landing.cta;
   if (st.loggedIn && st.questActive) { target = 'quest'; label = t.continueSurvey; }
   else if (st.loggedIn) { target = 'type'; label = t.continueAs(name); }
+  // Con una encuesta a medias hay una segunda opción: quien tiene sesión puede empezar una nueva; un invitado puede volver a la suya
+  const second = st.loggedIn
+    ? { label: t.startNew, run: () => set({ confirm: 'restart' }) }
+    : { label: t.continueSurvey, run: () => go('quest') };
 
   // El titular sube desde su máscara cuando el scroll llega hasta él
   useLayoutEffect(() => {
@@ -215,7 +219,7 @@ function Cta() {
         <Button className="lp-cta-btn" onClick={() => go(target)}>
           {label}<ArrowRight size={20} weight="bold" aria-hidden />
         </Button>
-        {!st.loggedIn && st.questActive && <Button variant="secondary" className="lp-cta-btn" onClick={() => go('quest')}>{t.continueSurvey}</Button>}
+        {st.questActive && <Button variant="secondary" className="lp-cta-btn" onClick={second.run}>{second.label}</Button>}
       </div>
     </section>
   );
