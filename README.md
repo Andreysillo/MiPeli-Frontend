@@ -14,9 +14,10 @@ npm run typecheck  # tsc --noEmit
 
 `build.mjs` hace ambas cosas: lee `.env`, inyecta la config de Firebase con `define` y, en modo dev, vigila los archivos y sirve `dist/`.
 
-## Inicio de sesión con Google (Firebase Authentication)
+## Inicio de sesión (Firebase Authentication)
 
-No depende del backend: Firebase abre el popup de Google y guarda la sesión en el navegador. Sin `.env` la app funciona igual y el botón de Google solo muestra un aviso.
+Google y correo con contraseña. No depende del backend: Firebase guarda la sesión en el navegador. Sin `.env` la app funciona igual y el inicio de sesión solo muestra un aviso.
+Para el correo, habilita también **Método de acceso → Correo electrónico/contraseña** en Firebase. Las contraseñas las guarda Firebase (cifradas); MiPeli nunca las ve. El restablecimiento de contraseña usa el correo de Firebase.
 
 1. En [console.firebase.google.com](https://console.firebase.google.com) crea un proyecto (plan Spark, gratis y sin tarjeta).
 2. **Authentication → Comenzar → Método de acceso → Google → Habilitar**, elige el correo de asistencia y guarda.
@@ -34,12 +35,14 @@ build.mjs             build y servidor de desarrollo (esbuild)
 src/
   main.tsx            monta <App />
   App.tsx             shell: header (nav, cerrar sesión, idioma), pantalla actual, toast
-  auth.ts             Firebase Authentication: popup de Google, cerrar sesión, escuchar la sesión
+  auth.ts             Firebase Authentication: Google, correo/contraseña, restablecer, cerrar sesión, escuchar la sesión
+  useGoogleSignIn.ts  hook del botón de Google (estado de carga y avisos), compartido por Welcome y Login
+  assets/platforms/   logos de las plataformas de streaming (PNG/JPG, esbuild los copia con hash a dist/)
   store.ts            estado global (pantalla, respuestas, persistencia en localStorage, rutas #hash)
   i18n.ts             textos es/en
   data.tsx            catálogo de demo con forma de TMDB (director, reparto, géneros, sinopsis, nota IMDb, plataformas),
                       recomendador local recommend() y arte de póster en canvas; lo reemplazará el backend
-  screens/            una pantalla por archivo (Welcome, SurveyType, RecTypes, Quest, Loading, Results, Home, Faq, Contact)
+  screens/            una pantalla por archivo (Welcome, Login, SurveyType, RecTypes, Quest, Loading, Results, Home, Faq, Contact)
   components/         Button, Reveal (transiciones GSAP + ScrollTrigger), PosterGallery (galería de pósters + ficha en <dialog>),
                       Movie (póster enmarcado, IMDb, plataformas), Credits (atribuciones de TMDB, JustWatch y OMDb),
                       WavesBg y componentes animados de React Bits (.jsx)
@@ -55,7 +58,7 @@ src/
 El botón de Google sigue el tema oscuro de las [guías de marca de Sign in with Google](https://developers.google.com/identity/branding-guidelines). Los pósters conservan sus colores: son contenido, no interfaz.
 
 Los componentes `.jsx` de `src/components/` vienen de [React Bits](https://github.com/DavidHDev/react-bits) adaptados; usan `gsap` y `ogl` (WebGL).
-Íconos: [Phosphor](https://phosphoricons.com); logos de plataformas de streaming: [simple-icons](https://simpleicons.org) (monograma con los colores de la marca cuando no hay logo). Tipografía: Geist para la interfaz y Bodoni Moda para títulos de película (auto-hospedadas vía `@fontsource-variable`).
+Íconos: [Phosphor](https://phosphoricons.com); logos de las plataformas de streaming: archivos de `src/assets/platforms/` (se importan en `data.tsx`). Tipografía: Geist para la interfaz y Bodoni Moda para títulos de película (auto-hospedadas vía `@fontsource-variable`).
 La galería de resultados toma como referencia [a24.raviklaassens.com](https://a24.raviklaassens.com/).
 
 ## Créditos de datos

@@ -1,9 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { L, type Lang } from './i18n';
 import { genres } from './data';
-import { onUserChange } from './auth';
+import { firstName, onUserChange } from './auth';
 
-export type Screen = 'welcome' | 'type' | 'rectypes' | 'quest' | 'loading' | 'results' | 'home' | 'faq' | 'contacto';
+export type Screen = 'welcome' | 'login' | 'type' | 'rectypes' | 'quest' | 'loading' | 'results' | 'home' | 'faq' | 'contacto';
 export type Step = 'genres' | 'director' | 'duel' | 'movies' | 'personal';
 export type RecKey = 'movies' | 'genres' | 'director';
 export type SurveyType = 'full' | 'short' | 'custom';
@@ -61,7 +61,7 @@ export function useStore() {
   }, [st]);
 
   // Firebase avisa al iniciar o cerrar sesión, y al recargar si ya había una sesión abierta
-  useEffect(() => onUserChange(u => set({ loggedIn: !!u, user: u?.displayName?.split(' ')[0] ?? '' })), [set]);
+  useEffect(() => onUserChange(u => set({ loggedIn: !!u, user: u ? firstName(u) : '' })), [set]);
 
   // La pantalla de carga es simulada: pasa sola a resultados
   useEffect(() => {

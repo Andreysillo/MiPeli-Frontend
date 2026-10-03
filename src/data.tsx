@@ -1,5 +1,15 @@
 // Datos de demo: aún no hay backend, todo lo que ve el usuario sale de aquí.
-import { siAppletv, siCrunchyroll, siHbomax, siMubi, siNetflix, siParamountplus, type SimpleIcon } from 'simple-icons';
+import netflix from './assets/platforms/netflix.jpg';
+import primeVideo from './assets/platforms/amazon prime.png';
+import disney from './assets/platforms/Disney+.png';
+import max from './assets/platforms/Max.jpg';
+import appleTv from './assets/platforms/apple TV.jpg';
+import paramount from './assets/platforms/paramount+.png';
+import mubi from './assets/platforms/mubi.jpg';
+import crunchyroll from './assets/platforms/crunchyroll.png';
+import vix from './assets/platforms/Vix.jpg';
+import claroVideo from './assets/platforms/Claro Video.png';
+import pluto from './assets/platforms/Pluto tv.png';
 import type { Lang } from './i18n';
 import type { State } from './store';
 
@@ -9,21 +19,21 @@ export type Movie = {
   imdb: number; color: string; platforms: Platform[]; overview: Record<Lang, string>;
 };
 
-// Plataformas disponibles en Costa Rica. Logo de simple-icons cuando existe; si no (marcas que no lo permiten), un monograma con sus colores.
-// Los botones llevan a la página de inicio de cada plataforma. Qué película está en cuál lo dirá el backend (TMDB watch/providers, region=CR).
-export type PlatformInfo = { url: string; tile: string; fg: string; icon?: SimpleIcon; mark?: string };
+// Plataformas disponibles en Costa Rica, con su logo (src/assets/platforms) y la página de inicio a la que lleva cada botón.
+// Qué película está en cuál lo dirá el backend (TMDB watch/providers, region=CR).
+export type PlatformInfo = { url: string; logo: string };
 export const platforms = {
-  'Netflix': { url: 'https://www.netflix.com/', tile: '#000000', fg: '#E50914', icon: siNetflix },
-  'Prime Video': { url: 'https://www.primevideo.com/', tile: '#00A8E1', fg: '#ffffff', mark: 'prime' },
-  'Disney+': { url: 'https://www.disneyplus.com/', tile: '#0B1E5B', fg: '#ffffff', mark: 'D+' },
-  'HBO Max': { url: 'https://www.hbomax.com/', tile: '#000000', fg: '#ffffff', icon: siHbomax },
-  'Apple TV': { url: 'https://tv.apple.com/', tile: '#000000', fg: '#ffffff', icon: siAppletv },
-  'Paramount+': { url: 'https://www.paramountplus.com/', tile: '#0064FF', fg: '#ffffff', icon: siParamountplus },
-  'Mubi': { url: 'https://mubi.com/', tile: '#000000', fg: '#ffffff', icon: siMubi },
-  'Crunchyroll': { url: 'https://www.crunchyroll.com/', tile: '#FF5E00', fg: '#ffffff', icon: siCrunchyroll },
-  'ViX': { url: 'https://vix.com/', tile: '#FF4E00', fg: '#ffffff', mark: 'ViX' },
-  'Claro video': { url: 'https://www.clarovideo.com/', tile: '#DA291C', fg: '#ffffff', mark: 'claro' },
-  'Pluto TV': { url: 'https://pluto.tv/', tile: '#000000', fg: '#FFF200', mark: 'P' },
+  'Netflix': { url: 'https://www.netflix.com/', logo: netflix },
+  'Prime Video': { url: 'https://www.primevideo.com/', logo: primeVideo },
+  'Disney+': { url: 'https://www.disneyplus.com/', logo: disney },
+  'HBO Max': { url: 'https://www.hbomax.com/', logo: max },
+  'Apple TV': { url: 'https://tv.apple.com/', logo: appleTv },
+  'Paramount+': { url: 'https://www.paramountplus.com/', logo: paramount },
+  'Mubi': { url: 'https://mubi.com/', logo: mubi },
+  'Crunchyroll': { url: 'https://www.crunchyroll.com/', logo: crunchyroll },
+  'ViX': { url: 'https://vix.com/', logo: vix },
+  'Claro video': { url: 'https://www.clarovideo.com/', logo: claroVideo },
+  'Pluto TV': { url: 'https://pluto.tv/', logo: pluto },
 } satisfies Record<string, PlatformInfo>;
 export type Platform = keyof typeof platforms;
 
@@ -229,9 +239,9 @@ export const moodGallery = ['Thriller', 'Comedia', 'Terror', 'Drama', 'Ciencia f
 export const maskedHeadingSrc = stripes(1600, 440, [[0, '#a3a3b8'], [0.5, '#f4f4f4'], [1, '#c9c9d6']], 'rgba(15,15,20,.1)', 26, 70);
 
 // ponytail: datos de contacto de ejemplo; reemplazar por los reales del autor
-export const contactInfo = { email: 'kevin@mipeli.app', github: 'https://github.com/', linkedin: 'https://www.linkedin.com/' };
+export const contactInfo = { email: 'jimenezzzandrey@gmail.com', github: 'https://github.com/', linkedin: 'https://www.linkedin.com/' };
 
 export const faqData: Record<Lang, { q: string; a: string }[]> = {
-  es: [{ q: '¿De dónde salen las recomendaciones?', a: 'De tus respuestas, cruzadas con nuestra base de títulos.' }, { q: '¿Necesito cuenta?', a: 'No para probar. Con Google guardas tu progreso y repites encuestas sin límite.' }, { q: '¿De dónde sale la calificación?', a: 'Es la nota de IMDb, sobre 10.' }, { q: '¿Dónde veo la peli?', a: 'Cada recomendación muestra en qué plataformas está, con un botón que te lleva directo a cada una.' }, { q: '¿Qué datos guardan de mí?', a: 'Si entras con Google, Firebase guarda tu nombre y correo para mantener tu sesión, y MiPeli solo usa tu nombre para saludarte. Tus respuestas viven solo en tu navegador. No vendemos tus datos. Hay más detalle en Contacto.' }],
-  en: [{ q: 'Where do recommendations come from?', a: 'Your answers, matched against our title base.' }, { q: 'Do I need an account?', a: 'Not to try. With Google you save progress and repeat surveys with no limit.' }, { q: 'Where does the rating come from?', a: 'It is the IMDb score, out of 10.' }, { q: 'Where can I watch it?', a: 'Every recommendation shows which platforms have it, with a button that takes you straight to each one.' }, { q: 'What data do you keep about me?', a: 'If you sign in with Google, Firebase keeps your name and email to maintain your session, and MiPeli only uses your name to greet you. Your answers live only in your browser. We don’t sell your data. See Contact for details.' }],
+  es: [{ q: '¿De dónde salen las recomendaciones?', a: 'De tus respuestas, cruzadas con nuestra base de títulos.' }, { q: '¿Necesito cuenta?', a: 'No para probar. Con una cuenta (Google o correo) guardas tu progreso y repites encuestas sin límite.' }, { q: '¿De dónde sale la calificación?', a: 'Es la nota de IMDb, sobre 10.' }, { q: '¿Dónde veo la peli?', a: 'Cada recomendación muestra en qué plataformas está, con un botón que te lleva directo a cada una.' }, { q: '¿Qué datos guardan de mí?', a: 'Si entras con Google o con correo, Firebase guarda tu nombre y correo para mantener tu sesión, y MiPeli solo usa tu nombre para saludarte. Tus respuestas viven solo en tu navegador. No vendemos tus datos. Hay más detalle en Contacto.' }],
+  en: [{ q: 'Where do recommendations come from?', a: 'Your answers, matched against our title base.' }, { q: 'Do I need an account?', a: 'Not to try. With an account (Google or email) you save progress and repeat surveys with no limit.' }, { q: 'Where does the rating come from?', a: 'It is the IMDb score, out of 10.' }, { q: 'Where can I watch it?', a: 'Every recommendation shows which platforms have it, with a button that takes you straight to each one.' }, { q: 'What data do you keep about me?', a: 'If you sign in with Google or email, Firebase keeps your name and email to maintain your session, and MiPeli only uses your name to greet you. Your answers live only in your browser. We don’t sell your data. See Contact for details.' }],
 };

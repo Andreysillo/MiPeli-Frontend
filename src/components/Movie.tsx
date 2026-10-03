@@ -32,12 +32,10 @@ export function Imdb({ m }: Readonly<{ m: Movie }>) {
 // Botón de plataforma: logo en su baldosa de color + nombre
 function PlatformLink({ p, big }: Readonly<{ p: Platform; big?: boolean }>) {
   const { t } = useApp();
-  const { url, tile, fg, icon, mark }: PlatformInfo = platforms[p];
+  const { url, logo }: PlatformInfo = platforms[p];
   return (
     <a href={url} target="_blank" rel="noopener noreferrer" aria-label={t.openIn(p)} className={`mp-platform${big ? ' big' : ''}`} translate="no">
-      <span className="mp-platform-logo" style={{ background: tile, color: fg }} aria-hidden>
-        {icon ? <svg viewBox="0 0 24 24" fill="currentColor"><path d={icon.path} /></svg> : <b>{mark}</b>}
-      </span>
+      <img className="mp-platform-logo" src={logo} alt="" height={38} draggable={false} />
       {p}
     </a>
   );

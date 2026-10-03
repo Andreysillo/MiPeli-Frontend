@@ -10,7 +10,7 @@ const firebaseKeys = ['FIREBASE_API_KEY', 'FIREBASE_AUTH_DOMAIN', 'FIREBASE_PROJ
 const options = {
   entryPoints: ['src/main.tsx', 'index.html'],
   bundle: true,
-  loader: { '.html': 'copy', '.woff2': 'file' },
+  loader: { '.html': 'copy', '.woff2': 'file', '.png': 'file', '.jpg': 'file' },
   entryNames: '[name]',
   outdir: 'dist',
   sourcemap: dev,

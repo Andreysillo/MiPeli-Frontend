@@ -1,11 +1,11 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { UserCircle } from '@phosphor-icons/react';
+import { EnvelopeSimple, UserCircle } from '@phosphor-icons/react';
 import Aurora from '../components/Aurora';
 import ParticleText from '../components/ParticleText';
 import Button from '../components/Button';
 import { auroraStops, poster, welcomePosters } from '../data';
-import { signInWithGoogle } from '../auth';
+import { useGoogleSignIn } from '../useGoogleSignIn';
 import { useApp } from '../store';
 
 export function AuroraBg() {
@@ -25,7 +25,7 @@ export function LogoParticles({ fontSize }: Readonly<{ fontSize: string }>) {
 }
 
 // "G" oficial de Google: las guías de marca de Sign in with Google piden el logo a color, sin modificar
-function GoogleG() {
+export function GoogleG() {
   return (
     <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden>
       <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
@@ -36,16 +36,13 @@ function GoogleG() {
   );
 }
 
-// Cerrar el popup o abrir otro encima no es un error: no se avisa
-const CANCELLED = new Set(['auth/popup-closed-by-user', 'auth/cancelled-popup-request']);
-
 // Posición final de cada póster del abanico: izquierda, centro (delante), derecha
 const fanPose = [{ x: -150, y: 24, rotation: -9 }, { x: 0, y: -18, rotation: 0, zIndex: 2 }, { x: 150, y: 24, rotation: 9 }];
 
 export default function Welcome() {
-  const { st, set, go, flash, t, name } = useApp();
+  const { st, set, go, t, name } = useApp();
   const fan = useRef<HTMLDivElement>(null);
-  const [busy, setBusy] = useState(false);
+  const { busy, google } = useGoogleSignIn();
 
   // El abanico se despliega al entrar: anticipa el tipo de resultado que vas a obtener
   useLayoutEffect(() => {
@@ -58,19 +55,6 @@ export default function Welcome() {
     return () => mm.revert();
   }, []);
 
-  // Abre el popup de Google (selector de cuentas). Con la sesión ya abierta, solo continúa.
-  const google = () => {
-    if (st.loggedIn) { go('type'); return; }
-    setBusy(true);
-    signInWithGoogle()
-      .then(() => go('type'))
-      .catch((e: { code?: string }) => {
-        if (e.code === 'auth/popup-blocked') flash(t.popupBlocked);
-        else if (!CANCELLED.has(e.code ?? '')) { console.error(e); flash(t.loginError); }
-      })
-      .finally(() => setBusy(false));
-  };
-
   return (
     <section className="mp-screen" style={{ display: 'flex', flexDirection: 'column' }}>
       <AuroraBg />
@@ -81,7 +65,8 @@ export default function Welcome() {
           <p data-reveal className="mp-lead">{t.heroDesc}</p>
           <div data-reveal style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 8 }}>
             <Button variant="google" icon={<GoogleG />} onClick={google} disabled={busy} aria-busy={busy}>{st.loggedIn ? t.continueAs(name) : t.google}</Button>
-            {!st.loggedIn && <Button variant="secondary" icon={<UserCircle size={20} aria-hidden />} onClick={() => set({ screen: 'type' })}>{t.guest}</Button>}
+            {!st.loggedIn && <Button variant="secondary" icon={<EnvelopeSimple size={20} aria-hidden />} onClick={() => go('login')}>{t.emailLogin}</Button>}
+            {!st.loggedIn && <Button variant="ghost" icon={<UserCircle size={20} aria-hidden />} onClick={() => set({ screen: 'type' })}>{t.guest}</Button>}
           </div>
         </div>
         <div className="mp-fan" ref={fan} aria-hidden>

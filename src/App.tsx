@@ -5,6 +5,7 @@ import Reveal from './components/Reveal';
 import { StoreContext, useStore, type Screen } from './store';
 import { signOutUser } from './auth';
 import Welcome from './screens/Welcome';
+import Login from './screens/Login';
 import SurveyType from './screens/SurveyType';
 import RecTypes from './screens/RecTypes';
 import Quest from './screens/Quest';
@@ -15,7 +16,7 @@ import Faq from './screens/Faq';
 import Contact from './screens/Contact';
 
 const screens: Record<Screen, ComponentType> = {
-  welcome: Welcome, type: SurveyType, rectypes: RecTypes, quest: Quest, loading: Loading,
+  welcome: Welcome, login: Login, type: SurveyType, rectypes: RecTypes, quest: Quest, loading: Loading,
   results: Results, home: Home, faq: Faq, contacto: Contact,
 };
 
@@ -41,7 +42,7 @@ export default function App() {
       {/* La carga va a pantalla completa, sin header */}
       {st.screen !== 'loading' && (
         <header className="mp-header">
-          {st.screen !== 'welcome' && (
+          {st.screen !== 'welcome' && st.screen !== 'login' && (
             <PillNav items={navItems} activeHref={activeHref} logoHref="#home" brand="MP" baseColor="#1f1f2e" pillColor="#f4f4f4" pillTextColor="#0f0f14" hoveredPillTextColor="#f4f4f4" />
           )}
           <div className="mp-header-actions">

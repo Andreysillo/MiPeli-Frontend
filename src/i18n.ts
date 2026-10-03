@@ -3,7 +3,16 @@ const es = {
   heroTitle: 'Tu película de esta noche, en dos minutos.',
   heroDesc: 'Responde unas preguntas rápidas y te recomendamos qué ver. Sin scrollear 40 minutos.',
   google: 'Continuar con Google', guest: 'Entrar como invitado', guestName: 'invitado', faq: 'Preguntas frecuentes', sug: 'Sugerencias',
-  continueAs: (user: string) => `Continuar como ${user}`, signOut: 'Cerrar sesión',
+  continueAs: (user: string) => `Continuar como ${user}`, signOut: 'Cerrar sesión', emailLogin: 'Usar correo',
+  loginTitle: 'Inicia sesión', registerTitle: 'Crea tu cuenta', tabLogin: 'Iniciar sesión', tabRegister: 'Crear cuenta', submitLogin: 'Entrar', submitRegister: 'Crear cuenta',
+  nameLabel: 'Nombre', emailLabel: 'Correo electrónico', passwordLabel: 'Contraseña', passwordHint: 'Mínimo 6 caracteres.', showPassword: 'Mostrar contraseña', hidePassword: 'Ocultar contraseña',
+  forgot: '¿Olvidaste tu contraseña?', needEmail: 'Escribe tu correo arriba y vuelve a pulsar “¿Olvidaste tu contraseña?”.', resetSent: 'Si ese correo tiene una cuenta, te enviamos un enlace para cambiar la contraseña.', or: 'o',
+  authErrors: {
+    'auth/invalid-credential': 'Correo o contraseña incorrectos.', 'auth/invalid-email': 'Ese correo no es válido.',
+    'auth/email-already-in-use': 'Ya existe una cuenta con ese correo. Prueba a iniciar sesión.', 'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
+    'auth/too-many-requests': 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.', 'auth/network-request-failed': 'No hay conexión. Revisa tu internet e inténtalo de nuevo.',
+    'auth/operation-not-allowed': 'El acceso con correo no está habilitado en Firebase.', 'auth/user-disabled': 'Esta cuenta está deshabilitada.',
+  },
   loginError: 'No pudimos iniciar sesión con Google. Inténtalo de nuevo.', popupBlocked: 'Tu navegador bloqueó la ventana de Google. Permite las ventanas emergentes e inténtalo de nuevo.',
   hi: (user: string) => `Hola, ${user}`,
 
@@ -54,7 +63,7 @@ const es = {
   contactLabel: 'Escríbenos', creditsLabel: 'Créditos',
   privacyLabel: 'Privacidad y datos',
   privacyPoints: [
-    'Si entras con Google, Firebase (de Google) recibe tu nombre, correo y foto de perfil para mantener tu sesión. MiPeli solo usa tu nombre, para saludarte.',
+    'Si entras con Google, Firebase (de Google) recibe tu nombre, correo y foto de perfil para mantener tu sesión. Si creas una cuenta con correo, guarda tu correo, tu nombre y una versión cifrada de tu contraseña, que MiPeli nunca ve. MiPeli solo usa tu nombre, para saludarte.',
     'Tus respuestas, el idioma y tu valoración se guardan solo en tu navegador. No se envían a ningún servidor, y al borrar los datos del sitio desaparecen.',
     'Lo que escribes en el formulario de sugerencias todavía no se envía ni se guarda en ningún lado.',
     'No vendemos ni compartimos tus datos, y no los usamos para publicidad.',
@@ -67,7 +76,7 @@ const es = {
   aboutKick: 'Sobre el autor', authorName: 'xxx', authorBio: 'Estudiante de xxx, estudiando en xxx, con una gran pasión por las películas y el software.',
   sugLabel: '¿Alguna sugerencia para MiPeli?', sugPh: 'Escríbela aquí…', send: 'Enviar',
 
-  freshPick: 'Nueva recomendación con tus gustos guardados', thanksSug: '¡Gracias! Tu sugerencia llegó a Kevin.', linkCopied: 'Enlace copiado', shareFallback: 'Comparte: ',
+  freshPick: 'Nueva recomendación con tus gustos guardados', thanksSug: '¡Gracias! Tu sugerencia llegó a Andrey.', linkCopied: 'Enlace copiado', shareFallback: 'Comparte: ',
 };
 
 export type Strings = typeof es;
@@ -78,7 +87,16 @@ const en: Strings = {
   heroTitle: 'Tonight’s movie, in two minutes.',
   heroDesc: 'Answer a few quick questions and we tell you what to watch. No more 40 minutes of scrolling.',
   google: 'Continue with Google', guest: 'Continue as guest', guestName: 'guest', faq: 'FAQ', sug: 'Suggestions',
-  continueAs: (user: string) => `Continue as ${user}`, signOut: 'Sign out',
+  continueAs: (user: string) => `Continue as ${user}`, signOut: 'Sign out', emailLogin: 'Use email',
+  loginTitle: 'Sign in', registerTitle: 'Create your account', tabLogin: 'Sign in', tabRegister: 'Create account', submitLogin: 'Sign in', submitRegister: 'Create account',
+  nameLabel: 'Name', emailLabel: 'Email', passwordLabel: 'Password', passwordHint: 'At least 6 characters.', showPassword: 'Show password', hidePassword: 'Hide password',
+  forgot: 'Forgot your password?', needEmail: 'Type your email above and press “Forgot your password?” again.', resetSent: 'If that email has an account, we sent you a link to reset the password.', or: 'or',
+  authErrors: {
+    'auth/invalid-credential': 'Wrong email or password.', 'auth/invalid-email': 'That email isn’t valid.',
+    'auth/email-already-in-use': 'An account with that email already exists. Try signing in.', 'auth/weak-password': 'The password must be at least 6 characters.',
+    'auth/too-many-requests': 'Too many attempts. Wait a few minutes and try again.', 'auth/network-request-failed': 'No connection. Check your internet and try again.',
+    'auth/operation-not-allowed': 'Email sign-in isn’t enabled in Firebase.', 'auth/user-disabled': 'This account is disabled.',
+  },
   loginError: 'We couldn’t sign you in with Google. Please try again.', popupBlocked: 'Your browser blocked the Google window. Allow pop-ups and try again.',
   hi: (user: string) => `Hi, ${user}`,
 
@@ -128,7 +146,7 @@ const en: Strings = {
   contactLabel: 'Get in touch', creditsLabel: 'Credits',
   privacyLabel: 'Privacy and data',
   privacyPoints: [
-    'If you sign in with Google, Firebase (by Google) receives your name, email and profile photo to keep you signed in. MiPeli only uses your name, to greet you.',
+    'If you sign in with Google, Firebase (by Google) receives your name, email and profile photo to keep you signed in. If you create an account with email, it stores your email, your name and an encrypted version of your password, which MiPeli never sees. MiPeli only uses your name, to greet you.',
     'Your answers, language and feedback are stored only in your browser. They are not sent to any server, and clearing the site’s data removes them.',
     'What you type in the suggestions form is not sent or stored anywhere yet.',
     'We don’t sell or share your data, and we don’t use it for advertising.',
@@ -141,7 +159,7 @@ const en: Strings = {
   aboutKick: 'About the author', authorName: 'xxx', authorBio: 'A xxx student, studying at xxx, with a deep passion for film and software.',
   sugLabel: 'Any suggestion for MiPeli?', sugPh: 'Write it here…', send: 'Send',
 
-  freshPick: 'Fresh pick from your saved taste', thanksSug: 'Thanks! Your suggestion reached Kevin.', linkCopied: 'Link copied', shareFallback: 'Share: ',
+  freshPick: 'Fresh pick from your saved taste', thanksSug: 'Thanks! Your suggestion reached Andrey.', linkCopied: 'Link copied', shareFallback: 'Share: ',
 };
 
 export const L: Record<Lang, Strings> = { es, en };
