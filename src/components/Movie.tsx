@@ -1,6 +1,8 @@
 // Piezas de película compartidas por la galería, la ficha y la lista de extras
 import { platforms, poster, type Movie, type Platform, type PlatformInfo } from '../data';
 import type { Lang } from '../i18n';
+import type { Reason, Rec } from '../recommend';
+import type { Mood } from '../survey';
 import { useApp } from '../store';
 
 // Los géneros vienen en español (como los da TMDB con language=es); para inglés se traducen aquí
@@ -51,5 +53,17 @@ export function WatchOn({ m, big, label }: Readonly<{ m: Movie; big?: boolean; l
         {m.platforms.map(p => <PlatformLink key={p} p={p} big={big} />)}
       </div>
     </div>
+  );
+}
+
+// Por qué sale esta película (parecida a una que eligió, su ánimo, su plataforma) y qué restricción incumple, si alguna
+export function Reasons({ m }: Readonly<{ m: Rec }>) {
+  const { t } = useApp();
+  const label = (r: Reason) => (r.kind === 'mood' ? t.moodNames[r.ref as Mood].name : r.ref);
+  return (
+    <ul className="mp-reasons">
+      {m.reasons.map(r => <li key={r.kind} className="mp-tag">{t.reasons[r.kind](label(r))}</li>)}
+      {m.flags.map(f => <li key={f} className="mp-tag mp-tag-warn">{t.flags[f]}</li>)}
+    </ul>
   );
 }

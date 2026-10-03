@@ -3,8 +3,10 @@ import { ArrowsClockwise, Lightning, ShareNetwork, ThumbsDown, ThumbsUp } from '
 import Button from '../components/Button';
 import CountUp from '../components/CountUp';
 import PosterGallery from '../components/PosterGallery';
-import { Imdb, WatchOn, countryName, genreName, runtime } from '../components/Movie';
-import { poster, recommend, type Movie } from '../data';
+import { Imdb, Reasons, WatchOn, countryName, genreName, runtime } from '../components/Movie';
+import { poster } from '../data';
+import { recommend, type Rec } from '../recommend';
+import PlatformPicker from '../steps/PlatformPicker';
 import { useApp } from '../store';
 
 // Extra en formato índice: compacto, sin animación de ficha, pero con lo necesario para decidir
@@ -17,7 +19,7 @@ function Stat({ label, children }: Readonly<{ label: string; children: ReactNode
   );
 }
 
-function IndexRow({ m }: Readonly<{ m: Movie }>) {
+function IndexRow({ m }: Readonly<{ m: Rec }>) {
   const { st, t } = useApp();
   return (
     <li data-reveal className="mp-index-row">
@@ -27,6 +29,7 @@ function IndexRow({ m }: Readonly<{ m: Movie }>) {
         <p className="mp-label tnum">{m.year} · {runtime(m.runtime)} · {m.genres.map(g => genreName(g, st.lang)).join(', ')}</p>
         <p className="mp-label"><span className="mp-cap">{t.directedBy}</span> {m.director} <span className="mp-cap">{t.starring}</span> {m.cast.slice(0, 2).join(', ')}</p>
         <p className="mp-index-overview">{m.overview[st.lang]}</p>
+        <Reasons m={m} />
       </div>
       <div className="mp-index-side">
         <Imdb m={m} />
@@ -40,16 +43,35 @@ const mostCommon = (xs: string[]) => xs.reduce((best, x) => (xs.filter(y => y ==
 
 // Si pidió menos de 10, se añaden hasta 4 extras al final del feed
 const MAX_EXTRAS = 4;
+const NUMBERS = [1, 3, 5, 8, 10];
 
 export default function Results() {
   const { st, set, go, flash, t } = useApp();
   const ranked = recommend(st);
   const recs = ranked.slice(0, st.numMovies);
   const extras = st.numMovies < 10 ? ranked.slice(st.numMovies, st.numMovies + MAX_EXTRAS) : [];
+  const redo = () => set({ qi: 0, duelIdx: 0, duelPicks: [], screen: 'quest', questActive: true });
 
-  // Lo que explica la selección: el género y director que eligió, o lo que más se repite en sus recomendaciones
-  const topGenre = st.rec.genres ? st.picks.genre : mostCommon(recs.flatMap(m => m.genres));
-  const director = st.rec.director ? st.picks.director : undefined;
+  // Los filtros dejaron la lista vacía: se ofrece quitarlos en lugar de mostrar una pantalla rota
+  if (recs.length === 0) {
+    return (
+      <section className="mp-screen">
+        <div className="mp-content mp-container mp-page mp-stack" style={{ gap: 20, minHeight: '70vh', justifyContent: 'center' }}>
+          <h1 data-reveal className="mp-title">{t.noResultsTitle}</h1>
+          <p data-reveal className="mp-lead">{t.noResultsText}</p>
+          <div data-reveal style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <Button onClick={() => set({ avoid: [], maxRuntime: null, company: 'solo', ownedPlatforms: [] })}>{t.relax}</Button>
+            <Button variant="secondary" icon={<ArrowsClockwise size={18} aria-hidden />} onClick={redo}>{t.redoSame}</Button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Lo que explica la selección: el ánimo que eligió y, si hay, una película que marcó
+  const moodList = new Intl.ListFormat(st.lang, { style: 'long', type: 'conjunction' }).format(st.moods.map(k => t.moodNames[k].name.toLowerCase()));
+  const lead = moodList ? t.because(moodList, st.liked[0] ?? st.duelPicks[0]) : '';
+  const topGenre = mostCommon(recs.flatMap(m => m.genres));
   const outside = Math.round((100 * recs.filter(m => m.country !== 'US').length) / recs.length);
   const cine = countryName(mostCommon(recs.map(m => m.country)), st.lang);
   const avgImdb = recs.reduce((sum, m) => sum + m.imdb, 0) / recs.length;
@@ -68,12 +90,20 @@ export default function Results() {
         <div className="mp-container mp-results-head">
           <div className="mp-stack" style={{ gap: 10 }}>
             <h1 data-reveal className="mp-title">{recs.length === 1 ? t.tonightKick : t.yourMovies(recs.length)}</h1>
-            <p data-reveal className="mp-lead">{t.because(genreName(topGenre, st.lang), director)}</p>
+            {lead && <p data-reveal className="mp-lead">{lead}</p>}
           </div>
           <div data-reveal><Button variant="ghost" size="sm" icon={<ShareNetwork size={18} aria-hidden />} onClick={share}>{t.share}</Button></div>
         </div>
 
-        <PosterGallery movies={recs} />
+        {/* Cuántas ver: cambiar el número no pide volver a responder */}
+        <div data-reveal className="mp-container mp-stack" style={{ gap: 2, marginTop: 28 }}>
+          <span id="num-label" className="mp-kicker">{t.numMoviesLabel}</span>
+          <div className="mp-nums mp-nums-sm tnum" role="group" aria-labelledby="num-label">
+            {NUMBERS.map(n => <button key={n} aria-pressed={st.numMovies === n} onClick={() => set({ numMovies: n })}>{n}</button>)}
+          </div>
+        </div>
+
+        <PosterGallery key={recs.map(m => m.title).join('|')} movies={recs} />
 
         <div className="mp-container mp-stack" style={{ gap: 72, marginTop: 88 }}>
           <div className="mp-stack" style={{ gap: 16 }}>
@@ -99,6 +129,11 @@ export default function Results() {
             </div>
           )}
 
+          <div data-reveal className="mp-card mp-stack" style={{ padding: 24, gap: 16 }}>
+            <h2 className="mp-h3">{t.myPlatforms}</h2>
+            <PlatformPicker label={t.myPlatforms} />
+          </div>
+
           <div data-reveal className="mp-card mp-stack" style={{ padding: 24, gap: 24 }}>
             <div className="mp-stack" style={{ gap: 12 }}>
               <h2 className="mp-h3">{t.usefulAsk}</h2>
@@ -112,8 +147,8 @@ export default function Results() {
             <div className="mp-stack" style={{ gap: 12 }}>
               <h2 className="mp-h3">{t.redoTitle}</h2>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <Button variant="secondary" size="sm" icon={<ArrowsClockwise size={18} aria-hidden />} onClick={() => set({ qi: 0, duelIdx: 0, screen: 'quest', questActive: true })}>{t.redoSame}</Button>
-                <Button variant="secondary" size="sm" onClick={() => go('type')}>{t.redoDiff}</Button>
+                <Button variant="secondary" size="sm" icon={<ArrowsClockwise size={18} aria-hidden />} onClick={redo}>{t.redoSame}</Button>
+                <Button variant="secondary" size="sm" onClick={() => set({ confirm: 'restart' })}>{t.redoFresh}</Button>
                 {st.loggedIn && <Button variant="secondary" size="sm" icon={<Lightning size={18} aria-hidden />} onClick={() => { go('loading'); flash(t.freshPick); }}>{t.quickRec}</Button>}
               </div>
             </div>

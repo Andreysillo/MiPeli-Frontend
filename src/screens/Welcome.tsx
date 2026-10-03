@@ -7,7 +7,7 @@ import CountUp from '../components/CountUp';
 import { genreName } from '../components/Movie';
 import { catalog, contactInfo, platforms, poster, type Movie } from '../data';
 import { splitWords } from '../words';
-import { useApp, type Screen } from '../store';
+import { useApp } from '../store';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -190,13 +190,13 @@ function Numbers() {
 // Aquí está el único acceso: sin sesión lleva a la pantalla de inicio; con sesión abierta, directo a la encuesta
 // (o a retomarla si había una a medias). Un invitado con la encuesta a medias también puede volver a ella.
 function Cta() {
-  const { st, set, go, t, name } = useApp();
+  const { st, set, go, enterSurvey, t, name } = useApp();
   const [title, dim] = t.landing.ctaTitle;
   const root = useRef<HTMLElement>(null);
-  let target: Screen = 'login';
+  let onMain = () => go('login');
   let label = t.landing.cta;
-  if (st.loggedIn && st.questActive) { target = 'quest'; label = t.continueSurvey; }
-  else if (st.loggedIn) { target = 'type'; label = t.continueAs(name); }
+  if (st.loggedIn && st.questActive) { onMain = () => go('quest'); label = t.continueSurvey; }
+  else if (st.loggedIn) { onMain = enterSurvey; label = t.continueAs(name); }
   // Con una encuesta a medias hay una segunda opción: quien tiene sesión puede empezar una nueva; un invitado puede volver a la suya
   const second = st.loggedIn
     ? { label: t.startNew, run: () => set({ confirm: 'restart' }) }
@@ -216,7 +216,7 @@ function Cta() {
       <h2 className="lp-display"><span className="lp-line"><span>{title}</span></span><span className="lp-line lp-dim"><span>{dim}</span></span></h2>
       <p data-reveal className="lp-cta-text">{t.landing.ctaText}</p>
       <div data-reveal className="lp-cta-actions">
-        <Button className="lp-cta-btn" onClick={() => go(target)}>
+        <Button className="lp-cta-btn" onClick={onMain}>
           {label}<ArrowRight size={20} weight="bold" aria-hidden />
         </Button>
         {st.questActive && <Button variant="secondary" className="lp-cta-btn" onClick={second.run}>{second.label}</Button>}

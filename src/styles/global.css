@@ -122,7 +122,7 @@ button { font: inherit; color: inherit; }
 [aria-pressed='true'] .mp-check { background: var(--text); border-color: var(--text); color: var(--on-light); transform: scale(1.08); }
 
 /* Control segmentado */
-.mp-seg { align-self: flex-start; display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(255, 255, 255, .06); border: 1px solid var(--border); }
+.mp-seg { align-self: flex-start; display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 26px; background: rgba(255, 255, 255, .06); border: 1px solid var(--border); }
 .mp-seg button {
   min-width: 48px; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent;
   color: var(--text-muted); font-weight: 600; font-size: .875rem; cursor: pointer;
@@ -227,8 +227,6 @@ html:has(.lp) { scroll-padding-top: calc(var(--header-h) + 8px); }
 .mp-steps .bar { width: 100%; height: 4px; border-radius: 999px; background: rgba(255, 255, 255, .14); transition: background-color .3s ease; }
 .mp-steps .done .bar, .mp-steps .current .bar { background: var(--text); }
 .mp-steps .current button { color: var(--text); }
-.mp-wheel-step { display: grid; grid-template-columns: 1fr; gap: 16px; }
-.mp-wheel { position: relative; height: 56vh; min-height: 340px; }
 .mp-actionbar {
   position: sticky; bottom: 0; z-index: 20; isolation: isolate; margin-top: 16px;
   padding: 32px 0 calc(16px + env(safe-area-inset-bottom));
@@ -239,13 +237,6 @@ html:has(.lp) { scroll-padding-top: calc(var(--header-h) + 8px); }
 .mp-poster-btn { padding: 0; border: 1px solid var(--border); border-radius: var(--radius-poster); overflow: hidden; cursor: pointer; background: #1f1f2e; transition: transform .25s var(--ease-out), border-color .2s ease, box-shadow .25s ease; }
 .mp-poster-btn:hover { transform: translateY(-4px); border-color: var(--text); box-shadow: 0 24px 50px -20px rgba(0, 0, 0, .8); }
 .mp-poster-btn img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; }
-.mp-movie-grid .chroma-grid { grid-template-columns: repeat(3, 1fr); }
-.chroma-grid .chroma-info .name { font-weight: 600; font-size: 14px; letter-spacing: -.01em; }
-.chroma-grid .chroma-info .role, .chroma-grid .chroma-info .handle { font-size: 12px; }
-.chroma-grid .chroma-card { cursor: default; }
-/* Los componentes de React Bits traen su propio texto crema/violeta: se alinea con la paleta */
-.chroma-grid .chroma-info { color: var(--text); }
-.chroma-grid .chroma-info .role, .chroma-grid .chroma-info .handle { color: var(--text-subtle); }
 .drift-wall__badge { color: var(--on-light) !important; }
 
 /* ---------- Pantallas ---------- */
@@ -395,11 +386,7 @@ html:has(dialog[open]) { overflow: hidden; }
 /* Insignia de IMDb: amarillo de marca con texto oscuro (contraste > 10:1) */
 .mp-imdb { background: #f5c518; color: #000; font-weight: 800; font-size: .6875rem; letter-spacing: .02em; padding: 2px 5px; border-radius: 4px; }
 
-@media (min-width: 640px) {
-  .mp-movie-grid .chroma-grid { grid-template-columns: repeat(6, 1fr); }
-}
 @media (min-width: 900px) {
-  .mp-wheel-step { grid-template-columns: 1fr 300px; align-items: center; }
   .mp-spec { grid-template-columns: minmax(0, 1fr) minmax(320px, 420px); align-items: end; gap: 48px; }
   .mp-dlg-grid { grid-template-columns: minmax(260px, 380px) minmax(0, 1fr); gap: 64px; align-items: start; }
   .mp-dlg-poster { width: 100%; }
@@ -414,8 +401,6 @@ html:has(dialog[open]) { overflow: hidden; }
   .mp-page { padding-top: calc(var(--header-h) + 24px); }
   .mp-steps .label { display: none; }
   .mp-mobile-only { display: inline; }
-  .mp-wheel { height: 42vh; min-height: 280px; }
-  .mp-wheel-pick { display: none; }
   .mp-lang { height: 38px; padding: 0 12px; gap: 6px; }
   .mp-header-actions { gap: 6px; }
   .mp-hide-sm { display: none; }
@@ -461,7 +446,7 @@ html:has(dialog[open]) { overflow: hidden; }
   padding: 12px 20px; border-radius: 999px; box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
 }
 
-/* ---------- Pantallas de elección (tipo de encuesta y qué recomendar) ---------- */
+/* ---------- Pasos de la encuesta ---------- */
 .mp-rise { display: inline-block; overflow: hidden; vertical-align: top; padding: .1em 0 .16em; margin: -.1em 0 -.16em; }
 .mp-rise > span { display: inline-block; }
 .mp-inline { display: inline-flex; align-items: center; gap: 6px; }
@@ -474,13 +459,12 @@ html:has(dialog[open]) { overflow: hidden; }
 .mp-blob.b { right: -25vmax; bottom: -35vmax; animation-delay: -6s; animation-duration: 18s; }
 .mp-glow { position: absolute; left: 0; top: 0; width: 620px; height: 620px; margin: -310px 0 0 -310px; border-radius: 50%; background: radial-gradient(circle, rgba(244, 244, 244, .085), transparent 65%); will-change: transform; }
 
-/* Panel de elección. --mx/--my los escribe useSpotlight (luz que sigue al cursor) */
-.mp-choices, .mp-picks { display: grid; gap: 12px; margin-top: 40px; }
+/* Panel de elección (mosaicos del ánimo). --mx/--my los escribe useSpotlight (luz que sigue al cursor) */
 .mp-panel {
   position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 18px;
   min-width: 0; min-height: 220px; padding: 24px; text-align: left; cursor: pointer; color: var(--text);
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-surface); touch-action: manipulation;
-  transition: flex-grow .6s var(--ease-out), border-color .25s ease, background-color .25s ease, transform .4s var(--ease-out);
+  transition: border-color .25s ease, background-color .25s ease, transform .4s var(--ease-out);
 }
 .mp-panel::before {
   content: ''; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .35s ease;
@@ -490,32 +474,51 @@ html:has(dialog[open]) { overflow: hidden; }
 .mp-panel:hover { border-color: var(--border-strong); }
 .mp-panel:active { transform: scale(.992); }
 .mp-panel:focus-visible { outline-offset: -3px; border-radius: var(--radius-surface); }
-/* Número gigante solo de contorno, anclado a la esquina: se desliza al apuntar */
-.mp-panel-num {
-  position: absolute; z-index: -1; top: -.1em; right: .06em; font-size: clamp(8rem, 15vw, 13rem); font-weight: 500; line-height: 1; letter-spacing: -.06em;
-  color: transparent; -webkit-text-stroke: 1px rgba(244, 244, 244, .12); pointer-events: none;
-  transition: transform .7s var(--ease-out), -webkit-text-stroke-color .3s ease;
-}
-.mp-panel:hover .mp-panel-num, .mp-panel:focus-visible .mp-panel-num { transform: translate(-.05em, .05em); -webkit-text-stroke-color: rgba(244, 244, 244, .3); }
 .mp-panel-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .mp-panel-body { display: grid; gap: 10px; justify-items: start; }
 .mp-panel-title { display: block; max-width: 100%; font-size: clamp(1.5rem, 2.3vw, 2.5rem); font-weight: 500; line-height: .95; letter-spacing: -.05em; overflow-wrap: anywhere; text-wrap: balance; }
 .mp-panel-desc { display: block; max-width: 34ch; color: var(--text-muted); }
-.mp-panel-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.mp-go { width: 44px; height: 44px; flex: none; display: grid; place-items: center; border-radius: 999px; border: 1px solid var(--border-strong); transition: background-color .3s ease, color .3s ease, transform .5s var(--ease-out); }
-.mp-panel:hover .mp-go, .mp-panel:focus-visible .mp-go { background: var(--text); color: var(--on-light); transform: rotate(-45deg); }
-
-/* Selección múltiple (qué recomendar) */
 .mp-pick[aria-pressed='true'] { border-color: var(--text); background: #2a2a3d; }
-.mp-pick[aria-pressed='true'] .mp-panel-num { -webkit-text-stroke-color: rgba(244, 244, 244, .24); }
-.mp-fanmini { display: flex; align-items: flex-end; height: 132px; }
-.mp-fanmini img { width: 88px; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-strong); transform-origin: bottom center; transition: transform .6s var(--ease-out), margin .6s var(--ease-out); }
-.mp-fanmini img + img { margin-left: -34px; }
-.mp-fanmini img:nth-child(1) { transform: rotate(-7deg); }
-.mp-fanmini img:nth-child(3) { transform: rotate(7deg); }
-.mp-pick:hover .mp-fanmini img + img, .mp-pick:focus-visible .mp-fanmini img + img { margin-left: 8px; }
-.mp-pick:hover .mp-fanmini img:nth-child(1), .mp-pick:focus-visible .mp-fanmini img:nth-child(1) { transform: rotate(-11deg) translateY(-6px); }
-.mp-pick:hover .mp-fanmini img:nth-child(3), .mp-pick:focus-visible .mp-fanmini img:nth-child(3) { transform: rotate(11deg) translateY(-6px); }
+
+/* Paso 1: ocho mosaicos de ánimo, dos columnas en teléfono y cuatro en pantalla ancha */
+.mp-moods { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 32px; }
+.mp-mood { min-height: 168px; padding: 18px; }
+.mp-mood .mp-panel-title { font-size: clamp(1.25rem, 1.9vw, 1.75rem); }
+.mp-mood .mp-panel-desc { font-size: .875rem; }
+
+/* Paso 4: buscador (el .mp-input base crece con flex, aquí va en columna), lista de resultados y sugerencias */
+.mp-input.mp-search { flex: none; width: 100%; max-width: 480px; }
+.mp-search-list { list-style: none; margin: 0; padding: 0; max-width: 480px; display: grid; gap: 6px; }
+.mp-search-list button {
+  width: 100%; display: grid; grid-template-columns: 40px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 12px; align-items: center; padding: 8px 12px 8px 8px;
+  text-align: left; color: var(--text); cursor: pointer; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; transition: border-color .2s ease, background-color .2s ease;
+}
+.mp-search-list button:hover, .mp-search-list button:focus-visible { border-color: var(--text); background: #2a2a3d; }
+.mp-search-list img { grid-row: 1 / 3; width: 40px; height: 60px; object-fit: cover; border-radius: 4px; }
+.mp-search-title { font-weight: 600; }
+.mp-sugs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mp-sug { position: relative; }
+.mp-sug .mp-check { position: absolute; top: 8px; right: 8px; background: rgba(15, 15, 20, .72); }
+.mp-sug[aria-pressed='true'] { border-color: var(--text); box-shadow: 0 0 0 2px var(--text); }
+.mp-sug[aria-pressed='true'] .mp-check { background: var(--text); }
+.mp-sug:disabled { opacity: .4; cursor: default; transform: none; border-color: var(--border); box-shadow: none; }
+.mp-chip[aria-pressed='true'] { background: var(--text); border-color: var(--text); color: var(--on-light); }
+
+/* Paso 5 y resultados: logos de las plataformas como interruptores */
+.mp-plats { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 10px; }
+.mp-plat {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text); font-weight: 500; font-size: .9375rem; text-align: left; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px; transition: border-color .2s ease, background-color .2s ease;
+}
+.mp-plat > span:nth-of-type(1) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.mp-plat:hover { border-color: var(--border-strong); }
+.mp-plat[aria-pressed='true'] { border-color: var(--text); background: #2a2a3d; }
+
+/* Resultados: por qué sale cada película y botones para afinar */
+.mp-reasons { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.mp-reasons:empty { display: none; }
+.mp-tag-warn { color: var(--text); border-color: var(--border-strong); background: transparent; border-style: dashed; }
+.mp-refine { display: flex; flex-wrap: wrap; gap: 8px; }
 
 /* Cuántas películas: números grandes con una línea que se dibuja bajo el elegido */
 .mp-nums { display: flex; gap: clamp(6px, 2vw, 20px); margin-left: -6px; }
@@ -525,20 +528,17 @@ html:has(dialog[open]) { overflow: hidden; }
 }
 .mp-nums button::after { content: ''; position: absolute; left: 6px; right: 6px; bottom: -4px; height: 2px; background: var(--text); transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease-out); }
 .mp-nums button:hover { color: var(--text); transform: translateY(-2px); }
+.mp-nums-sm { gap: clamp(2px, 1vw, 10px); }
+.mp-nums-sm button { min-width: 44px; height: 48px; font-size: 1.75rem; }
 .mp-nums button[aria-pressed='true'] { color: var(--text); }
 .mp-nums button[aria-pressed='true']::after { transform: scaleX(1); }
 
-@media (min-width: 900px) {
-  .mp-choices { display: flex; height: clamp(380px, 58vh, 560px); }
-  .mp-choices .mp-panel { flex: var(--g, 1) 1 0; min-height: 0; }
-  .mp-choices .mp-panel:first-child { --g: 1.45; }
-  .mp-picks { grid-template-columns: 1.5fr 1fr 1fr; }
-  .mp-picks .mp-panel { min-height: 340px; }
+@media (min-width: 640px) {
+  .mp-sugs { grid-template-columns: repeat(6, 1fr); }
 }
-/* La expansión solo con mouse; con tacto los paneles quedan fijos */
-@media (min-width: 900px) and (hover: hover) {
-  .mp-choices:has(.mp-panel:is(:hover, :focus-visible)) .mp-panel { --g: 1; }
-  .mp-choices:has(.mp-panel:is(:hover, :focus-visible)) .mp-panel:is(:hover, :focus-visible) { --g: 2; }
+@media (min-width: 900px) {
+  .mp-moods { grid-template-columns: repeat(4, 1fr); }
+  .mp-mood { min-height: 210px; padding: 22px; }
 }
 
 /* ---------- Landing (bienvenida) ----------

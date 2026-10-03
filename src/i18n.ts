@@ -22,7 +22,7 @@ const es = {
     },
     restart: {
       title: (user: string | null) => user ? `${user}, ¿seguro que quieres empezar de nuevo?` : '¿Seguro que quieres empezar de nuevo?',
-      text: 'Se borran tus respuestas hasta ahora y vuelves a elegir cómo hacer la encuesta.', ok: 'Empezar de nuevo', cancel: 'Cancelar',
+      text: 'Se borran tus respuestas hasta ahora y empiezas de nuevo desde la primera pregunta.', ok: 'Empezar de nuevo', cancel: 'Cancelar',
     },
   },
 
@@ -32,7 +32,7 @@ const es = {
     statement: 'Cuarenta minutos eligiendo qué ver. Cero minutos viéndolo. MiPeli te hace unas preguntas rápidas y te dice qué ver esta noche, y dónde verlo.',
     howLabel: 'Cómo funciona',
     steps: [
-      { title: 'Responde', text: 'Unas preguntas rápidas: géneros, directores y duelos entre pósters. Sin listas infinitas.' },
+      { title: 'Responde', text: 'Unas preguntas rápidas: tu ánimo, duelos entre pósters y tus favoritas. Sin listas infinitas.' },
       { title: 'Recibe', text: 'De 1 a 10 películas pensadas para tu noche, cada una con su ficha completa.' },
       { title: 'Mira', text: 'Cada recomendación te lleva directo a la plataforma donde puedes verla.' },
     ],
@@ -44,36 +44,48 @@ const es = {
     navLabel: 'Secciones', navStart: '¿Le entras a la recomendación?', navResume: '¡Continúa tu encuesta!', menu: 'Menú', menuClose: 'Cerrar',
   },
 
-  typeTitle: '¿Cómo quieres hacerlo?', typeDesc: 'Elige un tipo de encuesta. Puedes repetirla cuando quieras.',
-  typeFull: 'Encuesta completa', typeFullD: 'Secuencia larga que clava tus gustos con certeza.',
-  typeShort: 'Encuesta resumida', typeShortD: 'Versión corta para decidir rápido.',
-  typeCustom: 'Personalizada', typeCustomD: 'Tú eliges qué responder, sin límite de tiempo.',
-  recommendedTag: 'Recomendada', youChoose: 'Tú decides', min: 'min',
-
-  recTitle: '¿Qué quieres que te recomendemos?', recDesc: 'Elige una o varias. Cada una será su propia pantalla.',
-  recMovies: 'Películas', recMoviesD: 'Duelos entre películas y tus favoritas. La forma más precisa de acertar.', bestTag: 'La más precisa', recGenres: 'Géneros', recGenresD: 'Rueda de opciones',
-  recDirector: 'Director', recDirectorD: 'Rueda de opciones',
-  numMoviesLabel: '¿Cuántas películas quieres al final?', lengthLabel: 'Largo de la encuesta', lenShort: 'Corta', lenMed: 'Media', lenLong: 'Larga',
-  changeType: 'Cambiar tipo', start: 'Empezar', pickAtLeastOne: 'Elige al menos una opción para empezar.',
-  summary: (steps: number, mins: number) => `${steps} pasos, unos ${mins} min`,
-
-  stepNames: { genres: 'Género', director: 'Director', duel: 'Duelos', movies: 'Películas', personal: 'Ánimo' },
+  stepNames: { mood: 'Ánimo', context: 'Contexto', duel: 'Duelos', favorites: 'Favoritas', platforms: 'Plataformas' },
   stepOf: (i: number, n: number) => `Paso ${i} de ${n}`,
-  qGenres: '¿Qué género te apetece hoy?', qDirector: '¿Qué director te gusta más?',
-  wheelHint: 'Desliza la rueda o toca una opción. En teclado, usa las flechas.', yourPick: 'Tu elección',
-  duelQ: '¿Con cuál te quedas?', duelHint: 'Toca tu favorita.', duelOf: (i: number, n: number) => `Duelo ${i} de ${n}`, duelVs: 'vs',
-  moviesQ: 'De estas, ¿cuáles te laten?', moviesHint: 'Toca para marcar. Puedes elegir varias.', picked: (n: number) => (n === 1 ? '1 elegida' : `${n} elegidas`),
-  moodQ: '¿Qué se te antoja hoy?', moodHint: 'Arrastra la galería y toca los géneros que quieras.', moodEmpty: 'Aún no elegiste ninguno.', remove: 'Quitar',
-  next: 'Siguiente', seeResult: 'Ver mis resultados', back: 'Atrás',
+  moodQ: '¿Qué se te antoja esta noche?', moodHint: (max: number) => `Elige hasta ${max}.`,
+  moodNames: {
+    laugh: { name: 'Reír', hint: 'Algo ligero que me saque una sonrisa.' },
+    tension: { name: 'Tensión', hint: 'Que no pueda ni parpadear.' },
+    feel: { name: 'Emocionarme', hint: 'Historias que se sienten.' },
+    mind: { name: 'Volar la cabeza', hint: 'Ciencia ficción, giros y preguntas grandes.' },
+    epic: { name: 'Aventura', hint: 'Acción, mundos nuevos, algo épico.' },
+    scare: { name: 'Un buen susto', hint: 'Luces apagadas y volumen alto.' },
+    cozy: { name: 'Acurrucarme', hint: 'Cálida, familiar y sin estrés.' },
+    real: { name: 'Algo real', hint: 'Documentales y vidas de verdad.' },
+  },
+  contextQ: 'Cuéntanos de tu noche', contextHint: 'Todo es opcional: nos ayuda a afinar.',
+  timeLabel: '¿Cuánto tiempo tienes?', timeOption: (min: number | null) => (min ? `Hasta ${min} min` : 'Sin límite'),
+  companyLabel: '¿Con quién la ves?', companyNames: { solo: 'Para mí', couple: 'En pareja', friends: 'Con amigos', family: 'En familia' },
+  avoidLabel: '¿Algo que prefieras evitar?',
+  duelQ: '¿Con cuál te quedas?', duelHint: 'Toca tu favorita.', duelOf: (i: number, n: number) => `Duelo ${i} de ${n}`, duelVs: 'vs', duelSkip: 'No conozco ninguna',
+  favoritesQ: '¿Cuáles son tus favoritas?', favoritesHint: (max: number) => `Agrega hasta ${max}. Si no se te ocurre ninguna, sáltalo.`,
+  searchLabel: 'Busca una película', searchPh: 'Escribe un título…', noMatch: 'No encontramos ese título en el catálogo.', orTap: 'O toca una de estas',
+  picked: (n: number) => (n === 1 ? '1 elegida' : `${n} elegidas`), remove: 'Quitar',
+  platformsQ: '¿Dónde ves películas?', platformsHint: 'Solo te mostraremos lo que puedas ver. Se guardan para la próxima vez.',
+  numMoviesLabel: '¿Cuántas películas quieres ver?', myPlatforms: 'Tus plataformas',
+  next: 'Siguiente', skip: 'Omitir', seeResult: 'Ver mis resultados', back: 'Atrás',
 
-  loadingTitle: 'Calculando tu perfil…', loadingDone: (n: number) => (n === 1 ? 'Listo, encontramos tu película' : `Listo, encontramos ${n} películas`), loadingSteps: ['Analizando tus respuestas', 'Cruzando géneros y directores', 'Eligiendo tu película'],
+  loadingTitle: 'Calculando tu perfil…', loadingDone: (n: number) => (n === 1 ? 'Listo, encontramos tu película' : `Listo, encontramos ${n} películas`), loadingSteps: ['Analizando tus respuestas', 'Buscando películas parecidas', 'Comprobando dónde verlas'],
 
   tonightKick: 'Tu película para esta noche', yourMovies: (n: number) => `Tus ${n} películas para esta noche`,
-  because: (genre: string, director?: string) => {
-    const article = /^(Comedia|Ciencia ficción|Animación)$/.test(genre) ? 'la' : 'el';
-    const by = director ? ` y el cine de ${director}` : '';
-    return `Porque te va ${article} ${genre.toLowerCase()}${by}.`;
+  because: (list: string, liked?: string) => {
+    const extra = liked ? ` y lo que elegiste, como ${liked}` : '';
+    return `Según tu ánimo (${list})${extra}.`;
   },
+  reasons: {
+    director: (ref: string) => `Del mismo director que ${ref}`,
+    liked: (ref: string) => `Parecida a ${ref}`,
+    mood: (name: string) => `Va con tu ánimo: ${name.toLowerCase()}`,
+    platform: (p: string) => `Está en ${p}`,
+  },
+  flags: { offPlatform: 'Fuera de tus plataformas', overRuntime: 'Dura más de lo que pediste' },
+  refineSeen: 'Ya la vi', refineNo: 'No me interesa', refineMore: 'Más como esta',
+  refinedSeen: 'Listo, la cambiamos por otra.', refinedNo: 'Anotado, no te la volveremos a mostrar.', refinedMore: 'Anotado: buscaremos más así.',
+  noResultsTitle: 'Con esos filtros no encontramos nada', noResultsText: 'Prueba quitando alguna restricción: plataformas, duración o géneros a evitar.', relax: 'Relajar filtros',
   galleryHint: (n: number): string => (n === 1 ? 'Toca el póster para ver su ficha.' : 'Desliza, arrastra o usa las flechas. Toca un póster para ver su ficha.'),
   seeDetails: 'Ver ficha', posterOf: (title: string) => `Ver ficha de ${title}`, prev: 'Anterior', close: 'Cerrar',
   directedBy: 'Dirigida por', starring: 'Reparto', yearL: 'Año', genresL: 'Géneros', runtimeL: 'Duración', countryL: 'País', watchNow: 'Ver ahora en',
@@ -81,7 +93,7 @@ const es = {
   moreForYou: 'Más para ti', moreHint: 'Extras que también encajan con tus respuestas.',
   wrappedTitle: 'Tu Wrapped de esta sesión', wGenre: 'Género dominante', wRareza: 'Fuera de Hollywood', wCine: 'Cine favorito', wNota: 'Nota media en IMDb',
   usefulAsk: '¿Te sirvieron las recomendaciones?', useful: 'Sí, me sirvieron', notUseful: 'No mucho', thanksFeedback: 'Gracias, lo tendremos en cuenta.',
-  redoTitle: '¿Otra ronda?', redoSame: 'Mismas preguntas', redoDiff: 'Otro tipo de encuesta', quickRec: 'Recomendación sin encuesta',
+  redoTitle: '¿Otra ronda?', redoSame: 'Repetir la encuesta', redoFresh: 'Empezar de cero', quickRec: 'Recomendación sin encuesta',
 
   continueSurvey: 'Continuar encuesta',
 
@@ -132,7 +144,7 @@ const en: Strings = {
     },
     restart: {
       title: (user: string | null) => user ? `${user}, are you sure you want to start over?` : 'Are you sure you want to start over?',
-      text: 'Your answers so far are cleared and you pick how to take the survey again.', ok: 'Start over', cancel: 'Cancel',
+      text: 'Your answers so far are cleared and you start over from the first question.', ok: 'Start over', cancel: 'Cancel',
     },
   },
 
@@ -142,7 +154,7 @@ const en: Strings = {
     statement: 'Forty minutes choosing what to watch. Zero minutes watching it. MiPeli asks a few quick questions and tells you what to watch tonight, and where to stream it.',
     howLabel: 'How it works',
     steps: [
-      { title: 'Answer', text: 'A few quick questions: genres, directors and poster duels. No endless lists.' },
+      { title: 'Answer', text: 'A few quick questions: your mood, poster duels and your favorites. No endless lists.' },
       { title: 'Get', text: 'From 1 to 10 movies picked for your night, each with its full details.' },
       { title: 'Watch', text: 'Every recommendation takes you straight to the platform where you can watch it.' },
     ],
@@ -154,35 +166,48 @@ const en: Strings = {
     navLabel: 'Sections', navStart: 'Up for a recommendation?', navResume: 'Continue your survey!', menu: 'Menu', menuClose: 'Close',
   },
 
-  typeTitle: 'How do you want to do it?', typeDesc: 'Pick a survey type. Repeat it whenever you like.',
-  typeFull: 'Full survey', typeFullD: 'A long sequence that nails your taste for sure.',
-  typeShort: 'Quick survey', typeShortD: 'Short version to decide fast.',
-  typeCustom: 'Custom', typeCustomD: 'You choose what to answer, no time limit.',
-  recommendedTag: 'Recommended', youChoose: 'You decide', min: 'min',
-
-  recTitle: 'What should we recommend?', recDesc: 'Pick one or several. Each becomes its own screen.',
-  recMovies: 'Movies', recMoviesD: 'Movie duels and your favorites. The most accurate way to get it right.', bestTag: 'Most accurate', recGenres: 'Genres', recGenresD: 'Option wheel',
-  recDirector: 'Director', recDirectorD: 'Option wheel',
-  numMoviesLabel: 'How many movies do you want at the end?', lengthLabel: 'Survey length', lenShort: 'Short', lenMed: 'Medium', lenLong: 'Long',
-  changeType: 'Change type', start: 'Start', pickAtLeastOne: 'Pick at least one option to start.',
-  summary: (steps: number, mins: number) => `${steps} steps, about ${mins} min`,
-
-  stepNames: { genres: 'Genre', director: 'Director', duel: 'Duels', movies: 'Movies', personal: 'Mood' },
+  stepNames: { mood: 'Mood', context: 'Context', duel: 'Duels', favorites: 'Favorites', platforms: 'Platforms' },
   stepOf: (i: number, n: number) => `Step ${i} of ${n}`,
-  qGenres: 'What genre are you in the mood for?', qDirector: 'Which director do you like most?',
-  wheelHint: 'Swipe the wheel or tap an option. On a keyboard, use the arrows.', yourPick: 'Your pick',
-  duelQ: 'Which one do you pick?', duelHint: 'Tap your favorite.', duelOf: (i: number, n: number) => `Duel ${i} of ${n}`, duelVs: 'vs',
-  moviesQ: 'Which of these speak to you?', moviesHint: 'Tap to mark. You can pick several.', picked: (n: number) => `${n} picked`,
-  moodQ: 'What are you in the mood for?', moodHint: 'Drag the gallery and tap the genres you want.', moodEmpty: 'Nothing picked yet.', remove: 'Remove',
-  next: 'Next', seeResult: 'See my results', back: 'Back',
+  moodQ: 'What are you in the mood for tonight?', moodHint: (max: number) => `Pick up to ${max}.`,
+  moodNames: {
+    laugh: { name: 'Laugh', hint: 'Something light that makes me smile.' },
+    tension: { name: 'Tension', hint: 'Can’t even blink.' },
+    feel: { name: 'Feel something', hint: 'Stories that hit.' },
+    mind: { name: 'Blow my mind', hint: 'Sci-fi, twists and big questions.' },
+    epic: { name: 'Adventure', hint: 'Action, new worlds, something epic.' },
+    scare: { name: 'A good scare', hint: 'Lights off, volume up.' },
+    cozy: { name: 'Cozy up', hint: 'Warm, family-friendly, no stress.' },
+    real: { name: 'Something real', hint: 'Documentaries and real lives.' },
+  },
+  contextQ: 'Tell us about your night', contextHint: 'Everything is optional: it helps us fine-tune.',
+  timeLabel: 'How much time do you have?', timeOption: (min: number | null) => (min ? `Up to ${min} min` : 'No limit'),
+  companyLabel: 'Who are you watching with?', companyNames: { solo: 'Just me', couple: 'As a couple', friends: 'With friends', family: 'With family' },
+  avoidLabel: 'Anything you’d rather avoid?',
+  duelQ: 'Which one do you pick?', duelHint: 'Tap your favorite.', duelOf: (i: number, n: number) => `Duel ${i} of ${n}`, duelVs: 'vs', duelSkip: 'I don’t know either',
+  favoritesQ: 'What are your favorites?', favoritesHint: (max: number) => `Add up to ${max}. If none comes to mind, skip it.`,
+  searchLabel: 'Search for a movie', searchPh: 'Type a title…', noMatch: 'We couldn’t find that title in the catalog.', orTap: 'Or tap one of these',
+  picked: (n: number) => `${n} picked`, remove: 'Remove',
+  platformsQ: 'Where do you watch movies?', platformsHint: 'We’ll only show what you can watch. They’re saved for next time.',
+  numMoviesLabel: 'How many movies do you want to see?', myPlatforms: 'Your platforms',
+  next: 'Next', skip: 'Skip', seeResult: 'See my results', back: 'Back',
 
-  loadingTitle: 'Computing your profile…', loadingDone: (n: number) => (n === 1 ? 'Done, we found your movie' : `Done, we found ${n} movies`), loadingSteps: ['Analyzing your answers', 'Matching genres and directors', 'Picking your movie'],
+  loadingTitle: 'Computing your profile…', loadingDone: (n: number) => (n === 1 ? 'Done, we found your movie' : `Done, we found ${n} movies`), loadingSteps: ['Analyzing your answers', 'Finding similar movies', 'Checking where to watch'],
 
   tonightKick: 'Your movie for tonight', yourMovies: (n: number) => `Your ${n} movies for tonight`,
-  because: (genre: string, director?: string) => {
-    const by = director ? ` and ${director}’s films` : '';
-    return `Because you like ${genre.toLowerCase()}${by}.`;
+  because: (list: string, liked?: string) => {
+    const extra = liked ? ` and what you picked, like ${liked}` : '';
+    return `Based on your mood (${list})${extra}.`;
   },
+  reasons: {
+    director: (ref: string) => `From the director of ${ref}`,
+    liked: (ref: string) => `Similar to ${ref}`,
+    mood: (name: string) => `Fits your mood: ${name.toLowerCase()}`,
+    platform: (p: string) => `On ${p}`,
+  },
+  flags: { offPlatform: 'Outside your platforms', overRuntime: 'Longer than you asked' },
+  refineSeen: 'Already seen it', refineNo: 'Not interested', refineMore: 'More like this',
+  refinedSeen: 'Done, we swapped it for another one.', refinedNo: 'Noted, we won’t show it again.', refinedMore: 'Noted: we’ll look for more like it.',
+  noResultsTitle: 'We found nothing with those filters', noResultsText: 'Try removing a restriction: platforms, runtime or genres to avoid.', relax: 'Relax filters',
   galleryHint: (n: number) => (n === 1 ? 'Tap the poster to see its details.' : 'Swipe, drag or use the arrows. Tap a poster to see its details.'),
   seeDetails: 'View details', posterOf: (title: string) => `View details for ${title}`, prev: 'Previous', close: 'Close',
   directedBy: 'Directed by', starring: 'Starring', yearL: 'Year', genresL: 'Genres', runtimeL: 'Runtime', countryL: 'Country', watchNow: 'Watch now on',
@@ -190,7 +215,7 @@ const en: Strings = {
   moreForYou: 'More for you', moreHint: 'Extras that also fit your answers.',
   wrappedTitle: 'Your Wrapped for this session', wGenre: 'Top genre', wRareza: 'Outside Hollywood', wCine: 'Favorite cinema', wNota: 'Average IMDb rating',
   usefulAsk: 'Were the recommendations useful?', useful: 'Yes, they helped', notUseful: 'Not really', thanksFeedback: 'Thanks, we’ll keep it in mind.',
-  redoTitle: 'Another round?', redoSame: 'Same questions', redoDiff: 'Another survey type', quickRec: 'Pick without survey',
+  redoTitle: 'Another round?', redoSame: 'Redo the survey', redoFresh: 'Start from scratch', quickRec: 'Pick without survey',
 
   continueSurvey: 'Continue survey',
 

@@ -3,12 +3,10 @@ import { ArrowCounterClockwise, CheckCircle, Globe, SignOut } from '@phosphor-ic
 import ConfirmDialog from './components/ConfirmDialog';
 import SiteNav from './components/SiteNav';
 import Reveal from './components/Reveal';
-import { StoreContext, blankSurvey, freshSurvey, useStore, type Screen } from './store';
+import { StoreContext, blankSurvey, useStore, type Screen } from './store';
 import { signOutUser } from './auth';
 import Welcome from './screens/Welcome';
 import Login from './screens/Login';
-import SurveyType from './screens/SurveyType';
-import RecTypes from './screens/RecTypes';
 import Quest from './screens/Quest';
 import Loading from './screens/Loading';
 import Results from './screens/Results';
@@ -16,23 +14,22 @@ import Faq from './screens/Faq';
 import Contact from './screens/Contact';
 
 const screens: Record<Screen, ComponentType> = {
-  welcome: Welcome, login: Login, type: SurveyType, rectypes: RecTypes, quest: Quest, loading: Loading,
-  results: Results, faq: Faq, contacto: Contact,
+  welcome: Welcome, login: Login, quest: Quest, loading: Loading, results: Results, faq: Faq, contacto: Contact,
 };
 
 export default function App() {
   const store = useStore();
-  const { st, set, t } = store;
+  const { st, set, startSurvey, t } = store;
   const Current = screens[st.screen];
   const mainRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
   const who = st.loggedIn && st.user ? st.user : null;
   const ask = st.confirm ? t.confirm[st.confirm] : null;
   const dismiss = () => set({ confirm: null });
-  // Cerrar sesión también descarta la encuesta a medias; empezar de nuevo limpia las respuestas y vuelve a elegir el tipo
+  // Cerrar sesión también descarta la encuesta a medias; empezar de nuevo limpia las respuestas y entra al primer paso
   const accept = () => {
     if (st.confirm === 'signout') { signOutUser().catch(console.error); set({ ...blankSurvey(), confirm: null, screen: 'welcome' }); }
-    else set({ ...freshSurvey(), confirm: null, screen: 'type' });
+    else { set({ confirm: null }); startSurvey(); }
   };
   const actions = (
     <div className="mp-header-actions">

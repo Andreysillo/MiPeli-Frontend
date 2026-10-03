@@ -16,6 +16,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
+      - run: npm run check
       # Sin estos secrets el build igual compila: el inicio de sesión solo queda desactivado en ese bundle
       - run: npm run build
         env:

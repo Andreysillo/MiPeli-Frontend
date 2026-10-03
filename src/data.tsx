@@ -11,7 +11,6 @@ import vix from './assets/platforms/Vix.jpg';
 import claroVideo from './assets/platforms/Claro Video.png';
 import pluto from './assets/platforms/Pluto tv.png';
 import type { Lang } from './i18n';
-import type { State } from './store';
 
 // Forma de los datos según TMDB (movie details + credits + watch/providers). imdb: nota de IMDb sobre 10 (vía imdb_id, p. ej. OMDb).
 export type Movie = {
@@ -136,36 +135,8 @@ export const catalog: Movie[] = [
     overview: { es: 'Oregón, 1820: un cocinero y un inmigrante chino montan un negocio con la leche de la única vaca de la región.', en: 'Oregon, 1820s: a cook and a Chinese immigrant start a business with milk from the region’s only cow.' } },
 ];
 
-const byTitle = (title: string) => catalog.find(m => m.title === title)!;
-export const questMovies = ['Oldboy', 'Parasite', 'Drive', 'Seven', 'Zodiac', 'Heat'].map(byTitle);
-export const duels: [Movie, Movie][] = [['Oldboy', 'Drive'], ['Parasite', 'Seven'], ['Whiplash', 'Burning']].map(([a, b]) => [byTitle(a), byTitle(b)]);
-export const welcomePosters = ['In the Mood for Love', 'Parasite', 'Oldboy'].map(byTitle);
-
-// Géneros de la rueda (nombres de TMDB en español)
-export const genres = ['Thriller', 'Drama', 'Crimen', 'Ciencia ficción', 'Terror', 'Comedia', 'Romance', 'Animación', 'Documental'];
-
-// Recomendador de demo: ordena el catálogo según las respuestas (género, director, ánimo y películas que te gustaron).
-// ponytail: heurística local; la reemplaza el backend (TMDB discover / TasteDive).
-type Answers = Pick<State, 'rec' | 'picks' | 'moodSel' | 'movieSel' | 'duelWins'>;
-export function recommend(a: Answers): Movie[] {
-  const liked = catalog.filter(m => a.movieSel.includes(m.title) || a.duelWins[m.title]);
-  const likedGenres = new Set(liked.flatMap(m => m.genres));
-  const likedDirectors = new Set(liked.map(m => m.director));
-  const score = (m: Movie) => {
-    let s = m.imdb / 10 + m.genres.filter(g => a.moodSel.includes(g)).length * 1.5;
-    if (a.rec.genres && m.genres.includes(a.picks.genre)) s += 6;
-    if (a.rec.director && m.director === a.picks.director) s += 4;
-    if (a.rec.movies) {
-      s += m.genres.filter(g => likedGenres.has(g)).length * 0.5;
-      if (likedDirectors.has(m.director)) s += 1.5;
-    }
-    return s;
-  };
-  // Las que ya marcaste como favoritas no se recomiendan otra vez
-  return catalog.filter(m => !liked.includes(m)).sort((x, y) => score(y) - score(x));
-}
-
-export const directors = ['Bong Joon-ho', 'Denis Villeneuve', 'David Fincher', 'Park Chan-wook', 'Wong Kar-wai', 'Christopher Nolan', 'Céline Sciamma', 'Kelly Reichardt'];
+// Se usa en survey.ts para armar los duelos y las sugerencias
+export const byTitle = (title: string) => catalog.find(m => m.title === title)!;
 
 const canvas = (w: number, h: number) => {
   const c = document.createElement('canvas'); c.width = w; c.height = h;
@@ -217,24 +188,8 @@ export function poster(m: Movie): string {
   return url;
 }
 
-// Formatos que esperan los componentes de React Bits
-export const chromaItem = (m: Movie) => ({ title: m.title, subtitle: `${m.year} · ${m.genres[0]}`, handle: `IMDb ${m.imdb}`, image: poster(m), borderColor: m.color, gradient: '#1f1f2e' });
+// Formato que espera el mural de React Bits
 export const driftItem = (m: Movie) => ({ title: m.title, year: m.year, rating: String(m.imdb), subtitle: `${m.year} · IMDb ${m.imdb}`, image: poster(m) });
-
-function stripes(w: number, h: number, stops: [number, string][], line: string, lineWidth: number, step: number) {
-  const [c, ctx] = canvas(w, h);
-  const g = ctx.createLinearGradient(0, 0, w, h);
-  stops.forEach(([at, color]) => g.addColorStop(at, color));
-  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-  ctx.strokeStyle = line; ctx.lineWidth = lineWidth;
-  for (let k = -h; k < w; k += step) { ctx.beginPath(); ctx.moveTo(k, 0); ctx.lineTo(k + h, h); ctx.stroke(); }
-  return c.toDataURL('image/png');
-}
-
-const moodColors = ['#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#10b981'];
-export const moodGallery = ['Thriller', 'Comedia', 'Terror', 'Drama', 'Ciencia ficción', 'Romance', 'Animación']
-  .map((text, i) => ({ text, image: stripes(600, 450, [[0, moodColors[i]], [1, '#0f0f14']], 'rgba(255,255,255,.08)', 14, 42) }));
-
 
 export const contactInfo = { email: 'jimenezzzandrey@gmail.com', github: 'https://github.com/Andreysillo', linkedin: 'https://www.linkedin.com/in/andrey-jim%C3%A9nez-n%C3%BA%C3%B1ez-a20402322' };
 

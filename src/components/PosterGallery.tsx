@@ -1,9 +1,9 @@
 import { Fragment, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import gsap from 'gsap';
-import { ArrowLeft, ArrowRight, X } from '@phosphor-icons/react';
+import { ArrowLeft, ArrowRight, Eye, ThumbsDown, ThumbsUp, X } from '@phosphor-icons/react';
 import Button from './Button';
-import { FramedPoster, Imdb, WatchOn, countryName, genreName, runtime } from './Movie';
-import type { Movie } from '../data';
+import { FramedPoster, Imdb, Reasons, WatchOn, countryName, genreName, runtime } from './Movie';
+import type { Rec } from '../recommend';
 import { useApp } from '../store';
 
 // Galería de recomendaciones inspirada en a24.raviklaassens.com: pósters enmarcados flotando en un carril horizontal,
@@ -70,13 +70,15 @@ function untilt(e: ReactPointerEvent<HTMLButtonElement>) {
   gsap.to(e.currentTarget.querySelector('.mp-tilt'), { rotationX: 0, rotationY: 0, duration: 0.9, ease: 'elastic.out(1, 0.55)', overwrite: 'auto' });
 }
 
-type DetailProps = Readonly<{ m: Movie; source: HTMLElement; opener: HTMLElement; onClosed: () => void }>;
+type Refine = 'more' | 'seen' | 'no';
+type DetailProps = Readonly<{ m: Rec; source: HTMLElement; opener: HTMLElement; onClosed: () => void; onRefine: (kind: Refine, m: Rec) => void }>;
 
-function Detail({ m, source, opener, onClosed }: DetailProps) {
+function Detail({ m, source, opener, onClosed, onRefine }: DetailProps) {
   const { st, t } = useApp();
   const dlg = useRef<HTMLDialogElement>(null);
   const frame = useRef<HTMLDivElement>(null);
   const closing = useRef(false);
+  const after = useRef<(() => void) | null>(null);
   const intro = useRef<gsap.core.Timeline>(null);
   const country = countryName(m.country, st.lang);
 
@@ -90,7 +92,7 @@ function Detail({ m, source, opener, onClosed }: DetailProps) {
     if (closing.current) return;
     closing.current = true;
     const d = dlg.current!;
-    const done = () => { d.close(); source.querySelector<HTMLElement>('.mp-tilt')!.style.visibility = ''; opener.focus({ preventScroll: true }); onClosed(); };
+    const done = () => { d.close(); source.querySelector<HTMLElement>('.mp-tilt')!.style.visibility = ''; opener.focus({ preventScroll: true }); onClosed(); after.current?.(); };
     if (reduced()) return done();
     // Interrumpible: si cierran mientras aún entra, la entrada se corta y sale desde donde iba
     intro.current?.kill();
@@ -100,6 +102,9 @@ function Detail({ m, source, opener, onClosed }: DetailProps) {
       .to(frame.current, { ...fromGallery(), duration: 0.65, ease: 'power3.inOut' }, 0.05)
       .to(q('.mp-dlg-bg'), { opacity: 0, duration: 0.45, ease: 'power1.in' }, 0.25);
   };
+
+  // Cierra la ficha y después aplica la acción: así la película puede salir de la lista sin que la ficha apunte a otra
+  const refine = (kind: Refine) => { after.current = () => onRefine(kind, m); close(); };
 
   useLayoutEffect(() => {
     const d = dlg.current!;
@@ -157,8 +162,14 @@ function Detail({ m, source, opener, onClosed }: DetailProps) {
               </Rows>
             </div>
             <p data-dlg className="mp-dlg-overview">{m.overview[st.lang]}</p>
+            <div data-dlg><Reasons m={m} /></div>
             <div data-dlg className="mp-watch"><WatchOn m={m} big label={t.watchNow} /></div>
             <p data-dlg className="mp-label">{t.availability} <a href="https://www.justwatch.com" target="_blank" rel="noopener noreferrer" translate="no" style={{ color: 'inherit', textDecoration: 'underline' }}>JustWatch</a></p>
+            <div data-dlg className="mp-refine">
+              <Button variant="secondary" size="sm" icon={<ThumbsUp size={18} aria-hidden />} onClick={() => refine('more')}>{t.refineMore}</Button>
+              <Button variant="secondary" size="sm" icon={<Eye size={18} aria-hidden />} onClick={() => refine('seen')}>{t.refineSeen}</Button>
+              <Button variant="secondary" size="sm" icon={<ThumbsDown size={18} aria-hidden />} onClick={() => refine('no')}>{t.refineNo}</Button>
+            </div>
           </div>
         </div>
       </div>
@@ -166,13 +177,21 @@ function Detail({ m, source, opener, onClosed }: DetailProps) {
   );
 }
 
-export default function PosterGallery({ movies }: Readonly<{ movies: Movie[] }>) {
-  const { st, t } = useApp();
+export default function PosterGallery({ movies }: Readonly<{ movies: Rec[] }>) {
+  const { st, set, flash, t } = useApp();
   const track = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState<{ i: number; source: HTMLElement; opener: HTMLElement } | null>(null);
   const m = movies[active];
   const n = movies.length;
+
+  // Afinar desde la ficha: "más como esta" suma una pista sin sacarla de la lista; las otras dos la reemplazan por la siguiente
+  const refine = (kind: Refine, mv: Rec) => {
+    if (kind === 'more') set({ boosted: st.boosted.includes(mv.title) ? st.boosted : [...st.boosted, mv.title] });
+    else if (kind === 'seen') set({ seen: [...st.seen, mv.title] });
+    else set({ disliked: [...st.disliked, mv.title] });
+    flash({ more: t.refinedMore, seen: t.refinedSeen, no: t.refinedNo }[kind]);
+  };
 
   // Carril: qué póster es el activo al desplazarse + arrastrar con el mouse (en táctil el desplazamiento ya es nativo).
   // Listeners nativos porque son mejoras de puntero sobre un <div> que no es interactivo: el control real está en los
@@ -240,6 +259,7 @@ export default function PosterGallery({ movies }: Readonly<{ movies: Movie[] }>)
             {n > 1 && <p className="mp-cap tnum" aria-hidden>{pad(active + 1)} / {pad(n)}</p>}
             <h2 key={m.title} className="mp-spec-title">{m.title}</h2>
             <p className="mp-label">{m.genres.map(g => genreName(g, st.lang)).join(' · ')}</p>
+            <Reasons m={m} />
             <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', marginTop: 6 }}>
               <Button size="sm" icon={null} onClick={e => setOpen({ i: active, source: track.current!.children[active] as HTMLElement, opener: e.currentTarget })}>
                 {t.seeDetails}<ArrowRight size={16} weight="bold" aria-hidden />
@@ -260,7 +280,7 @@ export default function PosterGallery({ movies }: Readonly<{ movies: Movie[] }>)
         <p className="mp-label" style={{ marginTop: 20 }}>{t.galleryHint(n)}</p>
       </div>
 
-      {open && <Detail m={movies[open.i]} source={open.source} opener={open.opener} onClosed={() => setOpen(null)} />}
+      {open && <Detail m={movies[open.i]} source={open.source} opener={open.opener} onClosed={() => setOpen(null)} onRefine={refine} />}
     </div>
   );
 }

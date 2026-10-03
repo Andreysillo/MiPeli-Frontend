@@ -7,13 +7,13 @@ const CANCELLED = new Set(['auth/popup-closed-by-user', 'auth/cancelled-popup-re
 
 // Abre el popup de Google (selector de cuentas). Con la sesión ya abierta, solo continúa.
 export function useGoogleSignIn() {
-  const { st, go, flash, t } = useApp();
+  const { st, enterSurvey, flash, t } = useApp();
   const [busy, setBusy] = useState(false);
   const google = () => {
-    if (st.loggedIn) { go('type'); return; }
+    if (st.loggedIn) { enterSurvey(); return; }
     setBusy(true);
     signInWithGoogle()
-      .then(() => go('type'))
+      .then(enterSurvey)
       .catch((e: { code?: string }) => {
         if (e.code === 'auth/popup-blocked') flash(t.popupBlocked);
         else if (!CANCELLED.has(e.code ?? '')) { console.error(e); flash(t.loginError); }

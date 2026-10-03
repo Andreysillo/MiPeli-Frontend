@@ -1,25 +1,22 @@
 # MiPeli-Frontend
 
-MiPeli es un recomendador de películas: en lugar de pedirte que busques, te hace unas preguntas (géneros, directores, duelos entre películas, ánimo del momento) y te dice qué ver esta noche y en qué plataforma de streaming de Costa Rica.
+MiPeli es un recomendador de películas: en lugar de pedirte que busques, te hace unas preguntas (tu ánimo, cuánto tiempo tienes, duelos entre pósters, tus favoritas y dónde ves películas) y te dice qué ver esta noche y en qué plataforma de streaming de Costa Rica.
 Este repo es solo el **frontend** (React 19 + TypeScript, empaquetado con esbuild, sin Vite). El backend irá en otro repo. Proyecto personal: lo desarrollo y mantengo yo solo.
 
 ## Flujo de la app
 
 1. **Landing** (`Welcome`): página informativa con animaciones de scroll. Su único acceso está al final: "Iniciar sesión" o, con sesión abierta, "Continuar como …" (o "Continuar encuesta" si hay una a medias).
 2. **Login**: Google, correo y contraseña (crear cuenta, restablecer) o entrar como invitado, sobre el mural de pósters.
-3. **Tipo de encuesta** (`SurveyType`): completa, corta o personalizada.
-4. **Qué recomendar** (`RecTypes`): películas, géneros y/o director, y cuántas películas mostrar al final.
-5. **Encuesta** (`Quest`): rueda de géneros, rueda de directores, duelos entre películas, cuadrícula de películas favoritas y galería de ánimo.
-6. **Carga** (`Loading`, simulada) y **Resultados** (`Results`): galería de pósters enmarcados y ficha de cada película con director, reparto, nota de IMDb y plataformas.
+3. **Encuesta** (`Quest`, ~1 minuto, sin pantallas previas): ánimo (una sensación, nunca "género"), contexto (tiempo, con quién, qué evitar), 4 duelos de pósters, hasta 3 favoritas con buscador y, solo la primera vez, plataformas. Detalle de cada señal en [docs/recomendacion.md](docs/recomendacion.md).
+4. **Carga** (`Loading`, simulada) y **Resultados** (`Results`): galería de pósters enmarcados; cada película dice por qué sale y la ficha trae director, reparto, nota de IMDb, plataformas y botones para afinar (más como esta, ya la vi, no me interesa). El número de películas y las plataformas se cambian ahí mismo.
 
 El logo "MP" y "Inicio" del menú siempre llevan a la landing, así que un invitado puede iniciar sesión cuando quiera y quien ya la tiene encuentra "Continuar encuesta". FAQ y Contacto son pantallas aparte (`#faq`, `#contacto`).
 Todo el texto está en español e inglés (`src/i18n.ts`); cualquier texto nuevo debe llevar las dos versiones.
 
 ## Estado y pendientes
 
-- Hecho: toda la interfaz, el inicio de sesión real (Firebase) y un catálogo de demo con recomendador local (`src/data.tsx`).
-- Falta el **backend** (otro repo): catálogo, pósters y reparto desde TMDB, plataformas de streaming (atribuidas a JustWatch) y notas de IMDb desde OMDb. Al conectarlo hay que reemplazar `data.tsx`, enviar `user.getIdToken()` y actualizar el texto de privacidad de FAQ y Contacto si se guardan datos.
-- Falta remodelar la encuesta completa (`Quest`, aún con el fondo `WavesBg` y la estética anterior) para igualarla a las pantallas de elección.
+- Hecho: toda la interfaz, el inicio de sesión real (Firebase) y un catálogo de demo con recomendador local (`src/data.tsx`, `src/recommend.ts`).
+- Falta el **backend** (otro repo): catálogo, pósters y reparto desde TMDB (TasteDive como refuerzo opcional), plataformas de streaming (atribuidas a JustWatch) y notas de IMDb desde OMDb. El contrato, el algoritmo y la prueba para decidir sobre TasteDive están en [docs/recomendacion.md](docs/recomendacion.md). Al conectarlo hay que reemplazar `recommend()` y `data.tsx`, enviar `user.getIdToken()` y actualizar el texto de privacidad de FAQ y Contacto si se guardan datos.
 - Falta completar el nombre y la bio del autor en `src/i18n.ts` (`authorName`, `authorBio`, hoy con "xxx").
 - En Google Cloud, restringir la API key de Firebase a los dominios de la app antes de publicar.
 
@@ -32,6 +29,7 @@ npm install
 npm run dev        # http://localhost:8000 (o el siguiente puerto libre); se recarga solo al guardar, Ctrl+C lo cierra
 npm run build      # genera dist/
 npm run typecheck  # tsc --noEmit
+npm run check      # comprueba las reglas del recomendador de demo (src/recommend.check.ts)
 ```
 
 `build.mjs` hace ambas cosas: lee `.env`, inyecta la config de Firebase con `define` y, en modo dev, vigila los archivos y sirve `dist/`.
@@ -64,12 +62,15 @@ src/
   assets/platforms/   logos de las plataformas de streaming (PNG/JPG, esbuild los copia con hash a dist/)
   store.ts            estado global (pantalla, respuestas, persistencia en localStorage, rutas #hash)
   i18n.ts             textos es/en
-  data.tsx            catálogo de demo con forma de TMDB (director, reparto, géneros, sinopsis, nota IMDb, plataformas),
-                      recomendador local recommend() y arte de póster en canvas; lo reemplazará el backend
-  screens/            una pantalla por archivo (Welcome = landing informativa con el acceso al final, Login, SurveyType, RecTypes, Quest, Loading, Results, Faq, Contact)
+  data.tsx            catálogo de demo con forma de TMDB (director, reparto, géneros, sinopsis, nota IMDb, plataformas) y arte de póster en canvas; lo reemplazará el backend
+  survey.ts           configuración de la encuesta: pasos, moods, compañía, qué evitar, duelos, sugerencias y búsqueda de favoritas
+  recommend.ts        recomendador local (demo): puntaje, razones y marcas por película; es la costura que reemplazará el backend
+  recommend.check.ts  comprobación rápida de esas reglas (npm run check, también corre en CI)
+  steps/              un archivo por paso de la encuesta (MoodStep, ContextStep, DuelStep, FavoritesStep, PlatformsStep), StepHeader y PlatformPicker
+  screens/            una pantalla por archivo (Welcome = landing informativa con el acceso al final, Login, Quest, Loading, Results, Faq, Contact)
   components/         Button, Reveal (transiciones GSAP + ScrollTrigger), PosterGallery (galería de pósters + ficha en <dialog>),
-                      Movie (póster enmarcado, IMDb, plataformas), PosterWall (mural de fondo de Login), ConfirmDialog (aviso modal de confirmación: cerrar sesión y empezar de nuevo), SiteNav (header de todo el sitio: "MiPeli" como enlace al inicio, enlaces a secciones en la landing o a Inicio/FAQ/Contacto en el resto, menú a pantalla completa en móvil), Ambient (fondo gris de las pantallas de elección), Rise (titular con entrada por máscara), CountUp, GoogleG, Credits (atribuciones de TMDB, JustWatch y OMDb),
-                      WavesBg y componentes animados de React Bits (.jsx)
+                      Movie (póster enmarcado, IMDb, plataformas), PosterWall (mural de fondo de Login), ConfirmDialog (aviso modal de confirmación: cerrar sesión y empezar de nuevo), SiteNav (header de todo el sitio: "MiPeli" como enlace al inicio, enlaces a secciones en la landing o a Inicio/FAQ/Contacto en el resto, menú a pantalla completa en móvil), Ambient (fondo gris de la encuesta), Rise (titular con entrada por máscara), CountUp, GoogleG, Credits (atribuciones de TMDB, JustWatch y OMDb),
+                      DriftWall (mural de React Bits, .jsx)
   styles/global.css   tokens de diseño (color, radios, tipografía) y clases mp-*
 ```
 
@@ -89,7 +90,7 @@ src/
 
 El botón de Google sigue el tema oscuro de las [guías de marca de Sign in with Google](https://developers.google.com/identity/branding-guidelines). Los pósters conservan sus colores: son contenido, no interfaz.
 
-Los componentes `.jsx` de `src/components/` vienen de [React Bits](https://github.com/DavidHDev/react-bits) adaptados; usan `gsap` y `ogl` (WebGL).
+El mural de `src/components/DriftWall.jsx` viene de [React Bits](https://github.com/DavidHDev/react-bits), adaptado.
 Íconos: [Phosphor](https://phosphoricons.com); logos de las plataformas de streaming: archivos de `src/assets/platforms/` (se importan en `data.tsx`). Tipografía: Geist en toda la interfaz con el estilo de la landing (peso 500, interlínea cerrada, tracking apretado, etiquetas de 12 px en mayúsculas) y Bodoni Moda para títulos de película (auto-hospedadas vía `@fontsource-variable`).
 La galería de resultados toma como referencia [a24.raviklaassens.com](https://a24.raviklaassens.com/) y la landing, [14islands.com](https://www.14islands.com/) (tipografía enorme, tira de pósters, texto que se enciende al hacer scroll), con los colores de la app.
 

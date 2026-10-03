@@ -15,7 +15,7 @@ const errorText = (t: Strings, e: { code?: string }) => t.authErrors[e.code as k
 
 // Inicio de sesión y registro con correo y contraseña (Firebase Authentication)
 export default function Login() {
-  const { set, go, flash, t } = useApp();
+  const { set, go, enterSurvey, flash, t } = useApp();
   const { busy: googleBusy, google } = useGoogleSignIn();
   const [mode, setMode] = useState<Mode>('login');
   const [name, setName] = useState('');
@@ -37,7 +37,7 @@ export default function Login() {
       ? registerWithEmail(name.trim(), email.trim(), password).then(firstName)
       : signInWithEmail(email.trim(), password).then(cred => firstName(cred.user));
     done
-      .then(user => set({ loggedIn: true, user, screen: 'type' }))
+      .then(user => { set({ loggedIn: true, user }); enterSurvey(); })
       .catch((err: { code?: string }) => { setError(errorText(t, err)); if (!err.code) console.error(err); })
       .finally(() => setWorking(false));
   };
@@ -95,7 +95,7 @@ export default function Login() {
           <p data-reveal className="mp-or" aria-hidden>{t.or}</p>
           <div data-reveal className="mp-stack" style={{ gap: 8 }}>
             <Button variant="google" block icon={<GoogleG />} onClick={google} disabled={googleBusy} aria-busy={googleBusy}>{t.google}</Button>
-            <Button variant="ghost" block icon={<UserCircle size={20} aria-hidden />} onClick={() => set({ screen: 'type' })}>{t.guest}</Button>
+            <Button variant="ghost" block icon={<UserCircle size={20} aria-hidden />} onClick={enterSurvey}>{t.guest}</Button>
           </div>
         </div>
       </div>

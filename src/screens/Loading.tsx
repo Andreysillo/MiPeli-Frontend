@@ -1,6 +1,7 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import { Check } from '@phosphor-icons/react';
-import { poster, recommend } from '../data';
+import { poster } from '../data';
+import { recommend } from '../recommend';
 import { LOADING_MS, useApp } from '../store';
 
 // Fases: barajar el mazo mientras avanzan los pasos → abrirlo en abanico con las películas elegidas
