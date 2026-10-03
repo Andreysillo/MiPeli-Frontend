@@ -29,6 +29,7 @@ const es = {
     stats: [{ value: 2, label: 'minutos de encuesta' }, { value: 10, label: 'películas como máximo por ronda' }, { value: 11, label: 'plataformas de streaming' }],
     platformsLabel: 'Dónde verlas',
     ctaTitle: ['¿Listo para', 'elegir?'], ctaText: 'Entra con Google, con tu correo o como invitado.', cta: 'Iniciar sesión',
+    navLabel: 'Secciones', navStart: '¿Le entras a la recomendación?', menu: 'Menú', menuClose: 'Cerrar',
   },
 
   typeTitle: '¿Cómo quieres hacerlo?', typeDesc: 'Elige un tipo de encuesta. Puedes repetirla cuando quieras.',
@@ -127,6 +128,7 @@ const en: Strings = {
     stats: [{ value: 2, label: 'minutes of survey' }, { value: 10, label: 'movies at most per round' }, { value: 11, label: 'streaming platforms' }],
     platformsLabel: 'Where to watch',
     ctaTitle: ['Ready to', 'choose?'], ctaText: 'Sign in with Google, with your email or as a guest.', cta: 'Sign in',
+    navLabel: 'Sections', navStart: 'Up for a recommendation?', menu: 'Menu', menuClose: 'Close',
   },
 
   typeTitle: 'How do you want to do it?', typeDesc: 'Pick a survey type. Repeat it whenever you like.',

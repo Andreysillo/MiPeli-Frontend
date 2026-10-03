@@ -1,6 +1,6 @@
-import { useLayoutEffect, useMemo, useRef, type ComponentType } from 'react';
+import { useLayoutEffect, useRef, type ComponentType } from 'react';
 import { CheckCircle, Globe, SignOut } from '@phosphor-icons/react';
-import PillNav from './components/PillNav';
+import SiteNav from './components/SiteNav';
 import Reveal from './components/Reveal';
 import { StoreContext, useStore, type Screen } from './store';
 import { signOutUser } from './auth';
@@ -25,14 +25,24 @@ export default function App() {
   const Current = screens[st.screen];
   const mainRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
-  const navItems = useMemo(() => [{ label: t.navHome, href: '#home' }, { label: 'FAQ', href: '#faq' }, { label: t.navContact, href: '#contacto' }], [t]);
-  const activeHref = navItems.find(i => i.href === `#${st.screen}`)?.href;
   const signOut = () => { signOutUser().catch(console.error); go('welcome'); };
+  const actions = (
+    <div className="mp-header-actions">
+      {st.loggedIn && (
+        <button className="mp-lang mp-signout" onClick={signOut} title={t.signOut} aria-label={t.signOut}>
+          <SignOut size={18} weight="bold" aria-hidden /><span className="mp-hide-sm">{t.signOut}</span>
+        </button>
+      )}
+      <button className="mp-lang" onClick={() => set({ lang: st.lang === 'es' ? 'en' : 'es' })} title={t.langHint} aria-label={t.langHint}>
+        <Globe className="mp-hide-xs" size={18} weight="bold" aria-hidden /> {st.lang === 'es' ? 'EN' : 'ES'}
+      </button>
+    </div>
+  );
 
-  // Cada pantalla nueva empieza arriba y con el foco en el contenido (lectores de pantalla)
+  // Cada pantalla nueva empieza arriba y con el foco en el contenido (lectores de pantalla); 'instant' evita el desplazamiento suave de la landing
   useLayoutEffect(() => {
     if (firstRender.current) { firstRender.current = false; return; }
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     mainRef.current?.focus({ preventScroll: true });
   }, [st.screen]);
 
@@ -41,20 +51,7 @@ export default function App() {
       {/* La carga va a pantalla completa, sin header */}
       {st.screen !== 'loading' && (
         <header className="mp-header">
-          {st.screen === 'welcome' && <span className="mp-wordmark" translate="no">MiPeli</span>}
-          {st.screen !== 'welcome' && st.screen !== 'login' && (
-            <PillNav items={navItems} activeHref={activeHref} logoHref="#home" brand="MP" baseColor="#1f1f2e" pillColor="#f4f4f4" pillTextColor="#0f0f14" hoveredPillTextColor="#f4f4f4" />
-          )}
-          <div className="mp-header-actions">
-            {st.loggedIn && (
-              <button className="mp-lang mp-signout" onClick={signOut} title={t.signOut} aria-label={t.signOut}>
-                <SignOut size={18} weight="bold" aria-hidden /><span className="mp-hide-sm">{t.signOut}</span>
-              </button>
-            )}
-            <button className="mp-lang" onClick={() => set({ lang: st.lang === 'es' ? 'en' : 'es' })} title={t.langHint} aria-label={t.langHint}>
-              <Globe className="mp-hide-xs" size={18} weight="bold" aria-hidden /> {st.lang === 'es' ? 'EN' : 'ES'}
-            </button>
-          </div>
+          {st.screen === 'login' ? actions : <SiteNav>{actions}</SiteNav>}
         </header>
       )}
 

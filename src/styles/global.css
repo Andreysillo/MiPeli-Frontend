@@ -140,6 +140,7 @@ button { font: inherit; color: inherit; }
 .mp-tag { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px; background: rgba(255, 255, 255, .08); border: 1px solid var(--border); font-size: .8125rem; font-weight: 500; color: var(--text-muted); }
 
 /* ---------- Header ---------- */
+/* Mismo header en todo el sitio (14islands/Velour): "MiPeli", enlaces en mayúsculas pequeñas y acciones. Siempre visible, sobre un degradado con desenfoque */
 .mp-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: var(--header-h);
   display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 24px; pointer-events: none;
@@ -147,11 +148,10 @@ button { font: inherit; color: inherit; }
 .mp-header::before {
   content: ''; position: absolute; inset: 0 0 -24px; pointer-events: none;
   background: linear-gradient(180deg, rgba(15, 15, 20, .9), rgba(15, 15, 20, .5) 60%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  mask-image: linear-gradient(#000 55%, transparent); -webkit-mask-image: linear-gradient(#000 55%, transparent);
 }
 .mp-header > * { position: relative; pointer-events: auto; }
-.mp-header .pill-nav-container { position: static; transform: none; }
-.mp-header .pill-logo { font-family: var(--font-sans); font-weight: 700; font-size: 14px; letter-spacing: -.02em; }
-.mp-header .pill { font-size: 13px; }
 .mp-header-actions { display: flex; gap: 8px; margin-left: auto; }
 .mp-lang {
   display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px;
@@ -160,6 +160,36 @@ button { font: inherit; color: inherit; }
   font-size: .8125rem; font-weight: 600; letter-spacing: .02em; cursor: pointer; transition: background-color .2s ease;
 }
 .mp-lang:hover { background: rgba(255, 255, 255, .12); }
+
+.mp-nav { display: flex; gap: clamp(20px, 3vw, 44px); margin: 0 auto; }
+.mp-nav ~ .mp-header-actions { margin-left: 0; }
+.mp-nav a { position: relative; font-size: 12px; letter-spacing: .02em; text-transform: uppercase; color: var(--stone); text-decoration: none; transition: color .2s ease; }
+.mp-nav[data-landing] a:last-child, .mp-nav a[aria-current] { color: var(--text); }
+.mp-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -5px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease-out); }
+.mp-nav a:hover, .mp-nav a:focus-visible { color: var(--text); }
+.mp-nav a:hover::after, .mp-nav a:focus-visible::after, .mp-nav a[aria-current]::after { transform: scaleX(1); }
+.mp-menu-btn { display: none; }
+/* En teléfono los enlaces pasan a un menú a pantalla completa */
+@media (max-width: 899px) {
+  .mp-nav { display: none; }
+  .mp-nav ~ .mp-header-actions { margin-left: auto; }
+  .mp-menu-btn { display: inline-flex; }
+}
+.mp-menu { width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 0 24px 40px; border: 0; background: var(--bg); color: var(--text); }
+.mp-menu[open] { display: flex; flex-direction: column; }
+.mp-menu-top { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); }
+.mp-menu nav { display: grid; margin-top: auto; }
+.mp-menu nav a { padding: .1em 0 .14em; font-size: clamp(2.25rem, 11vw, 4.5rem); font-weight: 500; line-height: 1; letter-spacing: -.055em; color: var(--text); text-decoration: none; }
+.mp-menu nav a:hover { color: var(--stone); }
+.mp-menu[open] nav a { animation: mp-menu-in .7s var(--ease-out) backwards; }
+.mp-menu[open] nav a:nth-child(2) { animation-delay: .07s; }
+.mp-menu[open] nav a:nth-child(3) { animation-delay: .14s; }
+@keyframes mp-menu-in { from { opacity: 0; transform: translateY(32px); } }
+@media (max-width: 639px) { .mp-menu { padding-inline: 12px; } }
+
+/* Los enlaces de la landing bajan con desplazamiento suave y dejan libre el header; solo en la landing */
+html:has(.lp) { scroll-padding-top: calc(var(--header-h) + 8px); }
+@media (prefers-reduced-motion: no-preference) { html:has(.lp) { scroll-behavior: smooth; } }
 
 /* ---------- Encuesta ---------- */
 /* <progress> nativo: se avanza por pasos y la barra se suaviza con una transición de ancho */
@@ -366,15 +396,13 @@ html:has(dialog[open]) { overflow: hidden; }
   .mp-mobile-only { display: inline; }
   .mp-wheel { height: 42vh; min-height: 280px; }
   .mp-wheel-pick { display: none; }
-  .mp-header .pill-nav { --nav-h: 38px; --pill-pad-x: 11px; }
-  .mp-header .pill { font-size: 11.5px; }
   .mp-lang { height: 38px; padding: 0 12px; gap: 6px; }
   .mp-header-actions { gap: 6px; }
   .mp-hide-sm { display: none; }
 }
-/* Teléfonos con la sesión abierta: el botón de salir no cabe junto al nav, así que se oculta el logo ("Inicio" lleva al mismo lugar) */
+/* Teléfonos estrechos con la sesión abierta: el globo del idioma se oculta para que quepan salir, idioma y menú */
 @media (max-width: 400px) {
-  .mp-header:has(.mp-signout) .pill-logo, .mp-header:has(.mp-signout) .mp-hide-xs { display: none; }
+  .mp-header:has(.mp-signout) .mp-hide-xs { display: none; }
 }
 
 /* ---------- Carga ---------- */
@@ -496,7 +524,8 @@ html:has(dialog[open]) { overflow: hidden; }
 /* ---------- Landing (bienvenida) ----------
    Referencia: 14islands.com. Tipografía enorme y apretada (peso 500, interlínea .86), una línea gris de contrapunto, tira de pósters a sangre,
    secciones separadas 100-180px, esquinas de 4px y nada de sombras. Los colores son los de la app. */
-.mp-wordmark { font-size: 1.125rem; font-weight: 600; letter-spacing: -.03em; }
+.mp-wordmark { font-size: 1.125rem; font-weight: 600; letter-spacing: -.03em; color: var(--text); text-decoration: none; transition: opacity .2s ease; }
+.mp-wordmark:hover { opacity: .7; }
 .lp { --lp-pad: clamp(16px, 2.2vw, 32px); padding-inline: var(--lp-pad); }
 .lp-in { max-width: 1400px; margin-inline: auto; }
 .lp-dim { color: var(--stone); }

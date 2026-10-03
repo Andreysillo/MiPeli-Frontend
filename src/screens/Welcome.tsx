@@ -110,7 +110,7 @@ function Statement() {
 function Steps() {
   const { t } = useApp();
   return (
-    <section className="lp-sec lp-in" aria-labelledby="lp-how">
+    <section id="how" className="lp-sec lp-in" aria-labelledby="lp-how">
       <h2 id="lp-how" data-reveal className="lp-label">{t.landing.howLabel}</h2>
       <ol className="lp-steps">
         {t.landing.steps.map((s, i) => (
@@ -167,7 +167,7 @@ function Showcase() {
 function Numbers() {
   const { t } = useApp();
   return (
-    <section className="lp-sec lp-in" aria-labelledby="lp-nums">
+    <section id="numbers" className="lp-sec lp-in" aria-labelledby="lp-nums">
       <h2 id="lp-nums" data-reveal className="lp-label">{t.landing.statsLabel}</h2>
       <ul className="lp-stats">
         {t.landing.stats.map(s => (
@@ -208,7 +208,7 @@ function Cta() {
   }, []);
 
   return (
-    <section ref={root} className="lp-cta lp-in">
+    <section id="start" ref={root} className="lp-cta lp-in">
       <h2 className="lp-display"><span className="lp-line"><span>{title}</span></span><span className="lp-line lp-dim"><span>{dim}</span></span></h2>
       <p data-reveal className="lp-cta-text">{t.landing.ctaText}</p>
       <div data-reveal className="lp-cta-actions">
