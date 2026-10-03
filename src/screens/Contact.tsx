@@ -43,6 +43,14 @@ export default function Contact() {
             </div>
           </form>
 
+          <section data-reveal className="mp-card mp-span-2" id="privacidad">
+            <h2 className="mp-label">{t.privacyLabel}</h2>
+            <ul className="mp-points">
+              {t.privacyPoints.map(p => <li key={p}>{p}</li>)}
+            </ul>
+            <p className="mp-note">{t.privacyDelete} <a href={`mailto:${contactInfo.email}`} translate="no">{contactInfo.email}</a>. {t.privacyNote}</p>
+          </section>
+
           <Credits />
         </div>
       </div>

@@ -481,6 +481,9 @@ html:has(dialog[open]) { overflow: hidden; }
 .mp-attrib > div { display: grid; align-content: start; justify-items: start; gap: 10px; }
 .mp-note { max-width: 44ch; font-size: .875rem; line-height: 1.5; color: var(--text-muted); }
 .mp-note a { text-decoration: underline; text-underline-offset: 3px; }
+.mp-points { display: grid; gap: 10px; margin: 0; padding: 0 0 0 20px; max-width: 70ch; color: var(--text-muted); }
+.mp-points li::marker { color: var(--text-subtle); }
+#privacidad > .mp-note { max-width: 70ch; }
 .mp-tmdb { display: block; width: auto; height: 14px; }
 @media (min-width: 900px) {
   .mp-contact { grid-template-columns: 1fr 1fr; }
