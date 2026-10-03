@@ -70,8 +70,7 @@ const es = {
   usefulAsk: '¿Te sirvieron las recomendaciones?', useful: 'Sí, me sirvieron', notUseful: 'No mucho', thanksFeedback: 'Gracias, lo tendremos en cuenta.',
   redoTitle: '¿Otra ronda?', redoSame: 'Mismas preguntas', redoDiff: 'Otro tipo de encuesta', quickRec: 'Recomendación sin encuesta',
 
-  homeH1: 'Elige con la mirada', homeDesc: 'Pasa el cursor por el muro: el póster que toques se enciende. ¿Prefieres que elijamos nosotros?',
-  startSurvey: 'Empezar encuesta', continueSurvey: 'Continuar encuesta',
+  continueSurvey: 'Continuar encuesta',
 
   faqTitle: 'Preguntas frecuentes', faqMore: '¿Te quedó otra duda?', faqMoreD: 'Escríbenos y te respondemos lo antes posible.', faqWrite: 'Escríbenos', faqKick: 'Ayuda',
   aboutBrand: 'Sobre MiPeli', studioStatement: 'MiPeli es un recomendador de películas. Respondes unas preguntas y te decimos qué ver esta noche, y dónde verlo.',
@@ -168,8 +167,7 @@ const en: Strings = {
   usefulAsk: 'Were the recommendations useful?', useful: 'Yes, they helped', notUseful: 'Not really', thanksFeedback: 'Thanks, we’ll keep it in mind.',
   redoTitle: 'Another round?', redoSame: 'Same questions', redoDiff: 'Another survey type', quickRec: 'Pick without survey',
 
-  homeH1: 'Choose with your eyes', homeDesc: 'Hover the wall: the poster you touch lights up. Rather have us pick?',
-  startSurvey: 'Start survey', continueSurvey: 'Continue survey',
+  continueSurvey: 'Continue survey',
 
   faqTitle: 'Frequently asked questions', faqMore: 'Still have a question?', faqMoreD: 'Write to us and we’ll get back to you soon.', faqWrite: 'Write to us', faqKick: 'Help',
   aboutBrand: 'About MiPeli', studioStatement: 'MiPeli is a movie recommender. Answer a few questions and we tell you what to watch tonight, and where to stream it.',

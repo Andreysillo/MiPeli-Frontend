@@ -1,9 +1,31 @@
 # MiPeli-Frontend
 
-Recomendador de películas: el usuario responde una encuesta corta y MiPeli elige qué ver esta noche.
-React 19 + TypeScript, empaquetado con esbuild (sin Vite).
+MiPeli es un recomendador de películas: en lugar de pedirte que busques, te hace unas preguntas (géneros, directores, duelos entre películas, ánimo del momento) y te dice qué ver esta noche y en qué plataforma de streaming de Costa Rica.
+Este repo es solo el **frontend** (React 19 + TypeScript, empaquetado con esbuild, sin Vite). El backend irá en otro repo. Proyecto personal: lo desarrollo y mantengo yo solo.
+
+## Flujo de la app
+
+1. **Landing** (`Welcome`): página informativa con animaciones de scroll. Su único acceso está al final: "Iniciar sesión" o, con sesión abierta, "Continuar como …" (o "Continuar encuesta" si hay una a medias).
+2. **Login**: Google, correo y contraseña (crear cuenta, restablecer) o entrar como invitado, sobre el mural de pósters.
+3. **Tipo de encuesta** (`SurveyType`): completa, corta o personalizada.
+4. **Qué recomendar** (`RecTypes`): películas, géneros y/o director, y cuántas películas mostrar al final.
+5. **Encuesta** (`Quest`): rueda de géneros, rueda de directores, duelos entre películas, cuadrícula de películas favoritas y galería de ánimo.
+6. **Carga** (`Loading`, simulada) y **Resultados** (`Results`): galería de pósters enmarcados y ficha de cada película con director, reparto, nota de IMDb y plataformas.
+
+El logo "MP" y "Inicio" del menú siempre llevan a la landing, así que un invitado puede iniciar sesión cuando quiera y quien ya la tiene encuentra "Continuar encuesta". FAQ y Contacto son pantallas aparte (`#faq`, `#contacto`).
+Todo el texto está en español e inglés (`src/i18n.ts`); cualquier texto nuevo debe llevar las dos versiones.
+
+## Estado y pendientes
+
+- Hecho: toda la interfaz, el inicio de sesión real (Firebase) y un catálogo de demo con recomendador local (`src/data.tsx`).
+- Falta el **backend** (otro repo): catálogo, pósters y reparto desde TMDB, plataformas de streaming (atribuidas a JustWatch) y notas de IMDb desde OMDb. Al conectarlo hay que reemplazar `data.tsx`, enviar `user.getIdToken()` y actualizar el texto de privacidad de FAQ y Contacto si se guardan datos.
+- Falta remodelar la encuesta completa (`Quest`, aún con el fondo `WavesBg` y la estética anterior) para igualarla a las pantallas de elección.
+- Falta completar el nombre y la bio del autor en `src/i18n.ts` (`authorName`, `authorBio`, hoy con "xxx").
+- En Google Cloud, restringir la API key de Firebase a los dominios de la app antes de publicar.
 
 ## Uso
+
+Requiere Node 20.12 o superior (`build.mjs` usa `process.loadEnvFile`).
 
 ```bash
 npm install
@@ -44,12 +66,20 @@ src/
   i18n.ts             textos es/en
   data.tsx            catálogo de demo con forma de TMDB (director, reparto, géneros, sinopsis, nota IMDb, plataformas),
                       recomendador local recommend() y arte de póster en canvas; lo reemplazará el backend
-  screens/            una pantalla por archivo (Welcome = landing informativa con el acceso al final, Login, SurveyType, RecTypes, Quest, Loading, Results, Home, Faq, Contact)
+  screens/            una pantalla por archivo (Welcome = landing informativa con el acceso al final, Login, SurveyType, RecTypes, Quest, Loading, Results, Faq, Contact)
   components/         Button, Reveal (transiciones GSAP + ScrollTrigger), PosterGallery (galería de pósters + ficha en <dialog>),
-                      Movie (póster enmarcado, IMDb, plataformas), PosterWall (mural de fondo de Home y Login), Ambient (fondo gris de las pantallas de elección), Rise (titular con entrada por máscara), CountUp, GoogleG, Credits (atribuciones de TMDB, JustWatch y OMDb),
+                      Movie (póster enmarcado, IMDb, plataformas), PosterWall (mural de fondo de Login), Ambient (fondo gris de las pantallas de elección), Rise (titular con entrada por máscara), CountUp, GoogleG, Credits (atribuciones de TMDB, JustWatch y OMDb),
                       WavesBg y componentes animados de React Bits (.jsx)
   styles/global.css   tokens de diseño (color, radios, tipografía) y clases mp-*
 ```
+
+## Convenciones del proyecto
+
+- Los commits los hago yo a mano, en inglés y con Conventional Commits (`feat(ui): …`, `fix(auth): …`).
+- Código pensado para pasar SonarQube: manejadores solo en `<button>` nativos, sin JSX dentro de arreglos, sin índices como `key`, sin ternarios anidados y props con `Readonly<{…}>`. Las mejoras no interactivas (cursor, scroll) se enganchan con listeners nativos dentro de `useEffect`.
+- Un solo sistema visual para todas las pantallas (mismo header, tipografía, tarjetas y botones); ninguna página lleva estilo propio.
+- Las atribuciones de TMDB, JustWatch y OMDb son obligatorias y no se quitan.
+- `graphify-out/` (grafo de código para navegar el repo) es local y no se sube; se refresca con `graphify update .` después de cambiar código.
 
 ## Paleta (regla 60-30-10)
 

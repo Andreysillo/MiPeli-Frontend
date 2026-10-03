@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import DriftWall from './DriftWall';
 import { catalog, driftItem } from '../data';
 
-// Mural de pósters que flota de fondo (Home y Login). `scrim` oscurece la zona donde va el texto.
+// Mural de pósters que flota de fondo (Login). `scrim` oscurece la zona donde va el texto.
 export default function PosterWall({ scrim }: Readonly<{ scrim: string }>) {
   // 24 bastan para llenar el muro; generar el arte de todo el catálogo trabaría la entrada
   const wall = useMemo(() => catalog.slice(0, 24).map(driftItem), []);

@@ -3,7 +3,7 @@ import { L, type Lang } from './i18n';
 import { genres } from './data';
 import { firstName, onUserChange } from './auth';
 
-export type Screen = 'welcome' | 'login' | 'type' | 'rectypes' | 'quest' | 'loading' | 'results' | 'home' | 'faq' | 'contacto';
+export type Screen = 'welcome' | 'login' | 'type' | 'rectypes' | 'quest' | 'loading' | 'results' | 'faq' | 'contacto';
 export type Step = 'genres' | 'director' | 'duel' | 'movies' | 'personal';
 export type RecKey = 'movies' | 'genres' | 'director';
 export type SurveyType = 'full' | 'short' | 'custom';
@@ -22,7 +22,7 @@ export type State = {
 
 const KEY = 'mipeli:v1';
 export const LOADING_MS = 4600;
-const routes: Record<string, Screen> = { '#home': 'home', '#faq': 'faq', '#contacto': 'contacto' };
+const routes: Record<string, Screen> = { '#home': 'welcome', '#faq': 'faq', '#contacto': 'contacto' };
 // La sesión (loggedIn, user) no se guarda aquí: la restaura Firebase
 const PERSISTED = ['surveyType', 'rec', 'length', 'numMovies', 'picks', 'useful', 'lang'] as const;
 
@@ -78,7 +78,7 @@ export function useStore() {
 
   // El hash refleja la pantalla actual; si no, volver a pulsar un enlace del nav no dispararía hashchange
   useEffect(() => {
-    const hash = Object.keys(routes).find(h => routes[h] === st.screen) ?? '';
+    const hash = Object.keys(routes).find(h => h !== '#home' && routes[h] === st.screen) ?? ''; // la landing se queda en la raíz limpia
     if (location.hash !== hash) history.replaceState(null, '', hash || location.pathname + location.search);
   }, [st.screen]);
 

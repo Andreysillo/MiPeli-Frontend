@@ -11,13 +11,12 @@ import RecTypes from './screens/RecTypes';
 import Quest from './screens/Quest';
 import Loading from './screens/Loading';
 import Results from './screens/Results';
-import Home from './screens/Home';
 import Faq from './screens/Faq';
 import Contact from './screens/Contact';
 
 const screens: Record<Screen, ComponentType> = {
   welcome: Welcome, login: Login, type: SurveyType, rectypes: RecTypes, quest: Quest, loading: Loading,
-  results: Results, home: Home, faq: Faq, contacto: Contact,
+  results: Results, faq: Faq, contacto: Contact,
 };
 
 export default function App() {

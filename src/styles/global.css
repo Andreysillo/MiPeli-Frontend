@@ -475,7 +475,7 @@ html:has(dialog[open]) { overflow: hidden; }
   position: relative; min-width: 56px; height: 68px; padding: 0 6px; border: 0; background: none; color: var(--text-subtle); cursor: pointer; touch-action: manipulation;
   font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 500; letter-spacing: -.06em; transition: color .25s ease, transform .4s var(--ease-out);
 }
-.mp-nums button::after { content: ''; position: absolute; left: 6px; right: 6px; bottom: 6px; height: 2px; background: var(--text); transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease-out); }
+.mp-nums button::after { content: ''; position: absolute; left: 6px; right: 6px; bottom: -4px; height: 2px; background: var(--text); transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease-out); }
 .mp-nums button:hover { color: var(--text); transform: translateY(-2px); }
 .mp-nums button[aria-pressed='true'] { color: var(--text); }
 .mp-nums button[aria-pressed='true']::after { transform: scaleX(1); }
@@ -548,6 +548,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .lp-cta { display: grid; justify-items: start; gap: 28px; margin-top: clamp(120px, 18vw, 200px); }
 .lp-cta .lp-display { font-size: clamp(3rem, 13vw, 12rem); }
 .lp-cta-text { max-width: 40ch; font-size: 1.0625rem; color: var(--text-muted); }
+.lp-cta-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .lp-cta-btn { height: 64px; padding: 0 36px; font-size: 1.0625rem; }
 
 .lp-footer { position: relative; overflow: hidden; margin: clamp(100px, 14vw, 160px) calc(var(--lp-pad) * -1) 0; padding: 28px var(--lp-pad) 0; border-top: 1px solid var(--border); }

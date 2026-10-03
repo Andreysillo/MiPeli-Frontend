@@ -7,7 +7,7 @@ import CountUp from '../components/CountUp';
 import { genreName } from '../components/Movie';
 import { catalog, contactInfo, platforms, poster, type Movie } from '../data';
 import { splitWords } from '../words';
-import { useApp } from '../store';
+import { useApp, type Screen } from '../store';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -188,10 +188,15 @@ function Numbers() {
 }
 
 // Aquí está el único acceso: sin sesión lleva a la pantalla de inicio; con sesión abierta, directo a la encuesta
+// (o a retomarla si había una a medias). Un invitado con la encuesta a medias también puede volver a ella.
 function Cta() {
   const { st, go, t, name } = useApp();
   const [title, dim] = t.landing.ctaTitle;
   const root = useRef<HTMLElement>(null);
+  let target: Screen = 'login';
+  let label = t.landing.cta;
+  if (st.loggedIn && st.questActive) { target = 'quest'; label = t.continueSurvey; }
+  else if (st.loggedIn) { target = 'type'; label = t.continueAs(name); }
 
   // El titular sube desde su máscara cuando el scroll llega hasta él
   useLayoutEffect(() => {
@@ -206,10 +211,11 @@ function Cta() {
     <section ref={root} className="lp-cta lp-in">
       <h2 className="lp-display"><span className="lp-line"><span>{title}</span></span><span className="lp-line lp-dim"><span>{dim}</span></span></h2>
       <p data-reveal className="lp-cta-text">{t.landing.ctaText}</p>
-      <div data-reveal>
-        <Button className="lp-cta-btn" onClick={() => go(st.loggedIn ? 'type' : 'login')}>
-          {st.loggedIn ? t.continueAs(name) : t.landing.cta}<ArrowRight size={20} weight="bold" aria-hidden />
+      <div data-reveal className="lp-cta-actions">
+        <Button className="lp-cta-btn" onClick={() => go(target)}>
+          {label}<ArrowRight size={20} weight="bold" aria-hidden />
         </Button>
+        {!st.loggedIn && st.questActive && <Button variant="secondary" className="lp-cta-btn" onClick={() => go('quest')}>{t.continueSurvey}</Button>}
       </div>
     </section>
   );
