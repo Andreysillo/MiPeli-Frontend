@@ -1,3 +1,6 @@
+// Qué pasa con los resultados que se ven cuando se pide otra ronda: se guardan (con sesión), se pierden (invitado) o no hay resultados (encuesta en curso)
+export type Fate = 'survey' | 'saved' | 'unsaved';
+
 const es = {
   langHint: 'Cambiar idioma', navHome: 'Inicio', navContact: 'Contacto',
   google: 'Continuar con Google', guest: 'Entrar como invitado', guestName: 'invitado', faq: 'Preguntas frecuentes',
@@ -18,13 +21,48 @@ const es = {
   confirm: {
     signout: {
       title: (user: string | null) => user ? `${user}, ¿seguro que quieres cerrar sesión?` : '¿Seguro que quieres cerrar sesión?',
-      text: 'Puedes volver en cualquier momento si así lo deseas.', ok: 'Cerrar sesión', cancel: 'Quedarme',
+      text: () => 'Puedes volver en cualquier momento. Tus encuestas guardadas te esperan.', ok: 'Cerrar sesión', cancel: 'Quedarme',
     },
     restart: {
       title: (user: string | null) => user ? `${user}, ¿seguro que quieres empezar de nuevo?` : '¿Seguro que quieres empezar de nuevo?',
-      text: 'Se borran tus respuestas hasta ahora y empiezas de nuevo desde la primera pregunta.', ok: 'Empezar de nuevo', cancel: 'Cancelar',
+      text: (fate: Fate) => ({
+        survey: 'Se borran tus respuestas hasta ahora y empiezas de nuevo desde la primera pregunta.',
+        saved: 'Empiezas desde la primera pregunta. Estos resultados quedan guardados en Mi perfil.',
+        unsaved: 'Empiezas desde la primera pregunta y estos resultados se pierden. Con una cuenta se guardarían.',
+      })[fate],
+      ok: 'Empezar de nuevo', cancel: 'Cancelar',
+    },
+    redo: {
+      title: (user: string | null) => user ? `${user}, ¿seguro que quieres repetir la encuesta?` : '¿Seguro que quieres repetir la encuesta?',
+      text: (fate: Fate) => ({
+        survey: 'Vuelves a la primera pregunta con tus respuestas actuales, para cambiarlas.',
+        saved: 'Vuelves a la primera pregunta con tus respuestas actuales, para cambiarlas. Estos resultados quedan guardados en Mi perfil.',
+        unsaved: 'Vuelves a la primera pregunta con tus respuestas actuales, para cambiarlas. Estos resultados se pierden: con una cuenta se guardarían.',
+      })[fate],
+      ok: 'Repetir encuesta', cancel: 'Cancelar',
     },
   },
+
+  // Mi perfil: las encuestas guardadas de la cuenta
+  myProfile: 'Mi perfil', accountKick: 'Tu cuenta', accountLabel: 'Cuenta',
+  myRuns: 'Mis encuestas', runsHint: 'Se guardan solas al terminar una. Ábrelas para volver a ver tus recomendaciones.',
+  runsEmpty: 'Todavía no tienes encuestas guardadas.', runsEmptyHint: 'Cuando termines una, aparecerá aquí.', runStart: 'Empezar una encuesta',
+  runOpen: 'Ver resultados', runDelete: 'Borrar', runMovies: (n: number) => (n === 1 ? '1 película' : `${n} películas`),
+  runConfirm: {
+    deleteRun: {
+      title: (user: string | null) => user ? `${user}, ¿seguro que quieres borrar esta encuesta?` : '¿Seguro que quieres borrar esta encuesta?',
+      text: 'Se elimina de Mi perfil y no se puede recuperar.', ok: 'Borrar', cancel: 'Cancelar',
+    },
+    openRun: {
+      title: (user: string | null) => user ? `${user}, ¿abrir esta encuesta?` : '¿Abrir esta encuesta?',
+      text: 'Tienes una encuesta a medias. Si abres esta, la que dejaste a medias se descarta.', ok: 'Abrir', cancel: 'Cancelar',
+    },
+  },
+  // Qué se gana al iniciar sesión: se dice en el login, en los resultados y en el perfil sin sesión
+  loginBenefit: 'Con tu cuenta guardas tus encuestas y vuelves a tus resultados cuando quieras.',
+  guestNote: 'Como invitado, tus encuestas y resultados no se guardan.',
+  saveTitle: 'Guarda tus encuestas y resultados', saveText: 'Con una cuenta, cada encuesta queda en Mi perfil para que vuelvas a verla cuando quieras.', saveCta: 'Iniciar sesión',
+  savedNote: 'Guardada en Mi perfil', unsavedNote: 'Inicia sesión para guardar estos resultados.',
 
   landing: {
     kicker: 'Recomendador de películas', intro: 'Respondes unas preguntas y te decimos qué ver esta noche, y dónde verlo.',
@@ -34,13 +72,13 @@ const es = {
     steps: [
       { title: 'Responde', text: 'Unas preguntas rápidas: tu ánimo, duelos entre pósters y tus favoritas. Sin listas infinitas.' },
       { title: 'Recibe', text: 'De 1 a 10 películas pensadas para tu noche, cada una con su ficha completa.' },
-      { title: 'Mira', text: 'Cada recomendación te lleva directo a la plataforma donde puedes verla.' },
+      { title: 'Mira', text: 'Cada recomendación te dice dónde verla: en tu plataforma o, si está en cartelera, en el cine.' },
     ],
     showTitle: ['Pósters, fichas', 'y dónde verlas'],
     statsLabel: 'En números',
     stats: [{ value: 2, label: 'minutos de encuesta' }, { value: 10, label: 'películas como máximo por ronda' }, { value: 11, label: 'plataformas de streaming' }],
     platformsLabel: 'Dónde verlas',
-    ctaTitle: ['¿Listo para', 'elegir?'], ctaText: 'Entra con Google, con tu correo o como invitado.', cta: 'Iniciar sesión',
+    ctaTitle: ['¿Listo para', 'elegir?'], ctaText: 'Entra con Google, con tu correo o como invitado. Con una cuenta, tus encuestas y resultados se guardan.', cta: 'Iniciar sesión',
     navLabel: 'Secciones', navStart: '¿Le entras a la recomendación?', navResume: '¡Continúa tu encuesta!', menu: 'Menú', menuClose: 'Cerrar',
   },
 
@@ -65,7 +103,8 @@ const es = {
   favoritesQ: '¿Cuáles son tus favoritas?', favoritesHint: (max: number) => `Agrega hasta ${max}. Si no se te ocurre ninguna, sáltalo.`,
   searchLabel: 'Busca una película', searchPh: 'Escribe un título…', noMatch: 'No encontramos ese título en el catálogo.', orTap: 'O toca una de estas',
   picked: (n: number) => (n === 1 ? '1 elegida' : `${n} elegidas`), remove: 'Quitar',
-  platformsQ: '¿Dónde ves películas?', platformsHint: 'Solo te mostraremos lo que puedas ver. Se guardan para la próxima vez.',
+  platformsQ: '¿Dónde ves películas?', platformsHint: 'Solo te mostraremos lo que puedas ver, en streaming o en el cine. Se guardan para la próxima vez.',
+  inTheaters: 'En cines',
   numMoviesLabel: '¿Cuántas películas quieres ver?', myPlatforms: 'Tus plataformas',
   next: 'Siguiente', skip: 'Omitir', seeResult: 'Ver mis resultados', back: 'Atrás',
 
@@ -81,6 +120,7 @@ const es = {
     liked: (ref: string) => `Parecida a ${ref}`,
     mood: (name: string) => `Va con tu ánimo: ${name.toLowerCase()}`,
     platform: (p: string) => `Está en ${p}`,
+    cinema: (label: string) => label,
   },
   flags: { offPlatform: 'Fuera de tus plataformas', overRuntime: 'Dura más de lo que pediste' },
   refineSeen: 'Ya la vi', refineNo: 'No me interesa', refineMore: 'Más como esta',
@@ -93,7 +133,7 @@ const es = {
   moreForYou: 'Más para ti', moreHint: 'Extras que también encajan con tus respuestas.',
   wrappedTitle: 'Tu Wrapped de esta sesión', wGenre: 'Género dominante', wRareza: 'Fuera de Hollywood', wCine: 'Cine favorito', wNota: 'Nota media en IMDb',
   usefulAsk: '¿Te sirvieron las recomendaciones?', useful: 'Sí, me sirvieron', notUseful: 'No mucho', thanksFeedback: 'Gracias, lo tendremos en cuenta.',
-  redoTitle: '¿Otra ronda?', redoSame: 'Repetir la encuesta', redoFresh: 'Empezar de cero', quickRec: 'Recomendación sin encuesta',
+  redoTitle: '¿Otra ronda?', redoSame: 'Repetir la encuesta', redoFresh: 'Empezar de cero',
 
   continueSurvey: 'Continuar encuesta',
 
@@ -103,7 +143,7 @@ const es = {
   privacyLabel: 'Privacidad y datos',
   privacyPoints: [
     'Si entras con Google, Firebase (de Google) recibe tu nombre, correo y foto de perfil para mantener tu sesión. Si creas una cuenta con correo, guarda tu correo, tu nombre y una versión cifrada de tu contraseña, que MiPeli nunca ve. MiPeli solo usa tu nombre, para saludarte.',
-    'Tus respuestas, el idioma y tu valoración se guardan solo en tu navegador. No se envían a ningún servidor, y al borrar los datos del sitio desaparecen.',
+    'Tus respuestas, el idioma y tu valoración se guardan solo en tu navegador. Si tienes sesión, tus encuestas guardadas también viven ahí, ligadas a tu cuenta. Nada de esto se envía a ningún servidor, y al borrar los datos del sitio desaparece.',
     'Lo que escribes en el formulario de sugerencias todavía no se envía ni se guarda en ningún lado.',
     'No vendemos ni compartimos tus datos, y no los usamos para publicidad.',
   ],
@@ -115,7 +155,7 @@ const es = {
   aboutKick: 'Sobre el autor', authorName: 'xxx', authorBio: 'Estudiante de xxx, estudiando en xxx, con una gran pasión por las películas y el software.',
   sugLabel: '¿Alguna sugerencia para MiPeli?', sugPh: 'Escríbela aquí…', send: 'Enviar',
 
-  freshPick: 'Nueva recomendación con tus gustos guardados', thanksSug: '¡Gracias! Tu sugerencia llegó a Andrey.', linkCopied: 'Enlace copiado', shareFallback: 'Comparte: ',
+  thanksSug: '¡Gracias! Tu sugerencia llegó a Andrey.', linkCopied: 'Enlace copiado', shareFallback: 'Comparte: ',
 };
 
 export type Strings = typeof es;
@@ -140,13 +180,48 @@ const en: Strings = {
   confirm: {
     signout: {
       title: (user: string | null) => user ? `${user}, are you sure you want to sign out?` : 'Are you sure you want to sign out?',
-      text: 'You can come back any time you like.', ok: 'Sign out', cancel: 'Stay signed in',
+      text: () => 'You can come back any time. Your saved surveys will be waiting.', ok: 'Sign out', cancel: 'Stay signed in',
     },
     restart: {
       title: (user: string | null) => user ? `${user}, are you sure you want to start over?` : 'Are you sure you want to start over?',
-      text: 'Your answers so far are cleared and you start over from the first question.', ok: 'Start over', cancel: 'Cancel',
+      text: (fate: Fate) => ({
+        survey: 'Your answers so far are cleared and you start over from the first question.',
+        saved: 'You start over from the first question. These results stay saved in My profile.',
+        unsaved: 'You start over from the first question and these results are lost. With an account they would be saved.',
+      })[fate],
+      ok: 'Start over', cancel: 'Cancel',
+    },
+    redo: {
+      title: (user: string | null) => user ? `${user}, are you sure you want to redo the survey?` : 'Are you sure you want to redo the survey?',
+      text: (fate: Fate) => ({
+        survey: 'You go back to the first question with your current answers, to change them.',
+        saved: 'You go back to the first question with your current answers, to change them. These results stay saved in My profile.',
+        unsaved: 'You go back to the first question with your current answers, to change them. These results are lost: with an account they would be saved.',
+      })[fate],
+      ok: 'Redo survey', cancel: 'Cancel',
     },
   },
+
+  // My profile: the account's saved surveys
+  myProfile: 'My profile', accountKick: 'Your account', accountLabel: 'Account',
+  myRuns: 'My surveys', runsHint: 'They save themselves when you finish one. Open them to see your recommendations again.',
+  runsEmpty: 'You don’t have any saved surveys yet.', runsEmptyHint: 'When you finish one, it will show up here.', runStart: 'Start a survey',
+  runOpen: 'See results', runDelete: 'Delete', runMovies: (n: number) => (n === 1 ? '1 movie' : `${n} movies`),
+  runConfirm: {
+    deleteRun: {
+      title: (user: string | null) => user ? `${user}, are you sure you want to delete this survey?` : 'Are you sure you want to delete this survey?',
+      text: 'It is removed from My profile and can’t be recovered.', ok: 'Delete', cancel: 'Cancel',
+    },
+    openRun: {
+      title: (user: string | null) => user ? `${user}, open this survey?` : 'Open this survey?',
+      text: 'You have a survey in progress. If you open this one, the one you left halfway is discarded.', ok: 'Open', cancel: 'Cancel',
+    },
+  },
+  // What signing in gets you: said on the login screen, in the results and on the signed-out profile
+  loginBenefit: 'With your account you keep your surveys and come back to your results whenever you like.',
+  guestNote: 'As a guest, your surveys and results are not saved.',
+  saveTitle: 'Save your surveys and results', saveText: 'With an account, every survey stays in My profile so you can see it again whenever you like.', saveCta: 'Sign in',
+  savedNote: 'Saved in My profile', unsavedNote: 'Sign in to save these results.',
 
   landing: {
     kicker: 'Movie recommender', intro: 'Answer a few questions and we tell you what to watch tonight, and where to stream it.',
@@ -156,13 +231,13 @@ const en: Strings = {
     steps: [
       { title: 'Answer', text: 'A few quick questions: your mood, poster duels and your favorites. No endless lists.' },
       { title: 'Get', text: 'From 1 to 10 movies picked for your night, each with its full details.' },
-      { title: 'Watch', text: 'Every recommendation takes you straight to the platform where you can watch it.' },
+      { title: 'Watch', text: 'Every recommendation tells you where to watch it: on your platform or, if it is out now, in theaters.' },
     ],
     showTitle: ['Posters, details', 'and where to watch'],
     statsLabel: 'In numbers',
     stats: [{ value: 2, label: 'minutes of survey' }, { value: 10, label: 'movies at most per round' }, { value: 11, label: 'streaming platforms' }],
     platformsLabel: 'Where to watch',
-    ctaTitle: ['Ready to', 'choose?'], ctaText: 'Sign in with Google, with your email or as a guest.', cta: 'Sign in',
+    ctaTitle: ['Ready to', 'choose?'], ctaText: 'Sign in with Google, with your email or as a guest. With an account, your surveys and results are saved.', cta: 'Sign in',
     navLabel: 'Sections', navStart: 'Up for a recommendation?', navResume: 'Continue your survey!', menu: 'Menu', menuClose: 'Close',
   },
 
@@ -187,7 +262,8 @@ const en: Strings = {
   favoritesQ: 'What are your favorites?', favoritesHint: (max: number) => `Add up to ${max}. If none comes to mind, skip it.`,
   searchLabel: 'Search for a movie', searchPh: 'Type a title…', noMatch: 'We couldn’t find that title in the catalog.', orTap: 'Or tap one of these',
   picked: (n: number) => `${n} picked`, remove: 'Remove',
-  platformsQ: 'Where do you watch movies?', platformsHint: 'We’ll only show what you can watch. They’re saved for next time.',
+  platformsQ: 'Where do you watch movies?', platformsHint: 'We’ll only show what you can watch, streaming or in theaters. They’re saved for next time.',
+  inTheaters: 'In theaters',
   numMoviesLabel: 'How many movies do you want to see?', myPlatforms: 'Your platforms',
   next: 'Next', skip: 'Skip', seeResult: 'See my results', back: 'Back',
 
@@ -203,6 +279,7 @@ const en: Strings = {
     liked: (ref: string) => `Similar to ${ref}`,
     mood: (name: string) => `Fits your mood: ${name.toLowerCase()}`,
     platform: (p: string) => `On ${p}`,
+    cinema: (label: string) => label,
   },
   flags: { offPlatform: 'Outside your platforms', overRuntime: 'Longer than you asked' },
   refineSeen: 'Already seen it', refineNo: 'Not interested', refineMore: 'More like this',
@@ -215,7 +292,7 @@ const en: Strings = {
   moreForYou: 'More for you', moreHint: 'Extras that also fit your answers.',
   wrappedTitle: 'Your Wrapped for this session', wGenre: 'Top genre', wRareza: 'Outside Hollywood', wCine: 'Favorite cinema', wNota: 'Average IMDb rating',
   usefulAsk: 'Were the recommendations useful?', useful: 'Yes, they helped', notUseful: 'Not really', thanksFeedback: 'Thanks, we’ll keep it in mind.',
-  redoTitle: 'Another round?', redoSame: 'Redo the survey', redoFresh: 'Start from scratch', quickRec: 'Pick without survey',
+  redoTitle: 'Another round?', redoSame: 'Redo the survey', redoFresh: 'Start from scratch',
 
   continueSurvey: 'Continue survey',
 
@@ -225,7 +302,7 @@ const en: Strings = {
   privacyLabel: 'Privacy and data',
   privacyPoints: [
     'If you sign in with Google, Firebase (by Google) receives your name, email and profile photo to keep you signed in. If you create an account with email, it stores your email, your name and an encrypted version of your password, which MiPeli never sees. MiPeli only uses your name, to greet you.',
-    'Your answers, language and feedback are stored only in your browser. They are not sent to any server, and clearing the site’s data removes them.',
+    'Your answers, language and feedback are stored only in your browser. If you are signed in, your saved surveys live there too, tied to your account. None of this is sent to any server, and clearing the site’s data removes it.',
     'What you type in the suggestions form is not sent or stored anywhere yet.',
     'We don’t sell or share your data, and we don’t use it for advertising.',
   ],
@@ -237,7 +314,7 @@ const en: Strings = {
   aboutKick: 'About the author', authorName: 'xxx', authorBio: 'A xxx student, studying at xxx, with a deep passion for film and software.',
   sugLabel: 'Any suggestion for MiPeli?', sugPh: 'Write it here…', send: 'Send',
 
-  freshPick: 'Fresh pick from your saved taste', thanksSug: 'Thanks! Your suggestion reached Andrey.', linkCopied: 'Link copied', shareFallback: 'Share: ',
+  thanksSug: 'Thanks! Your suggestion reached Andrey.', linkCopied: 'Link copied', shareFallback: 'Share: ',
 };
 
 export const L: Record<Lang, Strings> = { es, en };

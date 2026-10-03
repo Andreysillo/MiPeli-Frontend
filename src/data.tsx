@@ -10,6 +10,7 @@ import crunchyroll from './assets/platforms/crunchyroll.png';
 import vix from './assets/platforms/Vix.jpg';
 import claroVideo from './assets/platforms/Claro Video.png';
 import pluto from './assets/platforms/Pluto tv.png';
+import cineLogo from './assets/platforms/cine logo.png';
 import type { Lang } from './i18n';
 
 // Forma de los datos según TMDB (movie details + credits + watch/providers). imdb: nota de IMDb sobre 10 (vía imdb_id, p. ej. OMDb).
@@ -34,7 +35,12 @@ export const platforms = {
   'Claro video': { url: 'https://www.clarovideo.com/', logo: claroVideo },
   'Pluto TV': { url: 'https://pluto.tv/', logo: pluto },
 } satisfies Record<string, PlatformInfo>;
-export type Platform = keyof typeof platforms;
+
+// El cine no es una plataforma de streaming: se elige y se muestra como una más, pero no tiene enlace ni entra en la landing (que recorre `platforms`).
+// Demo: Interstellar, Spirited Away y Seven figuran como reestrenos y Past Lives solo en cines. El backend lo calculará con TMDB (docs/recomendacion.md).
+export const CINE = 'Cine';
+export const cinemaLogo = cineLogo;
+export type Platform = keyof typeof platforms | typeof CINE;
 
 export const catalog: Movie[] = [
   { title: 'Parasite', year: 2019, director: 'Bong Joon-ho', cast: ['Song Kang-ho', 'Lee Sun-kyun', 'Cho Yeo-jeong', 'Choi Woo-shik'], genres: ['Comedia', 'Thriller', 'Drama'], runtime: 132, country: 'KR', imdb: 8.5, color: '#3b82f6', platforms: ['Netflix', 'Prime Video'],
@@ -51,7 +57,7 @@ export const catalog: Movie[] = [
     overview: { es: 'Un joven baterista de jazz cae en manos de un profesor implacable que lo empuja más allá de sus límites.', en: 'A young jazz drummer falls under a ruthless instructor who pushes him past his limits.' } },
   { title: 'Zodiac', year: 2007, director: 'David Fincher', cast: ['Jake Gyllenhaal', 'Mark Ruffalo', 'Robert Downey Jr.'], genres: ['Crimen', 'Drama', 'Misterio', 'Thriller'], runtime: 157, country: 'US', imdb: 7.7, color: '#ef4444', platforms: ['HBO Max', 'Disney+'],
     overview: { es: 'Un caricaturista se obsesiona con descubrir quién es el asesino del Zodiaco que aterrorizó San Francisco.', en: 'A cartoonist becomes obsessed with unmasking the Zodiac killer who terrorized San Francisco.' } },
-  { title: 'Seven', year: 1995, director: 'David Fincher', cast: ['Brad Pitt', 'Morgan Freeman', 'Gwyneth Paltrow'], genres: ['Crimen', 'Misterio', 'Thriller'], runtime: 127, country: 'US', imdb: 8.6, color: '#6366f1', platforms: ['Netflix', 'HBO Max'],
+  { title: 'Seven', year: 1995, director: 'David Fincher', cast: ['Brad Pitt', 'Morgan Freeman', 'Gwyneth Paltrow'], genres: ['Crimen', 'Misterio', 'Thriller'], runtime: 127, country: 'US', imdb: 8.6, color: '#6366f1', platforms: ['Cine', 'Netflix', 'HBO Max'],
     overview: { es: 'Dos detectives persiguen a un asesino que usa los siete pecados capitales como guion de sus crímenes.', en: 'Two detectives hunt a killer who uses the seven deadly sins as the script for his crimes.' } },
   { title: 'Prisoners', year: 2013, director: 'Denis Villeneuve', cast: ['Hugh Jackman', 'Jake Gyllenhaal', 'Viola Davis', 'Paul Dano'], genres: ['Drama', 'Thriller', 'Crimen'], runtime: 153, country: 'US', imdb: 8.1, color: '#0ea5e9', platforms: ['Paramount+', 'Prime Video'],
     overview: { es: 'Cuando su hija desaparece, un padre desesperado decide tomarse la justicia por su mano.', en: 'When his daughter goes missing, a desperate father takes matters into his own hands.' } },
@@ -93,7 +99,7 @@ export const catalog: Movie[] = [
     overview: { es: 'Una lingüista es reclutada para comunicarse con las naves extraterrestres que han llegado a la Tierra.', en: 'A linguist is recruited to communicate with the alien ships that have landed on Earth.' } },
   { title: 'Blade Runner 2049', year: 2017, director: 'Denis Villeneuve', cast: ['Ryan Gosling', 'Harrison Ford', 'Ana de Armas', 'Sylvia Hoeks'], genres: ['Ciencia ficción', 'Drama'], runtime: 164, country: 'US', imdb: 8.0, color: '#ea580c', platforms: ['HBO Max', 'Prime Video'],
     overview: { es: 'Un nuevo blade runner desentierra un secreto que lo lleva a buscar a Rick Deckard, desaparecido hace treinta años.', en: 'A new blade runner unearths a secret that leads him to track down Rick Deckard, missing for thirty years.' } },
-  { title: 'Interstellar', year: 2014, director: 'Christopher Nolan', cast: ['Matthew McConaughey', 'Anne Hathaway', 'Jessica Chastain'], genres: ['Aventura', 'Drama', 'Ciencia ficción'], runtime: 169, country: 'US', imdb: 8.7, color: '#0369a1', platforms: ['Paramount+', 'Prime Video'],
+  { title: 'Interstellar', year: 2014, director: 'Christopher Nolan', cast: ['Matthew McConaughey', 'Anne Hathaway', 'Jessica Chastain'], genres: ['Aventura', 'Drama', 'Ciencia ficción'], runtime: 169, country: 'US', imdb: 8.7, color: '#0369a1', platforms: ['Cine', 'Paramount+', 'Prime Video'],
     overview: { es: 'Con la Tierra agonizando, un grupo de exploradores cruza un agujero de gusano en busca de un nuevo hogar.', en: 'With Earth dying, a team of explorers travels through a wormhole in search of a new home.' } },
   { title: 'Ex Machina', year: 2014, director: 'Alex Garland', cast: ['Domhnall Gleeson', 'Alicia Vikander', 'Oscar Isaac'], genres: ['Drama', 'Ciencia ficción', 'Thriller'], runtime: 108, country: 'GB', imdb: 7.7, color: '#94a3b8', platforms: ['Netflix'],
     overview: { es: 'Un programador es invitado a evaluar si la inteligencia artificial creada por su jefe tiene conciencia.', en: 'A programmer is invited to judge whether the AI his boss built is truly conscious.' } },
@@ -107,11 +113,11 @@ export const catalog: Movie[] = [
     overview: { es: 'Bretaña, siglo XVIII: una pintora debe retratar en secreto a una joven que se niega a posar.', en: 'Brittany, 18th century: a painter must secretly portray a young woman who refuses to sit for her.' } },
   { title: 'La La Land', year: 2016, director: 'Damien Chazelle', cast: ['Ryan Gosling', 'Emma Stone', 'John Legend'], genres: ['Comedia', 'Drama', 'Romance'], runtime: 128, country: 'US', imdb: 8.0, color: '#7c3aed', platforms: ['Netflix', 'Prime Video'],
     overview: { es: 'Un pianista de jazz y una aspirante a actriz se enamoran mientras persiguen sus sueños en Los Ángeles.', en: 'A jazz pianist and an aspiring actress fall in love while chasing their dreams in Los Angeles.' } },
-  { title: 'Past Lives', year: 2023, director: 'Celine Song', cast: ['Greta Lee', 'Teo Yoo', 'John Magaro'], genres: ['Drama', 'Romance'], runtime: 106, country: 'US', imdb: 7.8, color: '#0d9488', platforms: ['Paramount+'],
+  { title: 'Past Lives', year: 2023, director: 'Celine Song', cast: ['Greta Lee', 'Teo Yoo', 'John Magaro'], genres: ['Drama', 'Romance'], runtime: 106, country: 'US', imdb: 7.8, color: '#0d9488', platforms: ['Cine'],
     overview: { es: 'Dos amigos de la infancia separados al emigrar se reencuentran en Nueva York veinte años después.', en: 'Two childhood friends separated by emigration reunite in New York twenty years later.' } },
   { title: 'Eternal Sunshine of the Spotless Mind', year: 2004, director: 'Michel Gondry', cast: ['Jim Carrey', 'Kate Winslet', 'Kirsten Dunst'], genres: ['Ciencia ficción', 'Drama', 'Romance'], runtime: 108, country: 'US', imdb: 8.3, color: '#2dd4bf', platforms: ['Prime Video'],
     overview: { es: 'Tras una ruptura, un hombre se somete a un procedimiento para borrar de su memoria a su expareja.', en: 'After a breakup, a man undergoes a procedure to erase his ex from his memory.' } },
-  { title: 'Spirited Away', year: 2001, director: 'Hayao Miyazaki', cast: ['Rumi Hiiragi', 'Miyu Irino', 'Mari Natsuki'], genres: ['Animación', 'Fantasía'], runtime: 125, country: 'JP', imdb: 8.6, color: '#e11d48', platforms: ['Netflix'],
+  { title: 'Spirited Away', year: 2001, director: 'Hayao Miyazaki', cast: ['Rumi Hiiragi', 'Miyu Irino', 'Mari Natsuki'], genres: ['Animación', 'Fantasía'], runtime: 125, country: 'JP', imdb: 8.6, color: '#e11d48', platforms: ['Cine', 'Netflix'],
     overview: { es: 'Una niña queda atrapada en un mundo de espíritus y debe trabajar en una casa de baños para salvar a sus padres.', en: 'A girl trapped in a world of spirits must work in a bathhouse to save her parents.' } },
   { title: 'Spider-Man: Into the Spider-Verse', year: 2018, director: 'Bob Persichetti, Peter Ramsey, Rodney Rothman', cast: ['Shameik Moore', 'Jake Johnson', 'Hailee Steinfeld'], genres: ['Animación', 'Acción', 'Ciencia ficción'], runtime: 117, country: 'US', imdb: 8.4, color: '#ef4444', platforms: ['Disney+'],
     overview: { es: 'Miles Morales se convierte en Spider-Man y se une a otros arañas de dimensiones paralelas.', en: 'Miles Morales becomes Spider-Man and teams up with spider-people from parallel dimensions.' } },
@@ -194,6 +200,6 @@ export const driftItem = (m: Movie) => ({ title: m.title, year: m.year, rating: 
 export const contactInfo = { email: 'jimenezzzandrey@gmail.com', github: 'https://github.com/Andreysillo', linkedin: 'https://www.linkedin.com/in/andrey-jim%C3%A9nez-n%C3%BA%C3%B1ez-a20402322' };
 
 export const faqData: Record<Lang, { q: string; a: string }[]> = {
-  es: [{ q: '¿De dónde salen las recomendaciones?', a: 'De tus respuestas, cruzadas con nuestra base de títulos.' }, { q: '¿Necesito cuenta?', a: 'No para probar. Con una cuenta (Google o correo) guardas tu progreso y repites encuestas sin límite.' }, { q: '¿De dónde sale la calificación?', a: 'Es la nota de IMDb, sobre 10.' }, { q: '¿Dónde veo la peli?', a: 'Cada recomendación muestra en qué plataformas está, con un botón que te lleva directo a cada una.' }, { q: '¿Qué datos guardan de mí?', a: 'Si entras con Google o con correo, Firebase guarda tu nombre y correo para mantener tu sesión, y MiPeli solo usa tu nombre para saludarte. Tus respuestas viven solo en tu navegador. No vendemos tus datos. Hay más detalle en Contacto.' }],
-  en: [{ q: 'Where do recommendations come from?', a: 'Your answers, matched against our title base.' }, { q: 'Do I need an account?', a: 'Not to try. With an account (Google or email) you save progress and repeat surveys with no limit.' }, { q: 'Where does the rating come from?', a: 'It is the IMDb score, out of 10.' }, { q: 'Where can I watch it?', a: 'Every recommendation shows which platforms have it, with a button that takes you straight to each one.' }, { q: 'What data do you keep about me?', a: 'If you sign in with Google or email, Firebase keeps your name and email to maintain your session, and MiPeli only uses your name to greet you. Your answers live only in your browser. We don’t sell your data. See Contact for details.' }],
+  es: [{ q: '¿De dónde salen las recomendaciones?', a: 'De tus respuestas, cruzadas con nuestra base de títulos.' }, { q: '¿Necesito cuenta?', a: 'No para probar. Con una cuenta (Google o correo) tus encuestas y resultados se guardan en Mi perfil, para que vuelvas a verlos cuando quieras. Como invitado no se guardan.' }, { q: '¿De dónde sale la calificación?', a: 'Es la nota de IMDb, sobre 10.' }, { q: '¿Dónde veo la peli?', a: 'Cada recomendación muestra en qué plataformas está, con un botón que te lleva directo a cada una.' }, { q: '¿Qué datos guardan de mí?', a: 'Si entras con Google o con correo, Firebase guarda tu nombre y correo para mantener tu sesión, y MiPeli solo usa tu nombre para saludarte. Tus respuestas y tus encuestas guardadas viven solo en tu navegador. No vendemos tus datos. Hay más detalle en Contacto.' }],
+  en: [{ q: 'Where do recommendations come from?', a: 'Your answers, matched against our title base.' }, { q: 'Do I need an account?', a: 'Not to try. With an account (Google or email) your surveys and results are saved in My profile, so you can see them again whenever you like. As a guest they are not saved.' }, { q: 'Where does the rating come from?', a: 'It is the IMDb score, out of 10.' }, { q: 'Where can I watch it?', a: 'Every recommendation shows which platforms have it, with a button that takes you straight to each one.' }, { q: 'What data do you keep about me?', a: 'If you sign in with Google or email, Firebase keeps your name and email to maintain your session, and MiPeli only uses your name to greet you. Your answers and saved surveys live only in your browser. We don’t sell your data. See Contact for details.' }],
 };

@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import { ArrowsClockwise, Lightning, ShareNetwork, ThumbsDown, ThumbsUp } from '@phosphor-icons/react';
+import { useEffect, type ReactNode } from 'react';
+import { ArrowsClockwise, BookmarkSimple, ClockCounterClockwise, ShareNetwork, ThumbsDown, ThumbsUp } from '@phosphor-icons/react';
 import Button from '../components/Button';
 import CountUp from '../components/CountUp';
 import PosterGallery from '../components/PosterGallery';
@@ -46,11 +46,14 @@ const MAX_EXTRAS = 4;
 const NUMBERS = [1, 3, 5, 8, 10];
 
 export default function Results() {
-  const { st, set, go, flash, t } = useApp();
+  const { st, set, go, flash, saveRun, redoSurvey, t } = useApp();
   const ranked = recommend(st);
   const recs = ranked.slice(0, st.numMovies);
   const extras = st.numMovies < 10 ? ranked.slice(st.numMovies, st.numMovies + MAX_EXTRAS) : [];
-  const redo = () => set({ qi: 0, duelIdx: 0, duelPicks: [], screen: 'quest', questActive: true });
+  const titles = recs.map(m => m.title);
+
+  // Con sesión, la encuesta se guarda al llegar y se actualiza cada vez que se afina (más como esta, ya la vi, no me interesa, cuántas)
+  useEffect(() => { saveRun(titles); }, [saveRun, st.uid, titles.join('|'), st.boosted, st.seen, st.disliked, st.numMovies]);
 
   // Los filtros dejaron la lista vacía: se ofrece quitarlos en lugar de mostrar una pantalla rota
   if (recs.length === 0) {
@@ -61,7 +64,7 @@ export default function Results() {
           <p data-reveal className="mp-lead">{t.noResultsText}</p>
           <div data-reveal style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             <Button onClick={() => set({ avoid: [], maxRuntime: null, company: 'solo', ownedPlatforms: [] })}>{t.relax}</Button>
-            <Button variant="secondary" icon={<ArrowsClockwise size={18} aria-hidden />} onClick={redo}>{t.redoSame}</Button>
+            <Button variant="secondary" icon={<ArrowsClockwise size={18} aria-hidden />} onClick={redoSurvey}>{t.redoSame}</Button>
           </div>
         </div>
       </section>
@@ -91,6 +94,11 @@ export default function Results() {
           <div className="mp-stack" style={{ gap: 10 }}>
             <h1 data-reveal className="mp-title">{recs.length === 1 ? t.tonightKick : t.yourMovies(recs.length)}</h1>
             {lead && <p data-reveal className="mp-lead">{lead}</p>}
+            {st.uid ? (
+              <a data-reveal href="#perfil" className="mp-saved"><BookmarkSimple size={16} weight="fill" aria-hidden />{t.savedNote}</a>
+            ) : (
+              <p data-reveal className="mp-saved">{t.unsavedNote}<button className="mp-linkbtn" onClick={() => set({ returnTo: 'results', screen: 'login' })}>{t.saveCta}</button></p>
+            )}
           </div>
           <div data-reveal><Button variant="ghost" size="sm" icon={<ShareNetwork size={18} aria-hidden />} onClick={share}>{t.share}</Button></div>
         </div>
@@ -147,9 +155,9 @@ export default function Results() {
             <div className="mp-stack" style={{ gap: 12 }}>
               <h2 className="mp-h3">{t.redoTitle}</h2>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <Button variant="secondary" size="sm" icon={<ArrowsClockwise size={18} aria-hidden />} onClick={redo}>{t.redoSame}</Button>
+                <Button variant="secondary" size="sm" icon={<ArrowsClockwise size={18} aria-hidden />} onClick={() => set({ confirm: 'redo' })}>{t.redoSame}</Button>
                 <Button variant="secondary" size="sm" onClick={() => set({ confirm: 'restart' })}>{t.redoFresh}</Button>
-                {st.loggedIn && <Button variant="secondary" size="sm" icon={<Lightning size={18} aria-hidden />} onClick={() => { go('loading'); flash(t.freshPick); }}>{t.quickRec}</Button>}
+                {st.uid && <Button variant="secondary" size="sm" icon={<ClockCounterClockwise size={18} aria-hidden />} onClick={() => go('profile')}>{t.myRuns}</Button>}
               </div>
             </div>
           </div>

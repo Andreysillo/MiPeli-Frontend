@@ -1,11 +1,11 @@
 // Recomendador de demo: ordena el catálogo local según las respuestas de la encuesta.
 // ponytail: heurística local; la reemplaza el backend. Este módulo es la costura: cada respuesta tiene su equivalente en TMDB
 // (ver docs/recomendacion.md). Mientras tanto aquí se puntúa con los mismos criterios que usará el servidor.
-import { catalog, type Movie, type Platform } from './data';
+import { CINE, catalog, type Movie, type Platform } from './data';
 import { companyRules, moods, type Company, type Mood } from './survey';
 
-// Por qué sale una película: parecida a una que eligió (o del mismo director), va con su mood o está en su plataforma
-export type Reason = { kind: 'director' | 'liked' | 'mood' | 'platform'; ref: string };
+// Por qué sale una película: parecida a una que eligió (o del mismo director), va con su mood, está en su plataforma o en cines
+export type Reason = { kind: 'director' | 'liked' | 'mood' | 'platform' | 'cinema'; ref: string };
 // Qué restricción incumple (se muestran al final de la lista y marcadas, solo si no alcanzan las que sí cumplen)
 export type Flag = 'offPlatform' | 'overRuntime';
 export type Rec = Movie & { reasons: Reason[]; flags: Flag[] };
@@ -49,9 +49,11 @@ export function recommend(a: Answers): Rec[] {
     const reasons: Reason[] = [];
     if (best && m.director === best.other.director) reasons.push({ kind: 'director', ref: best.other.title });
     else if (best && best.s >= 0.5 * best.w) reasons.push({ kind: 'liked', ref: best.other.title });
+    // Lo que está en cines es lo más difícil de encontrar y lo que más caduca: se dice siempre, antes que el ánimo (solo caben 2 razones)
+    if (own.includes(CINE)) reasons.push({ kind: 'cinema', ref: CINE });
     const mood = a.moods.find(k => genresOf(k).some(g => m.genres.includes(g)));
     if (mood) reasons.push({ kind: 'mood', ref: mood });
-    if (own.length) reasons.push({ kind: 'platform', ref: own[0] });
+    if (own.length && !own.includes(CINE)) reasons.push({ kind: 'platform', ref: own[0] });
 
     const flags: Flag[] = [];
     if (a.ownedPlatforms.length > 0 && own.length === 0) flags.push('offPlatform');

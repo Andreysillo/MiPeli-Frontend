@@ -16,6 +16,11 @@ ok(titles({ company: 'family' }).every(t => !catalog.find(m => m.title === t)!.g
 const mubi = recommend({ ...base, ownedPlatforms: ['Mubi'] });
 const firstOff = mubi.findIndex(m => m.flags.includes('offPlatform'));
 ok(mubi[0].platforms.includes('Mubi') && mubi.slice(0, firstOff).every(m => m.platforms.includes('Mubi')), 'las de tus plataformas van primero');
+ok(mubi.find(m => m.title === 'Past Lives')!.flags.includes('offPlatform'), 'lo que solo está en cines sale marcado si no eliges Cine');
+
+const cine = recommend({ ...base, ownedPlatforms: ['Cine'] });
+const firstOffCine = cine.findIndex(m => m.flags.includes('offPlatform'));
+ok(cine.slice(0, firstOffCine).every(m => m.platforms.includes('Cine')) && cine[0].reasons.some(r => r.kind === 'cinema'), 'las que están en cines van primero y lo dicen');
 ok(recommend({ ...base, maxRuntime: 100 }).filter(m => m.flags.includes('overRuntime')).every(m => m.runtime > 100), 'la marca de duración solo va en las que se pasan');
 ok(recommend({ ...base, liked: ['Parasite'] }).find(m => m.title === 'Mother')!.reasons[0]?.kind === 'director', 'mismo director explica la recomendación');
 

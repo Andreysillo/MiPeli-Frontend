@@ -15,7 +15,7 @@ const errorText = (t: Strings, e: { code?: string }) => t.authErrors[e.code as k
 
 // Inicio de sesión y registro con correo y contraseña (Firebase Authentication)
 export default function Login() {
-  const { set, go, enterSurvey, flash, t } = useApp();
+  const { st, set, enterSurvey, flash, t } = useApp();
   const { busy: googleBusy, google } = useGoogleSignIn();
   const [mode, setMode] = useState<Mode>('login');
   const [name, setName] = useState('');
@@ -55,8 +55,10 @@ export default function Login() {
       {/* El contenedor deja pasar el cursor para que el mural reaccione; solo el formulario lo recibe */}
       <div className="mp-content mp-container mp-page" style={{ pointerEvents: 'none' }}>
         <div className="mp-auth">
-          <div data-reveal><Button variant="ghost" size="sm" icon={<ArrowLeft size={18} aria-hidden />} onClick={() => go('welcome')} style={{ marginLeft: -14 }}>{t.back}</Button></div>
+          {/* Atrás vuelve adonde estaba (p. ej. los resultados de un invitado que quería guardarlos) o a la landing */}
+          <div data-reveal><Button variant="ghost" size="sm" icon={<ArrowLeft size={18} aria-hidden />} onClick={() => set({ screen: st.returnTo ?? 'welcome', returnTo: null })} style={{ marginLeft: -14 }}>{t.back}</Button></div>
           <h1 data-reveal className="mp-title">{register ? t.registerTitle : t.loginTitle}</h1>
+          <p data-reveal className="mp-lead">{t.loginBenefit}</p>
 
           <div data-reveal className="mp-seg" role="group" aria-label={t.loginTitle}>
             <button type="button" aria-pressed={!register} onClick={() => switchMode('login')}>{t.tabLogin}</button>
@@ -96,6 +98,7 @@ export default function Login() {
           <div data-reveal className="mp-stack" style={{ gap: 8 }}>
             <Button variant="google" block icon={<GoogleG />} onClick={google} disabled={googleBusy} aria-busy={googleBusy}>{t.google}</Button>
             <Button variant="ghost" block icon={<UserCircle size={20} aria-hidden />} onClick={enterSurvey}>{t.guest}</Button>
+            <p className="mp-label" style={{ textAlign: 'center' }}>{t.guestNote}</p>
           </div>
         </div>
       </div>

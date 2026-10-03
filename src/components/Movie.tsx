@@ -1,6 +1,6 @@
 // Piezas de película compartidas por la galería, la ficha y la lista de extras
-import { platforms, poster, type Movie, type Platform, type PlatformInfo } from '../data';
-import type { Lang } from '../i18n';
+import { CINE, cinemaLogo, platforms, poster, type Movie, type Platform } from '../data';
+import type { Lang, Strings } from '../i18n';
 import type { Reason, Rec } from '../recommend';
 import type { Mood } from '../survey';
 import { useApp } from '../store';
@@ -31,13 +31,23 @@ export function Imdb({ m }: Readonly<{ m: Movie }>) {
   return <span className="mp-tag tnum" aria-label={t.imdbOf(m.imdb)}><span className="mp-imdb" aria-hidden translate="no">IMDb</span><span aria-hidden>{m.imdb}</span></span>;
 }
 
-// Botón de plataforma: logo en su baldosa de color + nombre
+// Nombre que se muestra de una plataforma; el cine tiene el suyo, traducido
+export const platformName = (p: Platform, t: Strings) => (p === CINE ? t.inTheaters : p);
+
+// Logo de una plataforma o del cine, al alto que fije el contexto (.mp-platform-logo). El del cine va de fondo para poder acercarlo (ver .mp-cine)
+export function PlatformLogo({ p }: Readonly<{ p: Platform }>) {
+  if (p === CINE) return <span className="mp-platform-logo mp-cine" style={{ backgroundImage: `url("${cinemaLogo}")` }} aria-hidden />;
+  return <img className="mp-platform-logo" src={platforms[p].logo} alt="" height={38} draggable={false} />;
+}
+
+// Botón de plataforma: logo en su baldosa + nombre. El cine no lleva enlace: solo dice "En cines"
 function PlatformLink({ p, big }: Readonly<{ p: Platform; big?: boolean }>) {
   const { t } = useApp();
-  const { url, logo }: PlatformInfo = platforms[p];
+  const cls = `mp-platform${big ? ' big' : ''}`;
+  if (p === CINE) return <span className={cls}><PlatformLogo p={p} />{t.inTheaters}</span>;
   return (
-    <a href={url} target="_blank" rel="noopener noreferrer" aria-label={t.openIn(p)} className={`mp-platform${big ? ' big' : ''}`} translate="no">
-      <img className="mp-platform-logo" src={logo} alt="" height={38} draggable={false} />
+    <a href={platforms[p].url} target="_blank" rel="noopener noreferrer" aria-label={t.openIn(p)} className={cls} translate="no">
+      <PlatformLogo p={p} />
       {p}
     </a>
   );
@@ -59,7 +69,11 @@ export function WatchOn({ m, big, label }: Readonly<{ m: Movie; big?: boolean; l
 // Por qué sale esta película (parecida a una que eligió, su ánimo, su plataforma) y qué restricción incumple, si alguna
 export function Reasons({ m }: Readonly<{ m: Rec }>) {
   const { t } = useApp();
-  const label = (r: Reason) => (r.kind === 'mood' ? t.moodNames[r.ref as Mood].name : r.ref);
+  const label = (r: Reason) => {
+    if (r.kind === 'mood') return t.moodNames[r.ref as Mood].name;
+    if (r.kind === 'cinema') return t.inTheaters;
+    return r.ref;
+  };
   return (
     <ul className="mp-reasons">
       {m.reasons.map(r => <li key={r.kind} className="mp-tag">{t.reasons[r.kind](label(r))}</li>)}

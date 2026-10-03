@@ -157,9 +157,10 @@ button { font: inherit; color: inherit; }
   display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px;
   border-radius: 999px; border: 1px solid var(--border-strong); background: rgba(31, 31, 46, .7); color: var(--text);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  font-size: .8125rem; font-weight: 600; letter-spacing: .02em; cursor: pointer; transition: background-color .2s ease;
+  font-size: .8125rem; font-weight: 600; letter-spacing: .02em; text-decoration: none; cursor: pointer; transition: background-color .2s ease;
 }
 .mp-lang:hover { background: rgba(255, 255, 255, .12); }
+.mp-lang[aria-current] { border-color: var(--text); }
 
 .mp-nav { display: flex; gap: clamp(20px, 3vw, 44px); margin: 0 auto; }
 .mp-nav ~ .mp-header-actions { margin-left: 0; }
@@ -383,6 +384,10 @@ html:has(dialog[open]) { overflow: hidden; }
 .mp-platform-logo { height: 32px; width: auto; flex: none; border-radius: 9px; }
 .mp-platform.big { height: 52px; font-size: .9375rem; padding-right: 20px; }
 .mp-platform.big .mp-platform-logo { height: 38px; border-radius: 11px; }
+/* El logo del cine trae mucho margen blanco: va de fondo y se acerca para que el icono se lea al tamaño de los demás.
+   Como no es un enlace, su baldosa no reacciona al cursor */
+.mp-cine { display: inline-block; aspect-ratio: 1; background: #fff center / 170% no-repeat; }
+span.mp-platform { pointer-events: none; }
 /* Insignia de IMDb: amarillo de marca con texto oscuro (contraste > 10:1) */
 .mp-imdb { background: #f5c518; color: #000; font-weight: 800; font-size: .6875rem; letter-spacing: .02em; padding: 2px 5px; border-radius: 4px; }
 
@@ -407,7 +412,7 @@ html:has(dialog[open]) { overflow: hidden; }
 }
 /* Teléfonos estrechos con la sesión abierta: el globo del idioma se oculta para que quepan salir, idioma y menú */
 @media (max-width: 400px) {
-  .mp-header:has(.mp-signout) .mp-hide-xs { display: none; }
+  .mp-header:has(.mp-profile) .mp-hide-xs { display: none; }
 }
 
 /* ---------- Carga ---------- */
@@ -510,7 +515,7 @@ html:has(dialog[open]) { overflow: hidden; }
   display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text); font-weight: 500; font-size: .9375rem; text-align: left; cursor: pointer;
   background: var(--surface); border: 1px solid var(--border); border-radius: 14px; transition: border-color .2s ease, background-color .2s ease;
 }
-.mp-plat > span:nth-of-type(1) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.mp-plat-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .mp-plat:hover { border-color: var(--border-strong); }
 .mp-plat[aria-pressed='true'] { border-color: var(--text); background: #2a2a3d; }
 
@@ -519,6 +524,22 @@ html:has(dialog[open]) { overflow: hidden; }
 .mp-reasons:empty { display: none; }
 .mp-tag-warn { color: var(--text); border-color: var(--border-strong); background: transparent; border-style: dashed; }
 .mp-refine { display: flex; flex-wrap: wrap; gap: 8px; }
+/* Resultados: si la encuesta quedó guardada (enlace al perfil) o cómo guardarla (invitado) */
+.mp-saved { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; margin: 0; font-size: .875rem; color: var(--text-muted); text-decoration: none; }
+a.mp-saved:hover { color: var(--text); }
+.mp-saved .mp-linkbtn { color: var(--text); }
+
+/* Mi perfil: una tarjeta por encuesta guardada, con las miniaturas apiladas como un mazo */
+.mp-runs { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.mp-run { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px; padding: 16px 20px; }
+.mp-run-thumbs { display: flex; }
+.mp-run-thumbs img { width: 44px; height: auto; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-strong); background: var(--surface); }
+.mp-run-thumbs img + img { margin-left: -12px; }
+.mp-run-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+@media (max-width: 719px) {
+  .mp-run { grid-template-columns: 1fr; gap: 14px; }
+  .mp-run-actions { justify-content: flex-start; }
+}
 
 /* Cuántas películas: números grandes con una línea que se dibuja bajo el elegido */
 .mp-nums { display: flex; gap: clamp(6px, 2vw, 20px); margin-left: -6px; }

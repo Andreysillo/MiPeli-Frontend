@@ -14,6 +14,7 @@ const config = {
 };
 // Sin .env la app funciona igual; solo el inicio de sesión avisa que no puede
 const auth = config.apiKey ? getAuth(initializeApp(config)) : null;
+export const authEnabled = !!auth;
 const unconfigured = () => Promise.reject(new Error('Firebase sin configurar: copia .env.example a .env'));
 
 const google = new GoogleAuthProvider();

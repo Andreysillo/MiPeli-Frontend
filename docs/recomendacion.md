@@ -14,7 +14,7 @@ El frontend recomienda hoy con un catálogo de demo (`src/data.tsx`) y una heur�
 | `liked[]` | Favoritas escritas o tocadas (máx. 3) | Paso 4 | Anclas de peso 1 |
 | `boosted[]` | "Más como esta" desde los resultados | Afinar | Anclas de peso 0,8; la película sigue en la lista |
 | `seen[]`, `disliked[]` | "Ya la vi", "No me interesa" | Afinar | Se excluyen |
-| `ownedPlatforms[]` | Plataformas del usuario (se guardan) | Paso 5 / resultados | `watch_region=CR`, `with_watch_providers` (ids separados por `\|`) y `with_watch_monetization_types=flatrate` |
+| `ownedPlatforms[]` | Plataformas del usuario y, si va al cine, `Cine` (se guardan) | Paso 5 / resultados | `watch_region=CR`, `with_watch_providers` (ids separados por `\|`) y `with_watch_monetization_types=flatrate`. `Cine` no es un proveedor de TMDB: ver la sección 7 |
 
 En el frontend las películas se identifican por título (demo). El backend usará ids de TMDB y el frontend los enviará tal cual (`liked`, `duelPicks`… pasan a ser listas de ids).
 
@@ -22,8 +22,9 @@ En el frontend las películas se identifican por título (demo). El backend usar
 
 Una lista ordenada de `Rec` = `Movie` (ver `src/data.tsx`) más:
 
-- `reasons`: hasta 2 de `{ kind: 'director' | 'liked' | 'mood' | 'platform', ref }`. `ref` es el título de la película ancla, la clave del mood o el nombre de la plataforma.
-- `flags`: `offPlatform` (no está en las plataformas del usuario) y `overRuntime` (dura más de `maxRuntime`).
+- `reasons`: hasta 2 de `{ kind: 'director' | 'liked' | 'mood' | 'platform' | 'cinema', ref }`. `ref` es el título de la película ancla, la clave del mood o el nombre de la plataforma; `cinema` se dibuja como "En cines" y no necesita `ref`. Se muestra antes que el mood porque solo caben 2 razones.
+- `flags`: `offPlatform` (no está en las plataformas del usuario, cine incluido) y `overRuntime` (dura más de `maxRuntime`).
+- `platforms`: nombres de plataforma donde está; si está en cartelera, incluye `'Cine'` (sección 7).
 
 Orden: primero las que cumplen todas las restricciones (sin `flags`), cada grupo por puntaje. Las que incumplen solo salen si no alcanzan las que sí cumplen, y siempre marcadas.
 
@@ -74,3 +75,32 @@ Además: los duelos (4 pares con contraste de tono, época y estilo), las sugere
 | `duels`, `suggestions` en `src/survey.ts` | `GET /survey/duels` y `GET /survey/suggestions` |
 | `catalog` en `src/data.tsx` | Se elimina; `poster()` se reemplaza por la imagen de TMDB |
 | `npm run check` (`src/recommend.check.ts`) | Se convierte en pruebas del backend con los mismos casos |
+| Marcas `'Cine'` en `catalog` (demo) | Sección 7: se calcula con TMDB |
+| `loadRuns` y `storeRuns` en `src/history.ts` | `GET`, `POST` y `DELETE /surveys` (sección 8) |
+
+## 7. Cine (películas en salas)
+
+**Qué ve el usuario:** si una película está en cines, `platforms` la incluye como `'Cine'` (primero de la lista). El usuario puede marcar "En cines" junto a sus plataformas: lo que está en cartelera cuenta como suyo y sale con la razón `cinema`; si no lo marca y pidió plataformas, sale al final y marcada `offPlatform`, como cualquier título fuera de sus plataformas. La ficha dice solo "En cines": no hay enlace ni horarios.
+
+**Cómo saberlo con TMDB** (según la documentación de `discover/movie`, `now_playing` y `release_dates`):
+- **Candidatas en cartelera:** `GET /3/discover/movie?region=CR&with_release_type=2|3&release_date.gte={hoy − 45 días}&release_date.lte={hoy}` más los filtros de la encuesta (géneros, duración, nota mínima). Con `region`, `release_date.*` usa la fecha de estreno de ese país; `with_release_type` 2 es estreno limitado y 3 estreno general (1 premiere o festival, 4 digital, 5 físico, 6 TV). `GET /3/movie/now_playing?region=CR` es lo mismo con una ventana automática y sin filtros.
+- **Marcar `Cine` en una película que ya es candidata** (por ejemplo, llegó por `/recommendations`): `GET /3/movie/{id}/release_dates`, buscar en `CR` una fecha de tipo 2 o 3 dentro de la ventana.
+- **Estrenos exclusivos:** sin proveedor `flatrate`, `free` ni `ads` en `watch/providers` de CR y con estreno en la ventana ⇒ solo en cines. No hace falta otra marca: `platforms` queda `['Cine']`.
+- **Reestrenos:** salen solo si TMDB tiene para CR una fecha de tipo 2 o 3 dentro de la ventana (por ejemplo, un reestreno de aniversario). Son datos que carga la comunidad y en países pequeños pueden faltar.
+
+**Qué no da TMDB:** horarios, salas ni cadena (Cinépolis, Cinemark…). Si más adelante se quiere, se agrega un enlace a la cartelera de la cadena por país; sin scraping.
+
+**Antes de depender de esto:** con la key, comparar durante dos semanas `now_playing?region=CR` contra la cartelera real de las cadenas. Si cubre menos de ~70 % de los títulos, completar con otra fuente de cartelera local o probar con una región vecina.
+
+**Caché:** la lista de cartelera, ≤ 12 h (cambia cada semana); `release_dates` por película, 24 h. **Atribución:** las fechas de estreno son datos de TMDB (aviso ya en Contacto); JustWatch aplica solo al streaming.
+
+## 8. Encuestas guardadas (Mi perfil)
+
+**Hoy:** cada cuenta guarda hasta 30 encuestas en su navegador (`src/history.ts`, `localStorage['mipeli:runs:<uid>']`). Cada una es `{ id, at, titles, answers }`: `answers` son las señales de la sección 1 (menos `ownedPlatforms`, que es preferencia de hoy) más `numMovies`, y `titles` es una foto de lo recomendado. Se crea al llegar a resultados, se actualiza al afinar y, al reabrirla, se restauran las respuestas y se recalcula.
+
+**Con backend** se reemplazan `loadRuns` y `storeRuns` por:
+- `GET /surveys` (más recientes primero), `POST /surveys` (crea o actualiza por `id`) y `DELETE /surveys/{id}`.
+- Autenticación con `Authorization: Bearer <user.getIdToken()>`; el backend lo verifica con Firebase Admin y usa el `uid` como dueño. Tope de 30 por usuario (se borra la más antigua).
+- Guardar la foto como **ids de TMDB**, no solo las respuestas: así reabrir muestra exactamente lo que se recomendó ese día aunque cambien la cartelera, las plataformas o el algoritmo. "Ver resultados" mostraría esa foto (con los datos al día de cada id) y un botón aparte, "Repetir con estas respuestas", volvería a calcular.
+- Migración opcional: al primer inicio de sesión con backend, subir las encuestas que haya en el navegador.
+- Privacidad: pasan a ser datos que MiPeli guarda en un servidor ⇒ actualizar `privacyPoints` y la FAQ (hoy dicen que viven solo en el navegador) y ofrecer el borrado de cuenta y datos.
