@@ -6,6 +6,7 @@ import Button from '../components/Button';
 import CountUp from '../components/CountUp';
 import { genreName } from '../components/Movie';
 import { catalog, contactInfo, platforms, poster, type Movie } from '../data';
+import { splitWords } from '../words';
 import { useApp } from '../store';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -13,16 +14,6 @@ gsap.registerPlugin(ScrollTrigger);
 // Landing informativa. Referencia: 14islands.com (tipografía enorme y apretada con una línea gris de contrapunto, tira de pósters a sangre,
 // secciones muy separadas, texto que se enciende al hacer scroll). Los colores son los de la app: la única nota de color es el botón rojo del final.
 // Todo el movimiento va dentro de gsap.matchMedia: con prefers-reduced-motion queda la página estática.
-
-// Palabras con clave estable (sin índice) para el texto que se enciende
-function splitWords(text: string) {
-  const seen = new Map<string, number>();
-  return text.split(' ').map(word => {
-    const n = (seen.get(word) ?? 0) + 1;
-    seen.set(word, n);
-    return { word, key: `${word}#${n}` };
-  });
-}
 
 // Titular gigante: cada línea sube desde una máscara. La última va en gris, como el "&" de la referencia.
 function Hero() {

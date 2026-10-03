@@ -235,10 +235,8 @@ const moodColors = ['#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4
 export const moodGallery = ['Thriller', 'Comedia', 'Terror', 'Drama', 'Ciencia ficción', 'Romance', 'Animación']
   .map((text, i) => ({ text, image: stripes(600, 450, [[0, moodColors[i]], [1, '#0f0f14']], 'rgba(255,255,255,.08)', 14, 42) }));
 
-export const maskedHeadingSrc = stripes(1600, 440, [[0, '#a3a3b8'], [0.5, '#f4f4f4'], [1, '#c9c9d6']], 'rgba(15,15,20,.1)', 26, 70);
 
-// ponytail: datos de contacto de ejemplo; reemplazar por los reales del autor
-export const contactInfo = { email: 'jimenezzzandrey@gmail.com', github: 'https://github.com/', linkedin: 'https://www.linkedin.com/' };
+export const contactInfo = { email: 'jimenezzzandrey@gmail.com', github: 'https://github.com/Andreysillo', linkedin: 'https://www.linkedin.com/in/andrey-jim%C3%A9nez-n%C3%BA%C3%B1ez-a20402322' };
 
 export const faqData: Record<Lang, { q: string; a: string }[]> = {
   es: [{ q: '¿De dónde salen las recomendaciones?', a: 'De tus respuestas, cruzadas con nuestra base de títulos.' }, { q: '¿Necesito cuenta?', a: 'No para probar. Con una cuenta (Google o correo) guardas tu progreso y repites encuestas sin límite.' }, { q: '¿De dónde sale la calificación?', a: 'Es la nota de IMDb, sobre 10.' }, { q: '¿Dónde veo la peli?', a: 'Cada recomendación muestra en qué plataformas está, con un botón que te lleva directo a cada una.' }, { q: '¿Qué datos guardan de mí?', a: 'Si entras con Google o con correo, Firebase guarda tu nombre y correo para mantener tu sesión, y MiPeli solo usa tu nombre para saludarte. Tus respuestas viven solo en tu navegador. No vendemos tus datos. Hay más detalle en Contacto.' }],

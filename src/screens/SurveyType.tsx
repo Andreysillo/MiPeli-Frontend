@@ -1,7 +1,8 @@
-import { Clock, Lightning, SlidersHorizontal, Star, ArrowRight } from '@phosphor-icons/react';
-import MaskedHeading from '../components/MaskedHeading';
-import WavesBg, { interactive } from '../components/WavesBg';
-import { maskedHeadingSrc } from '../data';
+import { useRef } from 'react';
+import { ArrowRight, Clock, Lightning, SlidersHorizontal, Star } from '@phosphor-icons/react';
+import Ambient from '../components/Ambient';
+import Rise from '../components/Rise';
+import { useSpotlight } from '../useSpotlight';
 import { useApp, type State, type SurveyType as Kind } from '../store';
 
 const presets: Record<Kind, Partial<State>> = {
@@ -10,8 +11,13 @@ const presets: Record<Kind, Partial<State>> = {
   custom: { surveyType: 'custom', length: 'med', rec: { movies: false, genres: true, director: false } },
 };
 
+// Tres paneles: con mouse, el que tocas se expande y los demás ceden espacio; con tacto quedan apilados.
+// Cada panel lleva un resplandor que sigue al cursor, un número en contorno gigante y una flecha que gira al apuntarla.
 export default function SurveyType() {
   const { set, t, name } = useApp();
+  const list = useRef<HTMLDivElement>(null);
+  useSpotlight(list);
+
   const types = [
     { key: 'full' as const, title: t.typeFull, desc: t.typeFullD, time: `~5 ${t.min}`, Icon: Star },
     { key: 'short' as const, title: t.typeShort, desc: t.typeShortD, time: `~2 ${t.min}`, Icon: Lightning },
@@ -20,28 +26,27 @@ export default function SurveyType() {
 
   return (
     <section className="mp-screen">
-      <WavesBg {...interactive} />
-      <div className="mp-content mp-container mp-page">
+      <Ambient />
+      <div className="mp-content mp-container mp-wide mp-page">
         <p data-reveal className="mp-kicker">{t.hi(name)}</p>
-        <MaskedHeading text={t.typeTitle} src={maskedHeadingSrc} tag="h1" align="left" textScale={window.innerWidth < 640 ? 0.09 : 0.046}
-          weight={700} tracking={-0.03} reveal="rise" trigger="view" duration={1} stagger={0.06} fillScale={1.2} parallax={18} drift={10} />
-        <p data-reveal className="mp-lead" style={{ margin: '8px 0 28px' }}>{t.typeDesc}</p>
+        <Rise text={t.typeTitle} className="mp-display" />
+        <p data-reveal className="mp-lead" style={{ margin: '16px 0 0' }}>{t.typeDesc}</p>
 
-        <div className="mp-types">
+        <div ref={list} className="mp-choices">
           {types.map(({ key, title, desc, time, Icon }, i) => (
-            <button key={key} data-reveal className={i === 0 ? 'mp-option mp-raised' : 'mp-option'} onClick={() => set({ ...presets[key], screen: 'rectypes' })}
-              style={{ gap: 12, padding: i === 0 ? 28 : 22, justifyContent: 'space-between', minHeight: i === 0 ? 260 : 0 }}>
-              <span style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <button key={key} data-reveal className="mp-panel" onClick={() => set({ ...presets[key], screen: 'rectypes' })}>
+              <span className="mp-panel-num" aria-hidden>{String(i + 1).padStart(2, '0')}</span>
+              <span className="mp-panel-top">
                 <span className="mp-icon-tile"><Icon size={22} weight="duotone" aria-hidden /></span>
-                {i === 0 && <span className="mp-tag" style={{ color: 'var(--text)', borderColor: 'var(--border-strong)' }}>{t.recommendedTag}</span>}
+                {i === 0 && <span className="mp-tag">{t.recommendedTag}</span>}
               </span>
-              <span className="mp-stack" style={{ gap: 6 }}>
-                <span className={i === 0 ? 'mp-title' : 'mp-h3'}>{title}</span>
-                <span style={{ color: 'var(--text-muted)', maxWidth: '40ch' }}>{desc}</span>
+              <span className="mp-panel-body">
+                <span className="mp-panel-title">{title}</span>
+                <span className="mp-panel-desc">{desc}</span>
               </span>
-              <span style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span className="mp-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Clock size={16} aria-hidden />{time}</span>
-                <ArrowRight size={20} aria-hidden />
+              <span className="mp-panel-foot">
+                <span className="mp-label mp-inline"><Clock size={16} aria-hidden />{time}</span>
+                <span className="mp-go"><ArrowRight size={20} aria-hidden /></span>
               </span>
             </button>
           ))}

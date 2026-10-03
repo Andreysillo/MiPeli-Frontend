@@ -36,6 +36,8 @@ src/
   main.tsx            monta <App />
   App.tsx             shell: header (nav, cerrar sesión, idioma), pantalla actual, toast
   auth.ts             Firebase Authentication: Google, correo/contraseña, restablecer, cerrar sesión, escuchar la sesión
+  words.ts            splitWords: palabras con clave estable (titulares animados)
+  useSpotlight.ts     luz que sigue al cursor dentro de cada .mp-panel
   useGoogleSignIn.ts  hook del botón de Google (estado de carga y avisos), compartido por Welcome y Login
   assets/platforms/   logos de las plataformas de streaming (PNG/JPG, esbuild los copia con hash a dist/)
   store.ts            estado global (pantalla, respuestas, persistencia en localStorage, rutas #hash)
@@ -44,7 +46,7 @@ src/
                       recomendador local recommend() y arte de póster en canvas; lo reemplazará el backend
   screens/            una pantalla por archivo (Welcome = landing informativa con el acceso al final, Login, SurveyType, RecTypes, Quest, Loading, Results, Home, Faq, Contact)
   components/         Button, Reveal (transiciones GSAP + ScrollTrigger), PosterGallery (galería de pósters + ficha en <dialog>),
-                      Movie (póster enmarcado, IMDb, plataformas), PosterWall (mural de fondo de Home y Login), CountUp, GoogleG, Credits (atribuciones de TMDB, JustWatch y OMDb),
+                      Movie (póster enmarcado, IMDb, plataformas), PosterWall (mural de fondo de Home y Login), Ambient (fondo gris de las pantallas de elección), Rise (titular con entrada por máscara), CountUp, GoogleG, Credits (atribuciones de TMDB, JustWatch y OMDb),
                       WavesBg y componentes animados de React Bits (.jsx)
   styles/global.css   tokens de diseño (color, radios, tipografía) y clases mp-*
 ```
@@ -58,7 +60,7 @@ src/
 El botón de Google sigue el tema oscuro de las [guías de marca de Sign in with Google](https://developers.google.com/identity/branding-guidelines). Los pósters conservan sus colores: son contenido, no interfaz.
 
 Los componentes `.jsx` de `src/components/` vienen de [React Bits](https://github.com/DavidHDev/react-bits) adaptados; usan `gsap` y `ogl` (WebGL).
-Íconos: [Phosphor](https://phosphoricons.com); logos de las plataformas de streaming: archivos de `src/assets/platforms/` (se importan en `data.tsx`). Tipografía: Geist para la interfaz y Bodoni Moda para títulos de película (auto-hospedadas vía `@fontsource-variable`).
+Íconos: [Phosphor](https://phosphoricons.com); logos de las plataformas de streaming: archivos de `src/assets/platforms/` (se importan en `data.tsx`). Tipografía: Geist en toda la interfaz con el estilo de la landing (peso 500, interlínea cerrada, tracking apretado, etiquetas de 12 px en mayúsculas) y Bodoni Moda para títulos de película (auto-hospedadas vía `@fontsource-variable`).
 La galería de resultados toma como referencia [a24.raviklaassens.com](https://a24.raviklaassens.com/) y la landing, [14islands.com](https://www.14islands.com/) (tipografía enorme, tira de pósters, texto que se enciende al hacer scroll), con los colores de la app.
 
 ## Créditos de datos
