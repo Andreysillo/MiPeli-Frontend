@@ -536,6 +536,13 @@ a.mp-saved:hover { color: var(--text); }
 .mp-run-thumbs img { width: 44px; height: auto; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-strong); background: var(--surface); }
 .mp-run-thumbs img + img { margin-left: -12px; }
 .mp-run-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+/* Nombre de la encuesta: título con un lápiz al lado, que se convierte en un campo para cambiarlo */
+.mp-run-title { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.mp-run-title .mp-h3 { min-width: 0; overflow-wrap: anywhere; }
+.mp-icon-btn { display: inline-grid; place-items: center; width: 44px; height: 44px; margin: -6px 0; flex: none; border: 0; border-radius: 999px; background: none; color: var(--text-muted); cursor: pointer; touch-action: manipulation; transition: background-color .2s ease, color .2s ease; }
+.mp-icon-btn:hover { background: rgba(255, 255, 255, .1); color: var(--text); }
+.mp-run-edit { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.mp-run-edit .mp-input { flex: 1 1 220px; min-width: 0; }
 @media (max-width: 719px) {
   .mp-run { grid-template-columns: 1fr; gap: 14px; }
   .mp-run-actions { justify-content: flex-start; }

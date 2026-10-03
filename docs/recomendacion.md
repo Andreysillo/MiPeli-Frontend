@@ -96,10 +96,10 @@ Además: los duelos (4 pares con contraste de tono, época y estilo), las sugere
 
 ## 8. Encuestas guardadas (Mi perfil)
 
-**Hoy:** cada cuenta guarda hasta 30 encuestas en su navegador (`src/history.ts`, `localStorage['mipeli:runs:<uid>']`). Cada una es `{ id, at, titles, answers }`: `answers` son las señales de la sección 1 (menos `ownedPlatforms`, que es preferencia de hoy) más `numMovies`, y `titles` es una foto de lo recomendado. Se crea al llegar a resultados, se actualiza al afinar y, al reabrirla, se restauran las respuestas y se recalcula.
+**Hoy:** cada cuenta guarda hasta 30 encuestas en su navegador (`src/history.ts`, `localStorage['mipeli:runs:<uid>']`). Cada una es `{ id, at, name?, titles, answers }`: `answers` son las señales de la sección 1 (menos `ownedPlatforms`, que es preferencia de hoy) más `numMovies`, `titles` es una foto de lo recomendado y `name` es el nombre que le puso el usuario (hasta 50 caracteres; sin él se muestra el ánimo elegido). Se crea al llegar a resultados, se actualiza al afinar y, al reabrirla, se restauran las respuestas y se recalcula.
 
 **Con backend** se reemplazan `loadRuns` y `storeRuns` por:
-- `GET /surveys` (más recientes primero), `POST /surveys` (crea o actualiza por `id`) y `DELETE /surveys/{id}`.
+- `GET /surveys` (más recientes primero), `POST /surveys` (crea o actualiza por `id`), `PATCH /surveys/{id}` (solo `name`; actualizar los resultados de una encuesta nunca debe borrar el nombre) y `DELETE /surveys/{id}`.
 - Autenticación con `Authorization: Bearer <user.getIdToken()>`; el backend lo verifica con Firebase Admin y usa el `uid` como dueño. Tope de 30 por usuario (se borra la más antigua).
 - Guardar la foto como **ids de TMDB**, no solo las respuestas: así reabrir muestra exactamente lo que se recomendó ese día aunque cambien la cartelera, las plataformas o el algoritmo. "Ver resultados" mostraría esa foto (con los datos al día de cada id) y un botón aparte, "Repetir con estas respuestas", volvería a calcular.
 - Migración opcional: al primer inicio de sesión con backend, subir las encuestas que haya en el navegador.

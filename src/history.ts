@@ -3,16 +3,18 @@
 import type { Answers } from './recommend';
 
 // Las respuestas con que se hizo (las plataformas son una preferencia de hoy y no se guardan aquí) y cuántas películas se pidieron.
-// `titles` es una foto de lo que se recomendó, para dibujar la tarjeta sin recalcular.
-export type Run = { id: string; at: number; titles: string[]; answers: Omit<Answers, 'ownedPlatforms'> & { numMovies: number } };
+// `titles` es una foto de lo que se recomendó, para dibujar la tarjeta sin recalcular. `name` es el que le puso el usuario;
+// sin él, la tarjeta se titula con el ánimo elegido.
+export type Run = { id: string; at: number; name?: string; titles: string[]; answers: Omit<Answers, 'ownedPlatforms'> & { numMovies: number } };
 
 export const MAX_RUNS = 30;
+export const MAX_NAME = 50;
 
 const key = (uid: string) => `mipeli:runs:${uid}`;
 
 // Lo guardado puede estar corrupto o venir de otra versión: lo que no tenga la forma esperada se descarta
 const isRun = (r: Partial<Run> | null): r is Run =>
-  !!r && typeof r.id === 'string' && typeof r.at === 'number' && Array.isArray(r.titles) && Array.isArray(r.answers?.moods);
+  !!r && typeof r.id === 'string' && typeof r.at === 'number' && (r.name === undefined || typeof r.name === 'string') && Array.isArray(r.titles) && Array.isArray(r.answers?.moods);
 
 export function loadRuns(uid: string): Run[] {
   try {

@@ -47,7 +47,7 @@ const es = {
   myProfile: 'Mi perfil', accountKick: 'Tu cuenta', accountLabel: 'Cuenta',
   myRuns: 'Mis encuestas', runsHint: 'Se guardan solas al terminar una. Ábrelas para volver a ver tus recomendaciones.',
   runsEmpty: 'Todavía no tienes encuestas guardadas.', runsEmptyHint: 'Cuando termines una, aparecerá aquí.', runStart: 'Empezar una encuesta',
-  runOpen: 'Ver resultados', runDelete: 'Borrar', runMovies: (n: number) => (n === 1 ? '1 película' : `${n} películas`),
+  runOpen: 'Ver resultados', runDelete: 'Borrar', runRename: 'Cambiar nombre', runNameLabel: 'Nombre de la encuesta', runSave: 'Guardar', runCancel: 'Cancelar', runMovies: (n: number) => (n === 1 ? '1 película' : `${n} películas`),
   runConfirm: {
     deleteRun: {
       title: (user: string | null) => user ? `${user}, ¿seguro que quieres borrar esta encuesta?` : '¿Seguro que quieres borrar esta encuesta?',
@@ -78,7 +78,7 @@ const es = {
     statsLabel: 'En números',
     stats: [{ value: 2, label: 'minutos de encuesta' }, { value: 10, label: 'películas como máximo por ronda' }, { value: 11, label: 'plataformas de streaming' }],
     platformsLabel: 'Dónde verlas',
-    ctaTitle: ['¿Listo para', 'elegir?'], ctaText: 'Entra con Google, con tu correo o como invitado. Con una cuenta, tus encuestas y resultados se guardan.', cta: 'Iniciar sesión',
+    ctaTitle: ['¿Listo para', 'elegir?'], ctaText: 'Entra con Google, con tu correo o como invitado. Con una cuenta, tus encuestas y resultados se guardan.', cta: '¡Entrémosle!',
     navLabel: 'Secciones', navStart: '¿Le entras a la recomendación?', navResume: '¡Continúa tu encuesta!', menu: 'Menú', menuClose: 'Cerrar',
   },
 
@@ -137,22 +137,24 @@ const es = {
 
   continueSurvey: 'Continuar encuesta',
 
-  faqTitle: 'Preguntas frecuentes', faqMore: '¿Te quedó otra duda?', faqMoreD: 'Escríbenos y te respondemos lo antes posible.', faqWrite: 'Escríbenos', faqKick: 'Ayuda',
+  faqTitle: 'Preguntas frecuentes', faqMore: '¿Te quedó otra duda?', faqMoreD: 'Escribeme y te respondo lo antes posible.', faqWrite: 'Escribeme', faqKick: 'Ayuda',
   aboutBrand: 'Sobre MiPeli', studioStatement: 'MiPeli es un recomendador de películas. Respondes unas preguntas y te decimos qué ver esta noche, y dónde verlo.',
-  contactLabel: 'Escríbenos', creditsLabel: 'Créditos',
+  contactLabel: 'Escribeme', creditsLabel: 'Créditos',
   privacyLabel: 'Privacidad y datos',
   privacyPoints: [
     'Si entras con Google, Firebase (de Google) recibe tu nombre, correo y foto de perfil para mantener tu sesión. Si creas una cuenta con correo, guarda tu correo, tu nombre y una versión cifrada de tu contraseña, que MiPeli nunca ve. MiPeli solo usa tu nombre, para saludarte.',
     'Tus respuestas, el idioma y tu valoración se guardan solo en tu navegador. Si tienes sesión, tus encuestas guardadas también viven ahí, ligadas a tu cuenta. Nada de esto se envía a ningún servidor, y al borrar los datos del sitio desaparece.',
+    'No usamos cookies de publicidad ni de seguimiento, y no hay analítica. Para funcionar, MiPeli guarda en tu navegador (almacenamiento local) tu idioma, tus plataformas y tus encuestas guardadas, y Firebase guarda ahí datos técnicos de su servicio y, si inicias sesión, tu sesión. Al entrar con Google, Google puede usar sus propias cookies en su ventana. Si borras los datos del sitio en tu navegador, todo esto desaparece.',
     'Lo que escribes en el formulario de sugerencias todavía no se envía ni se guarda en ningún lado.',
     'No vendemos ni compartimos tus datos, y no los usamos para publicidad.',
   ],
-  privacyDelete: 'Para pedir que se borren tu cuenta o tus datos, escríbenos a', privacyNote: 'Esta es la versión de la aplicación sin servidor propio. Se actualizará cuando se conecte uno.',
+  privacyDelete: 'Para pedir que se borren tu cuenta o tus datos, escríbeme a', privacyNote: 'Esta es la versión de la aplicación sin servidor propio. Se actualizará cuando se conecte uno.',
   colMovies: 'Datos de películas', colProviders: 'Dónde ver', colRatings: 'Calificaciones',
   creditProviders: 'Datos de disponibilidad en plataformas de', creditRatings: 'Notas de IMDb obtenidas con', creditLicense: ', licencia CC BY-NC 4.0.',
   tmdbNotice: 'This product uses the TMDB API but is not endorsed or certified by TMDB.', availability: 'Disponibilidad:',
 
-  aboutKick: 'Sobre el autor', authorName: 'xxx', authorBio: 'Estudiante de xxx, estudiando en xxx, con una gran pasión por las películas y el software.',
+  aboutKick: 'Sobre el autor', authorName: 'Andrey Jiménez',
+  authorBio: 'Estudiante avanzado de Ingeniería en Computación del Tecnológico de Costa Rica (TEC), con una gran pasión por las películas y el software. MiPeli surgio porque honestamente no sabia que peli poner un dia con mi mama, ahi empezo todo',
   sugLabel: '¿Alguna sugerencia para MiPeli?', sugPh: 'Escríbela aquí…', send: 'Enviar',
 
   thanksSug: '¡Gracias! Tu sugerencia llegó a Andrey.', linkCopied: 'Enlace copiado', shareFallback: 'Comparte: ',
@@ -206,7 +208,7 @@ const en: Strings = {
   myProfile: 'My profile', accountKick: 'Your account', accountLabel: 'Account',
   myRuns: 'My surveys', runsHint: 'They save themselves when you finish one. Open them to see your recommendations again.',
   runsEmpty: 'You don’t have any saved surveys yet.', runsEmptyHint: 'When you finish one, it will show up here.', runStart: 'Start a survey',
-  runOpen: 'See results', runDelete: 'Delete', runMovies: (n: number) => (n === 1 ? '1 movie' : `${n} movies`),
+  runOpen: 'See results', runDelete: 'Delete', runRename: 'Rename', runNameLabel: 'Survey name', runSave: 'Save', runCancel: 'Cancel', runMovies: (n: number) => (n === 1 ? '1 movie' : `${n} movies`),
   runConfirm: {
     deleteRun: {
       title: (user: string | null) => user ? `${user}, are you sure you want to delete this survey?` : 'Are you sure you want to delete this survey?',
@@ -237,7 +239,7 @@ const en: Strings = {
     statsLabel: 'In numbers',
     stats: [{ value: 2, label: 'minutes of survey' }, { value: 10, label: 'movies at most per round' }, { value: 11, label: 'streaming platforms' }],
     platformsLabel: 'Where to watch',
-    ctaTitle: ['Ready to', 'choose?'], ctaText: 'Sign in with Google, with your email or as a guest. With an account, your surveys and results are saved.', cta: 'Sign in',
+    ctaTitle: ['Ready to', 'choose?'], ctaText: 'Sign in with Google, with your email or as a guest. With an account, your surveys and results are saved.', cta: 'Let’s go!',
     navLabel: 'Sections', navStart: 'Up for a recommendation?', navResume: 'Continue your survey!', menu: 'Menu', menuClose: 'Close',
   },
 
@@ -296,22 +298,24 @@ const en: Strings = {
 
   continueSurvey: 'Continue survey',
 
-  faqTitle: 'Frequently asked questions', faqMore: 'Still have a question?', faqMoreD: 'Write to us and we’ll get back to you soon.', faqWrite: 'Write to us', faqKick: 'Help',
+  faqTitle: 'Frequently asked questions', faqMore: 'Still have a question?', faqMoreD: 'Write me and I’ll get back to you soon.', faqWrite: 'Write to me', faqKick: 'Help',
   aboutBrand: 'About MiPeli', studioStatement: 'MiPeli is a movie recommender. Answer a few questions and we tell you what to watch tonight, and where to stream it.',
   contactLabel: 'Get in touch', creditsLabel: 'Credits',
   privacyLabel: 'Privacy and data',
   privacyPoints: [
     'If you sign in with Google, Firebase (by Google) receives your name, email and profile photo to keep you signed in. If you create an account with email, it stores your email, your name and an encrypted version of your password, which MiPeli never sees. MiPeli only uses your name, to greet you.',
     'Your answers, language and feedback are stored only in your browser. If you are signed in, your saved surveys live there too, tied to your account. None of this is sent to any server, and clearing the site’s data removes it.',
+    'We don’t use advertising or tracking cookies, and there is no analytics. To work, MiPeli keeps your language, your platforms and your saved surveys in your browser (local storage), and Firebase keeps technical data of its service there and, if you sign in, your session. When you sign in with Google, Google may use its own cookies in its window. If you clear the site’s data in your browser, all of this disappears.',
     'What you type in the suggestions form is not sent or stored anywhere yet.',
     'We don’t sell or share your data, and we don’t use it for advertising.',
   ],
-  privacyDelete: 'To ask for your account or data to be deleted, write to us at', privacyNote: 'This describes the app as it is without its own server. It will be updated when one is connected.',
+  privacyDelete: 'To ask for your account or data to be deleted, write to me at', privacyNote: 'This describes the app as it is without its own server. It will be updated when one is connected.',
   colMovies: 'Movie data', colProviders: 'Where to watch', colRatings: 'Ratings',
   creditProviders: 'Streaming availability data from', creditRatings: 'IMDb scores fetched with', creditLicense: ', CC BY-NC 4.0 license.',
   tmdbNotice: 'This product uses the TMDB API but is not endorsed or certified by TMDB.', availability: 'Availability:',
 
-  aboutKick: 'About the author', authorName: 'xxx', authorBio: 'A xxx student, studying at xxx, with a deep passion for film and software.',
+  aboutKick: 'About the author', authorName: 'Andrey Jiménez',
+  authorBio: 'Advanced Computer Engineering student at the Costa Rica Institute of Technology (TEC), with a deep passion for film and software. MiPeli is born out of the simple need to decide what movie to watch one evening with my mom, and that’s how it all started',
   sugLabel: 'Any suggestion for MiPeli?', sugPh: 'Write it here…', send: 'Send',
 
   thanksSug: 'Thanks! Your suggestion reached Andrey.', linkCopied: 'Link copied', shareFallback: 'Share: ',

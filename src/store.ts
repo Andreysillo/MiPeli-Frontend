@@ -3,7 +3,7 @@ import { L, type Lang } from './i18n';
 import { CINE, platforms, type Platform } from './data';
 import { buildSteps, type Company, type Mood, type Step } from './survey';
 import { authEnabled, firstName, onUserChange } from './auth';
-import { MAX_RUNS, loadRuns, storeRuns, type Run } from './history';
+import { MAX_NAME, MAX_RUNS, loadRuns, storeRuns, type Run } from './history';
 
 export type Screen = 'welcome' | 'login' | 'quest' | 'loading' | 'results' | 'profile' | 'faq' | 'contacto';
 export type Confirm = 'signout' | 'restart' | 'redo'; // aviso abierto antes de una acción que no se deshace
@@ -84,7 +84,7 @@ export function useStore() {
   const saveRun = useCallback((titles: string[]) => setSt(s => {
     if (!s.uid || titles.length === 0) return s;
     const prev = s.runs.find(r => r.id === s.runId);
-    const run: Run = { id: prev?.id ?? crypto.randomUUID(), at: prev?.at ?? Date.now(), titles, answers: answersOf(s) };
+    const run: Run = { id: prev?.id ?? crypto.randomUUID(), at: prev?.at ?? Date.now(), name: prev?.name, titles, answers: answersOf(s) };
     return { ...s, runId: run.id, runs: prev ? s.runs.map(r => (r.id === run.id ? run : r)) : [run, ...s.runs].slice(0, MAX_RUNS) };
   }), []);
   // Reabre una encuesta guardada: restaura sus respuestas y muestra los resultados (se recalculan con las plataformas de hoy)
@@ -93,6 +93,8 @@ export function useStore() {
     return run ? { ...s, ...run.answers, runId: id, questActive: false, screen: 'results' } : s;
   }), []);
   const deleteRun = useCallback((id: string) => setSt(s => ({ ...s, runs: s.runs.filter(r => r.id !== id), runId: s.runId === id ? null : s.runId })), []);
+  // Le pone nombre a una encuesta guardada; vacío (o sin cambios) vuelve al título automático
+  const renameRun = useCallback((id: string, name: string) => setSt(s => ({ ...s, runs: s.runs.map(r => (r.id === id ? { ...r, name: name.trim().slice(0, MAX_NAME) || undefined } : r)) })), []);
 
   const toastTimer = useRef<number>(undefined);
   const flash = useCallback((toast: string) => {
@@ -134,7 +136,7 @@ export function useStore() {
   }, [st.screen]);
 
   const t = L[st.lang];
-  return { st, set, go, startSurvey, enterSurvey, redoSurvey, saveRun, openRun, deleteRun, flash, t, name: st.loggedIn && st.user ? st.user : t.guestName };
+  return { st, set, go, startSurvey, enterSurvey, redoSurvey, saveRun, openRun, deleteRun, renameRun, flash, t, name: st.loggedIn && st.user ? st.user : t.guestName };
 }
 
 export type Store = ReturnType<typeof useStore>;
