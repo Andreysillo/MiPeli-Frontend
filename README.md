@@ -96,9 +96,18 @@ Las contraseñas las guarda Firebase (cifradas); MiPeli nunca las ve. Cuando exi
 npm run build      # genera dist/
 npm run typecheck  # tsc --noEmit
 npm run check      # reglas del recomendador de demo (src/recommend.check.ts)
+npm run smoke      # tras el build: sirve dist/ con las cabeceras de vercel.json y recorre landing → login → encuesta
 ```
 
-`typecheck`, `check` y el build también corren en GitHub Actions.
+`smoke` usa Chrome (otro navegador: `SMOKE_CHANNEL=msedge npm run smoke`). `npm audit` (solo críticas), `typecheck`, `check`, el build y `smoke` corren en GitHub Actions; Dependabot propone las actualizaciones cada semana.
+
+## Seguridad
+
+- **XSS:** sin `innerHTML`, `dangerouslySetInnerHTML` ni `eval`; React escapa todo lo que escribe el usuario. Los enlaces externos llevan `rel="noopener noreferrer"`.
+- **Cabeceras** (`vercel.json`): CSP restrictiva (`default-src 'self'`; solo se abren Google/Firebase para el inicio de sesión), `nosniff`, `frame-ancestors 'none'`, `Referrer-Policy` y `Permissions-Policy`. No se usa `Cross-Origin-Opener-Policy: same-origin` porque rompe el popup de Google. Todo estilo va en CSS (nada de `<style>` inyectado); los `style` en línea están permitidos solo como atributo. **Al conectar el backend hay que sumar a la CSP el host de imágenes de TMDB (`img-src`) y la URL de la API (`connect-src`)**; `npm run smoke` avisa si algo queda bloqueado.
+- **Sin cookies ni CSRF:** la sesión es de Firebase (IndexedDB) y el backend recibirá `Authorization: Bearer`. Las contraseñas las guarda Firebase; el intento repetido lo limita Firebase (`auth/too-many-requests`).
+- **Backend (pendiente):** validar todo con Pydantic, tomar el `uid` solo del token verificado, límite de peticiones por IP en `/recommend` y por usuario en `/surveys`, y CORS solo al dominio de Vercel. Mongo no usa SQL, pero evitar filtros armados con datos crudos (inyección NoSQL).
+- **Dependencias:** `npm audit` marca vulnerabilidades altas en `@grpc/grpc-js` vía Firestore (dependencia de `firebase` que la app no importa); revisar al actualizar Firebase.
 
 ## Estado y pendientes
 
@@ -113,6 +122,8 @@ npm run check      # reglas del recomendador de demo (src/recommend.check.ts)
 ```
 index.html            HTML de entrada (esbuild lo copia a dist/)
 build.mjs             build y servidor de desarrollo (esbuild; lee .env e inyecta Firebase con define)
+vercel.json           build de Vercel y cabeceras de seguridad (CSP, nosniff, frame-ancestors…)
+scripts/smoke.mjs     prueba de humo con las cabeceras de vercel.json (npm run smoke)
 src/
   main.tsx            monta <App />
   App.tsx             shell: header (nav, Mi perfil, idioma), pantalla actual, avisos de confirmación, toast

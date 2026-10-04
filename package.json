@@ -7,7 +7,8 @@
     "dev": "node build.mjs --dev",
     "build": "node build.mjs",
     "typecheck": "tsc",
-    "check": "esbuild src/recommend.check.ts --bundle --platform=node --format=esm --loader:.png=dataurl --loader:.jpg=dataurl --outfile=node_modules/.cache/mipeli-check.mjs --log-level=error && node node_modules/.cache/mipeli-check.mjs"
+    "check": "esbuild src/recommend.check.ts --bundle --platform=node --format=esm --loader:.png=dataurl --loader:.jpg=dataurl --outfile=node_modules/.cache/mipeli-check.mjs --log-level=error && node node_modules/.cache/mipeli-check.mjs",
+    "smoke": "node scripts/smoke.mjs"
   },
   "dependencies": {
     "@fontsource-variable/bodoni-moda": "^5.3.0",
@@ -22,6 +23,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "esbuild": "^0.28.2",
+    "playwright-core": "^1.63.0",
     "typescript": "^7.0.2"
   }
 }

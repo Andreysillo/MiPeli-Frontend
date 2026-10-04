@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -15,6 +18,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Solo críticas bloquean: las "high" de hoy vienen de Firestore vía firebase, que la app no usa
+      - run: npm audit --omit=dev --audit-level=critical
       - run: npm run typecheck
       - run: npm run check
       # Sin estos secrets el build igual compila: el inicio de sesión solo queda desactivado en ese bundle
@@ -24,3 +29,5 @@ jobs:
           FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      # Sirve dist/ con las cabeceras de vercel.json (CSP) y recorre landing → login → encuesta en Chrome (ya viene en el runner)
+      - run: npm run smoke

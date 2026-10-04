@@ -62,6 +62,7 @@ Además: los duelos (4 pares con contraste de tono, época y estilo), las sugere
 ## 5. Datos, claves y atribuciones
 
 - La key de TMDB (y la de TasteDive y OMDb) viven solo en el backend, nunca en el bundle.
+- Al conectar el backend, ampliar la CSP de `vercel.json`: el host de imágenes de TMDB en `img-src` (`https://image.tmdb.org`) y la URL de la API en `connect-src`. Sin eso el navegador bloquea pósters y llamadas.
 - TMDB es gratis para uso no comercial con atribución (logo y aviso en Contacto, ya puestos); si MiPeli llega a generar ingresos hace falta licencia comercial.
 - Las plataformas vienen de TMDB `watch/providers` y exigen atribuir a **JustWatch**; las notas de IMDb vienen de OMDb (CC BY-NC 4.0). Ambas atribuciones ya están en `src/components/Credits.tsx` y en la ficha.
 - Cuando el backend guarde respuestas o perfiles, actualizar el texto de privacidad de FAQ y Contacto.
