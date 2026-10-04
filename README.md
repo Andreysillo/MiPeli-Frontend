@@ -1,6 +1,6 @@
 <div align="center">
 
-# MiPeli
+<img src="./src/assets/MiPeli_frontend_logo.png" alt="MiPeli Frontend" width="400">
 
 ### Un recomendador de películas que te pregunta en vez de pedirte que busques.
 
@@ -99,7 +99,7 @@ npm run check      # reglas del recomendador de demo (src/recommend.check.ts)
 npm run smoke      # tras el build: sirve dist/ con las cabeceras de vercel.json y recorre landing → login → encuesta
 ```
 
-`smoke` usa Chrome (otro navegador: `SMOKE_CHANNEL=msedge npm run smoke`). `npm audit` (solo críticas), `typecheck`, `check`, el build y `smoke` corren en GitHub Actions; Dependabot propone las actualizaciones cada semana.
+`smoke` usa Chrome (otro navegador: `SMOKE_CHANNEL=msedge npm run smoke`). `npm audit` (solo críticas), `typecheck`, `check`, el build y `smoke` corren en GitHub Actions; Dependabot propone las actualizaciones cada mes.
 
 ## Seguridad
 
@@ -131,7 +131,7 @@ src/
   words.ts            splitWords: palabras con clave estable (titulares animados)
   useSpotlight.ts     luz que sigue al cursor dentro de cada .mp-panel
   useGoogleSignIn.ts  hook del botón de Google (estado de carga y avisos), compartido por Welcome y Login
-  assets/platforms/   logos de las plataformas de streaming y del cine (PNG/JPG, esbuild los copia con hash a dist/)
+  assets/             logos de MiPeli (frontend y backend) y, en platforms/, los de las plataformas de streaming y del cine (PNG/JPG, esbuild los copia con hash a dist/)
   store.ts            estado global (pantalla, respuestas, sesión, encuestas guardadas, persistencia en localStorage, rutas #hash)
   history.ts          encuestas guardadas de cada cuenta (hoy en el navegador, una lista por uid); la costura que reemplazará el backend
   i18n.ts             textos es/en
