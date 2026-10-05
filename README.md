@@ -129,7 +129,6 @@ src/
   App.tsx             shell: header (nav, Mi perfil, idioma), pantalla actual, avisos de confirmación, toast
   auth.ts             Firebase Authentication: Google, correo/contraseña, restablecer, cerrar sesión, escuchar la sesión
   words.ts            splitWords: palabras con clave estable (titulares animados)
-  useSpotlight.ts     luz que sigue al cursor dentro de cada .mp-panel
   useGoogleSignIn.ts  hook del botón de Google (estado de carga y avisos), compartido por Welcome y Login
   assets/             logos de MiPeli (frontend y backend) y, en platforms/, los de las plataformas de streaming y del cine (PNG/JPG, esbuild los copia con hash a dist/)
   store.ts            estado global (pantalla, respuestas, sesión, encuestas guardadas, persistencia en localStorage, rutas #hash)

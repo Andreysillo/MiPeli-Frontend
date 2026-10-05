@@ -85,6 +85,7 @@ const es = {
   stepNames: { mood: 'Ánimo', context: 'Contexto', duel: 'Duelos', favorites: 'Favoritas', platforms: 'Plataformas' },
   stepOf: (i: number, n: number) => `Paso ${i} de ${n}`,
   moodQ: '¿Qué se te antoja esta noche?', moodHint: (max: number) => `Elige hasta ${max}.`,
+  moodPick: 'Elegir', moodPicked: 'Elegido',
   moodNames: {
     laugh: { name: 'Reír', hint: 'Algo ligero que me saque una sonrisa.' },
     tension: { name: 'Tensión', hint: 'Que no pueda ni parpadear.' },
@@ -246,6 +247,7 @@ const en: Strings = {
   stepNames: { mood: 'Mood', context: 'Context', duel: 'Duels', favorites: 'Favorites', platforms: 'Platforms' },
   stepOf: (i: number, n: number) => `Step ${i} of ${n}`,
   moodQ: 'What are you in the mood for tonight?', moodHint: (max: number) => `Pick up to ${max}.`,
+  moodPick: 'Pick', moodPicked: 'Picked',
   moodNames: {
     laugh: { name: 'Laugh', hint: 'Something light that makes me smile.' },
     tension: { name: 'Tension', hint: 'Can’t even blink.' },

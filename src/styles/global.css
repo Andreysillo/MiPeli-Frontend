@@ -464,32 +464,45 @@ span.mp-platform { pointer-events: none; }
 .mp-blob.b { right: -25vmax; bottom: -35vmax; animation-delay: -6s; animation-duration: 18s; }
 .mp-glow { position: absolute; left: 0; top: 0; width: 620px; height: 620px; margin: -310px 0 0 -310px; border-radius: 50%; background: radial-gradient(circle, rgba(244, 244, 244, .085), transparent 65%); will-change: transform; }
 
-/* Panel de elección (mosaicos del ánimo). --mx/--my los escribe useSpotlight (luz que sigue al cursor) */
-.mp-panel {
-  position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 18px;
-  min-width: 0; min-height: 220px; padding: 24px; text-align: left; cursor: pointer; color: var(--text);
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-surface); touch-action: manipulation;
-  transition: border-color .25s ease, background-color .25s ease, transform .4s var(--ease-out);
-}
-.mp-panel::before {
-  content: ''; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .35s ease;
-  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(244, 244, 244, .11), transparent 65%);
-}
-.mp-panel:hover::before, .mp-panel:focus-visible::before { opacity: 1; }
-.mp-panel:hover { border-color: var(--border-strong); }
-.mp-panel:active { transform: scale(.992); }
-.mp-panel:focus-visible { outline-offset: -3px; border-radius: var(--radius-surface); }
-.mp-panel-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.mp-panel-body { display: grid; gap: 10px; justify-items: start; }
-.mp-panel-title { display: block; max-width: 100%; font-size: clamp(1.5rem, 2.3vw, 2.5rem); font-weight: 500; line-height: .95; letter-spacing: -.05em; overflow-wrap: anywhere; text-wrap: balance; }
-.mp-panel-desc { display: block; max-width: 34ch; color: var(--text-muted); }
-.mp-pick[aria-pressed='true'] { border-color: var(--text); background: #2a2a3d; }
-
-/* Paso 1: ocho mosaicos de ánimo, dos columnas en teléfono y cuatro en pantalla ancha */
+/* Paso 1: tarjetas de ánimo al estilo de nk.studio/impact. Nombre grande arriba, índice "/ 01", descripción abajo.
+   Al pasar el mouse, con foco o elegida, la tarjeta se invierte (clara sobre el fondo oscuro) y aparece el círculo con "Elegir".
+   Dos columnas en teléfono y cuatro en pantalla ancha, con las columnas pares un poco más abajo (como el desfase de nk). */
 .mp-moods { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 32px; }
-.mp-mood { min-height: 168px; padding: 18px; }
-.mp-mood .mp-panel-title { font-size: clamp(1.25rem, 1.9vw, 1.75rem); }
-.mp-mood .mp-panel-desc { font-size: .875rem; }
+.mp-mood {
+  position: relative; display: grid; grid-template-rows: auto 1fr auto; gap: 14px; min-width: 0; min-height: 188px; padding: 16px;
+  text-align: left; cursor: pointer; color: var(--text); background: #17171f; border: 1px solid var(--border); border-radius: var(--radius-surface);
+  touch-action: manipulation;
+  transition: background-color .35s var(--ease-out), color .35s var(--ease-out), border-color .35s var(--ease-out), transform .45s var(--ease-out), box-shadow .45s var(--ease-out);
+}
+.mp-mood-head { display: grid; gap: 10px; }
+.mp-mood-name { font-size: clamp(1.25rem, 2.6vw, 2.5rem); font-weight: 500; line-height: .95; letter-spacing: -.05em; overflow-wrap: anywhere; text-wrap: balance; }
+.mp-mood-kick { font-size: .75rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text-subtle); transition: color .35s ease; }
+.mp-mood-slash { color: var(--stone); }
+.mp-mood-cta { position: relative; align-self: center; justify-self: end; display: inline-flex; }
+.mp-mood-dot {
+  width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; flex: none;
+  background: rgba(244, 244, 244, .08); color: var(--text-muted); transition: background-color .35s ease, color .35s ease, transform .45s var(--ease-out);
+}
+.mp-mood-label {
+  position: absolute; right: calc(100% + 12px); top: 50%; translate: 0 -50%; white-space: nowrap;
+  font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; opacity: 0; transform: translateX(8px);
+  transition: opacity .3s ease, transform .45s var(--ease-out);
+}
+.mp-mood-hint { max-width: 30ch; font-size: .875rem; line-height: 1.4; color: var(--text-muted); transition: color .35s ease; }
+
+/* Invertida: hover (solo con mouse), foco de teclado o elegida */
+.mp-mood[aria-pressed='true'], .mp-mood:focus-visible { background: var(--text); color: var(--on-light); border-color: var(--text); }
+.mp-mood[aria-pressed='true'] :is(.mp-mood-kick, .mp-mood-hint), .mp-mood:focus-visible :is(.mp-mood-kick, .mp-mood-hint) { color: rgba(15, 15, 20, .66); }
+.mp-mood[aria-pressed='true'] .mp-mood-dot, .mp-mood:focus-visible .mp-mood-dot { background: var(--on-light); color: var(--text); }
+.mp-mood[aria-pressed='true'] .mp-mood-label, .mp-mood:focus-visible .mp-mood-label { opacity: 1; transform: none; }
+.mp-mood:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+.mp-mood:active { transform: scale(.985); }
+@media (hover: hover) {
+  .mp-mood:hover { background: var(--text); color: var(--on-light); border-color: var(--text); transform: translateY(-4px); box-shadow: 0 24px 60px -24px rgba(0, 0, 0, .7); }
+  .mp-mood:hover :is(.mp-mood-kick, .mp-mood-hint) { color: rgba(15, 15, 20, .66); }
+  .mp-mood:hover .mp-mood-dot { background: var(--on-light); color: var(--text); transform: rotate(-12deg); }
+  .mp-mood:hover .mp-mood-label { opacity: 1; transform: none; }
+}
 
 /* Paso 4: buscador (el .mp-input base crece con flex, aquí va en columna), lista de resultados y sugerencias */
 .mp-input.mp-search { flex: none; width: 100%; max-width: 480px; }
@@ -565,8 +578,9 @@ a.mp-saved:hover { color: var(--text); }
   .mp-sugs { grid-template-columns: repeat(6, 1fr); }
 }
 @media (min-width: 900px) {
-  .mp-moods { grid-template-columns: repeat(4, 1fr); }
-  .mp-mood { min-height: 210px; padding: 22px; }
+  .mp-moods { grid-template-columns: repeat(4, 1fr); gap: 16px; padding-bottom: 40px; }
+  .mp-mood { min-height: 260px; padding: 26px; }
+  .mp-mood:nth-child(even) { margin-top: 40px; margin-bottom: -40px; }
 }
 
 /* ---------- Landing (bienvenida) ----------
