@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, FolderOpen, PencilSimple, SignOut, Trash } from '@phosphor-icons/react';
+import { ArrowRight, FolderOpen, PencilSimple, Plus, SignOut, Trash } from '@phosphor-icons/react';
 import Button from '../components/Button';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { catalog, poster } from '../data';
@@ -76,7 +76,7 @@ function RunCard({ run, onOpen, onDelete, onRename }: CardProps) {
 
 // Mi perfil: las encuestas guardadas de la cuenta (para volver a ver sus recomendaciones) y cerrar sesión
 export default function Profile() {
-  const { st, set, startSurvey, openRun, deleteRun, renameRun, t } = useApp();
+  const { st, set, go, startSurvey, openRun, deleteRun, renameRun, t } = useApp();
   const [ask, setAsk] = useState<Ask | null>(null);
   const who = st.user || null;
   const modal = ask && { ...t.runConfirm[ask.kind], Icon: askIcon[ask.kind] };
@@ -121,6 +121,17 @@ export default function Profile() {
           <p data-reveal className="mp-kicker">{t.accountKick}</p>
           <h1 data-reveal className="mp-title">{t.hi(st.user)}</h1>
           {st.email && <p data-reveal className="mp-lead" translate="no">{st.email}</p>}
+          {/* Con una encuesta a medias: retomarla es lo principal y empezar otra pide confirmación (aviso 'restart') */}
+          {st.questActive ? (
+            <div data-reveal className="mp-row" style={{ marginTop: 14 }}>
+              <Button onClick={() => go('quest')}>{t.continueSurvey}<ArrowRight size={18} weight="bold" aria-hidden /></Button>
+              <Button variant="secondary" icon={<Plus size={18} aria-hidden />} onClick={() => set({ confirm: 'restart' })}>{t.runStart}</Button>
+            </div>
+          ) : (
+            <div data-reveal className="mp-row" style={{ marginTop: 14 }}>
+              <Button icon={<Plus size={18} weight="bold" aria-hidden />} onClick={startSurvey}>{t.runStart}</Button>
+            </div>
+          )}
         </div>
 
         <div className="mp-stack" style={{ gap: 16 }}>
@@ -138,7 +149,6 @@ export default function Profile() {
             <div data-reveal className="mp-card mp-stack" style={{ padding: 24, gap: 12, alignItems: 'flex-start' }}>
               <p className="mp-h3">{t.runsEmpty}</p>
               <p className="mp-label">{t.runsEmptyHint}</p>
-              <Button variant="secondary" onClick={startSurvey}>{t.runStart}</Button>
             </div>
           )}
         </div>

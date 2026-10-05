@@ -46,7 +46,7 @@ const es = {
   // Mi perfil: las encuestas guardadas de la cuenta
   myProfile: 'Mi perfil', accountKick: 'Tu cuenta', accountLabel: 'Cuenta',
   myRuns: 'Mis encuestas', runsHint: 'Se guardan solas al terminar una. Ábrelas para volver a ver tus recomendaciones.',
-  runsEmpty: 'Todavía no tienes encuestas guardadas.', runsEmptyHint: 'Cuando termines una, aparecerá aquí.', runStart: 'Empezar una encuesta',
+  runsEmpty: 'Todavía no tienes encuestas guardadas.', runsEmptyHint: 'Cuando termines una, aparecerá aquí. Empieza con “Nueva encuesta”.', runStart: 'Nueva encuesta',
   runOpen: 'Ver resultados', runDelete: 'Borrar', runRename: 'Cambiar nombre', runNameLabel: 'Nombre de la encuesta', runSave: 'Guardar', runCancel: 'Cancelar', runMovies: (n: number) => (n === 1 ? '1 película' : `${n} películas`),
   runConfirm: {
     deleteRun: {
@@ -207,7 +207,7 @@ const en: Strings = {
   // My profile: the account's saved surveys
   myProfile: 'My profile', accountKick: 'Your account', accountLabel: 'Account',
   myRuns: 'My surveys', runsHint: 'They save themselves when you finish one. Open them to see your recommendations again.',
-  runsEmpty: 'You don’t have any saved surveys yet.', runsEmptyHint: 'When you finish one, it will show up here.', runStart: 'Start a survey',
+  runsEmpty: 'You don’t have any saved surveys yet.', runsEmptyHint: 'When you finish one, it will show up here. Start with “New survey”.', runStart: 'New survey',
   runOpen: 'See results', runDelete: 'Delete', runRename: 'Rename', runNameLabel: 'Survey name', runSave: 'Save', runCancel: 'Cancel', runMovies: (n: number) => (n === 1 ? '1 movie' : `${n} movies`),
   runConfirm: {
     deleteRun: {
