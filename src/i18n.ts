@@ -7,7 +7,7 @@ const es = {
   continueAs: (user: string) => `Continuar como ${user}`, signOut: 'Cerrar sesión',
   loginTitle: 'Inicia sesión', registerTitle: 'Crea tu cuenta', tabLogin: 'Iniciar sesión', tabRegister: 'Crear cuenta', submitLogin: 'Entrar', submitRegister: 'Crear cuenta',
   nameLabel: 'Nombre', emailLabel: 'Correo electrónico', passwordLabel: 'Contraseña', passwordHint: 'Mínimo 6 caracteres.', showPassword: 'Mostrar contraseña', hidePassword: 'Ocultar contraseña',
-  forgot: '¿Olvidaste tu contraseña?', needEmail: 'Escribe tu correo arriba y vuelve a pulsar “¿Olvidaste tu contraseña?”.', resetSent: 'Si ese correo tiene una cuenta, te enviamos un enlace para cambiar la contraseña.', or: 'o',
+  forgot: '¿Olvidaste tu contraseña?', resetTitle: 'Restablece tu contraseña', resetLead: 'Escribe el correo de tu cuenta y te enviaremos un enlace para crear una contraseña nueva.', resetSubmit: 'Restablece tu contraseña', resetSentTitle: 'Revisa tu correo', resetSent: 'Si ese correo tiene una cuenta, te enviamos un enlace para cambiar la contraseña.', resetSpam: 'Si no lo ves en unos minutos, revisa tu carpeta de correo no deseado o spam. Llega de noreply@…firebaseapp.com.', backToLogin: 'Volver a iniciar sesión', or: 'o',
   authErrors: {
     'auth/invalid-credential': 'Correo o contraseña incorrectos.', 'auth/invalid-email': 'Ese correo no es válido.',
     'auth/email-already-in-use': 'Ya existe una cuenta con ese correo. Prueba a iniciar sesión.', 'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
@@ -169,7 +169,7 @@ const en: Strings = {
   continueAs: (user: string) => `Continue as ${user}`, signOut: 'Sign out',
   loginTitle: 'Sign in', registerTitle: 'Create your account', tabLogin: 'Sign in', tabRegister: 'Create account', submitLogin: 'Sign in', submitRegister: 'Create account',
   nameLabel: 'Name', emailLabel: 'Email', passwordLabel: 'Password', passwordHint: 'At least 6 characters.', showPassword: 'Show password', hidePassword: 'Hide password',
-  forgot: 'Forgot your password?', needEmail: 'Type your email above and press “Forgot your password?” again.', resetSent: 'If that email has an account, we sent you a link to reset the password.', or: 'or',
+  forgot: 'Forgot your password?', resetTitle: 'Reset your password', resetLead: 'Enter your account’s email and we’ll send you a link to create a new password.', resetSubmit: 'Reset your password', resetSentTitle: 'Check your email', resetSent: 'If that email has an account, we sent you a link to reset the password.', resetSpam: 'If you don’t see it in a few minutes, check your junk or spam folder. It comes from noreply@…firebaseapp.com.', backToLogin: 'Back to sign in', or: 'or',
   authErrors: {
     'auth/invalid-credential': 'Wrong email or password.', 'auth/invalid-email': 'That email isn’t valid.',
     'auth/email-already-in-use': 'An account with that email already exists. Try signing in.', 'auth/weak-password': 'The password must be at least 6 characters.',

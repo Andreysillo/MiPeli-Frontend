@@ -22,7 +22,12 @@ google.setCustomParameters({ prompt: 'select_account' }); // siempre muestra el 
 
 export const signInWithGoogle = () => (auth ? signInWithPopup(auth, google) : unconfigured());
 export const signInWithEmail = (email: string, password: string) => (auth ? signInWithEmailAndPassword(auth, email, password) : unconfigured());
-export const resetPassword = (email: string) => (auth ? sendPasswordResetEmail(auth, email) : unconfigured());
+// El correo de Firebase sale en el idioma de la interfaz (languageCode), no siempre en inglés
+export function resetPassword(email: string, lang: string) {
+  if (!auth) return unconfigured();
+  auth.languageCode = lang;
+  return sendPasswordResetEmail(auth, email);
+}
 export const signOutUser = () => (auth ? signOut(auth) : Promise.resolve());
 export const onUserChange = (cb: (user: User | null) => void) => (auth ? onAuthStateChanged(auth, cb) : () => {});
 

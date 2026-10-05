@@ -166,10 +166,6 @@ El botón de Google sigue el tema oscuro de las [guías de marca de Sign in with
 
 TMDB exige mostrar su logo y el aviso "This product uses the TMDB API but is not endorsed or certified by TMDB", además de atribuir a JustWatch los datos de plataformas; OMDb pide citar su licencia CC BY-NC 4.0. Todo eso está en la sección Créditos de Contacto (`src/components/Credits.tsx`) y **no debe quitarse** al conectar el backend.
 
-Otros créditos:
-- El mural de `src/components/DriftWall.jsx` viene de [React Bits](https://github.com/DavidHDev/react-bits), adaptado.
-- Íconos: [Phosphor](https://phosphoricons.com). Logos de plataformas y cine: archivos de `src/assets/platforms/`.
-- La galería de resultados toma como referencia [a24.raviklaassens.com](https://a24.raviklaassens.com/) y la landing, [14islands.com](https://www.14islands.com/), con los colores de la app.
 
 ## Autor
 
