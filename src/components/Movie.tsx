@@ -8,7 +8,7 @@ import { useApp } from '../store';
 // Los géneros vienen en español (como los da TMDB con language=es); para inglés se traducen aquí
 const genreEn: Record<string, string> = {
   'Comedia': 'Comedy', 'Ciencia ficción': 'Science fiction', 'Terror': 'Horror', 'Animación': 'Animation', 'Documental': 'Documentary',
-  'Crimen': 'Crime', 'Misterio': 'Mystery', 'Acción': 'Action', 'Aventura': 'Adventure', 'Fantasía': 'Fantasy', 'Familia': 'Family', 'Música': 'Music',
+  'Crimen': 'Crime', 'Misterio': 'Mystery', 'Acción': 'Action', 'Aventura': 'Adventure', 'Fantasía': 'Fantasy', 'Familia': 'Family', 'Música': 'Music', 'Bélica': 'War', 'Historia': 'History',
 };
 export const genreName = (g: string, lang: Lang) => (lang === 'en' && genreEn[g]) || g;
 export const countryName = (code: string, lang: Lang) => new Intl.DisplayNames([lang], { type: 'region' }).of(code) ?? code;

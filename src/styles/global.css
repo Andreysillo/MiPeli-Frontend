@@ -234,6 +234,7 @@ html:has(.lp) { scroll-padding-top: calc(var(--header-h) + 8px); }
 }
 /* Fundido de borde a borde aunque la barra viva dentro del contenedor */
 .mp-actionbar::before { content: ''; position: absolute; inset: 0 -100vw; z-index: -1; background: linear-gradient(to top, rgba(15, 15, 20, .95) 50%, transparent); pointer-events: none; }
+.mp-duel-skip { display: flex; justify-content: center; max-width: 620px; margin: 28px auto 20px; }
 .mp-duel { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; max-width: 620px; margin: 0 auto; }
 .mp-poster-btn { padding: 0; border: 1px solid var(--border); border-radius: var(--radius-poster); overflow: hidden; cursor: pointer; background: #1f1f2e; transition: transform .25s var(--ease-out), border-color .2s ease, box-shadow .25s ease; }
 .mp-poster-btn:hover { transform: translateY(-4px); border-color: var(--text); box-shadow: 0 24px 50px -20px rgba(0, 0, 0, .8); }
@@ -522,7 +523,9 @@ span.mp-platform { pointer-events: none; }
 .mp-pill[aria-pressed='true'] { background: var(--text); color: var(--on-light); border-color: var(--text); }
 .mp-pills-avoid .mp-pill[aria-pressed='true'] span { text-decoration: line-through; text-decoration-thickness: 2px; }
 .mp-pill:active { transform: scale(.97); }
-@media (hover: hover) { .mp-pill:not([aria-pressed='true']):hover { background: rgba(255, 255, 255, .14); border-color: var(--text); } }
+.mp-pill:disabled { opacity: .35; cursor: not-allowed; }
+.mp-q-summary strong { font-weight: 600; color: var(--text); }
+@media (hover: hover) { .mp-pill:not([aria-pressed='true'], :disabled):hover { background: rgba(255, 255, 255, .14); border-color: var(--text); } }
 @media (max-width: 520px) { .mp-pill { min-height: 52px; padding: 0 20px; font-size: 1rem; } }
 
 /* Paso 4: buscador (el .mp-input base crece con flex, aquí va en columna), lista de resultados y sugerencias */

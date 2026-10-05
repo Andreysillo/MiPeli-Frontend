@@ -27,6 +27,8 @@ export default function ContextStep() {
   const { st, set, t } = useApp();
   const toggleAvoid = (g: string) => set({ avoid: st.avoid.includes(g) ? st.avoid.filter(x => x !== g) : [...st.avoid, g] });
   const avoidNames = st.avoid.map(g => genreName(g, st.lang)).join(', ');
+  // Evitarlos todos no dejaría nada que recomendar: al faltar uno, los demás se bloquean
+  const avoidFull = st.avoid.length >= avoidOptions.length - 1;
 
   return (
     <>
@@ -49,14 +51,17 @@ export default function ContextStep() {
             {avoidOptions.map(g => {
               const on = st.avoid.includes(g);
               return (
-                <button key={g} className="mp-pill" aria-pressed={on} onClick={() => toggleAvoid(g)}>
+                <button key={g} className="mp-pill" aria-pressed={on} disabled={avoidFull && !on} onClick={() => toggleAvoid(g)}>
                   {on && <X size={16} weight="bold" aria-hidden />}
                   <span>{genreName(g, st.lang)}</span>
                 </button>
               );
             })}
           </div>
-          <p className="mp-q-summary" aria-live="polite">{st.avoid.length > 0 ? t.avoidSome(avoidNames) : t.avoidNone}</p>
+          <p className="mp-q-summary" aria-live="polite">
+            {st.avoid.length > 0 ? t.avoidSome(avoidNames) : t.avoidNone}
+            {avoidFull && <strong> {t.avoidMax}</strong>}
+          </p>
         </Question>
       </div>
     </>

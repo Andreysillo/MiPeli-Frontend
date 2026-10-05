@@ -34,7 +34,10 @@ export const companyRules: Record<Company, { boost: string[]; ban: string[] }> =
 };
 
 // Géneros que se pueden evitar (en TMDB: without_genres) y duraciones máximas en minutos (with_runtime.lte; null = sin límite)
-export const avoidOptions = ['Terror', 'Romance', 'Animación', 'Documental', 'Ciencia ficción'];
+export const avoidOptions = [
+  'Terror', 'Romance', 'Animación', 'Documental', 'Ciencia ficción', 'Acción', 'Comedia', 'Drama', 'Thriller', 'Crimen',
+  'Misterio', 'Aventura', 'Fantasía', 'Familia', 'Música', 'Western', 'Bélica', 'Historia',
+];
 export const runtimeOptions: (number | null)[] = [100, 130, null];
 
 // Plataformas guardadas: el paso de plataformas solo se pregunta la primera vez

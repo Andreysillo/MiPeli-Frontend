@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { Question } from '@phosphor-icons/react';
 import gsap from 'gsap';
 import Button from '../components/Button';
 import { poster } from '../data';
@@ -36,16 +37,16 @@ export default function DuelStep({ onDone }: Readonly<{ onDone: () => void }>) {
   return (
     <>
       <StepHeader kicker={t.duelOf(st.duelIdx + 1, duels.length)} title={t.duelQ} hint={t.duelHint} />
-      <div className="mp-duel" ref={ref} style={{ marginTop: 32 }}>
+      <div data-reveal className="mp-duel-skip">
+        <Button variant="secondary" icon={<Question size={20} weight="bold" aria-hidden />} onClick={() => { if (!busy.current) advance(); }}>{t.duelSkip}</Button>
+      </div>
+      <div className="mp-duel" ref={ref}>
         {[0, 1].map(i => (
           <button key={pair[i].title} data-reveal className="mp-poster-btn" onClick={() => choose(i)} aria-label={`${pair[i].title}, ${pair[i].year}, ${pair[i].director}`} style={{ order: i * 2 }}>
             <img src={poster(pair[i])} alt="" />
           </button>
         ))}
         <span className="mp-label" style={{ order: 1 }} aria-hidden>{t.duelVs}</span>
-      </div>
-      <div data-reveal style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-        <Button variant="ghost" size="sm" onClick={() => { if (!busy.current) advance(); }}>{t.duelSkip}</Button>
       </div>
     </>
   );
