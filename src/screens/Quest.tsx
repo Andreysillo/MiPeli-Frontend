@@ -39,10 +39,10 @@ function Stepper({ steps }: Readonly<{ steps: Step[] }>) {
   );
 }
 
-// La encuesta: ánimo → contexto → duelos → favoritas (→ plataformas la primera vez). Una pantalla por paso, ~1 minuto en total.
+// La encuesta: plataformas → ánimo → contexto → duelos → favoritas. Una pantalla por paso, ~1 minuto en total.
 export default function Quest() {
   const { st, set, t } = useApp();
-  const steps = st.questSteps.length ? st.questSteps : buildSteps(st.ownedPlatforms);
+  const steps = st.questSteps.length ? st.questSteps : buildSteps();
   const qi = Math.min(st.qi, steps.length - 1);
   const kind = steps[qi];
   const isLast = qi >= steps.length - 1;

@@ -3,16 +3,16 @@ import { CINE, platforms, type Platform } from '../data';
 import { PlatformLogo, platformName } from '../components/Movie';
 import { useApp } from '../store';
 
-const all: Platform[] = [...(Object.keys(platforms) as Platform[]), CINE]; // el cine va al final
+export const allPlatforms: Platform[] = [...(Object.keys(platforms) as Platform[]), CINE]; // el cine va al final
 
-// Logos de las plataformas (y el cine) como interruptores. Lo comparten el paso de plataformas y los resultados (donde cambiarlas reordena al instante).
+// Logos de las plataformas (y el cine) como interruptores. Lo usan los resultados (donde cambiarlas reordena al instante); el paso de plataformas de la encuesta comparte la lista.
 export default function PlatformPicker({ label }: Readonly<{ label: string }>) {
   const { st, set, t } = useApp();
   const toggle = (p: Platform) => set({ ownedPlatforms: st.ownedPlatforms.includes(p) ? st.ownedPlatforms.filter(x => x !== p) : [...st.ownedPlatforms, p] });
 
   return (
     <div className="mp-plats" role="group" aria-label={label}>
-      {all.map(p => (
+      {allPlatforms.map(p => (
         <button key={p} className="mp-plat" aria-pressed={st.ownedPlatforms.includes(p)} onClick={() => toggle(p)}>
           <PlatformLogo p={p} />
           <span className="mp-plat-name">{platformName(p, t)}</span>

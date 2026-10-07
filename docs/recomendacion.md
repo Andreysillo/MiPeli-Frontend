@@ -14,7 +14,7 @@ El frontend recomienda hoy con un catálogo de demo (`src/data.tsx`) y una heur�
 | `liked[]` | Favoritas escritas o tocadas (máx. 3) | Paso 4 | Anclas de peso 1 |
 | `boosted[]` | "Más como esta" desde los resultados | Afinar | Anclas de peso 0,8; la película sigue en la lista |
 | `seen[]`, `disliked[]` | "Ya la vi", "No me interesa" | Afinar | Se excluyen |
-| `ownedPlatforms[]` | Plataformas del usuario y, si va al cine, `Cine` (se guardan) | Paso 5 / resultados | `watch_region=CR`, `with_watch_providers` (ids separados por `\|`) y `with_watch_monetization_types=flatrate`. `Cine` no es un proveedor de TMDB: ver la sección 7 |
+| `ownedPlatforms[]` | Plataformas del usuario y, si va al cine, `Cine` (se guardan) | Paso 1 / resultados | `watch_region=CR`, `with_watch_providers` (ids separados por `\|`) y `with_watch_monetization_types=flatrate`. `Cine` no es un proveedor de TMDB: ver la sección 7 |
 
 En el frontend las películas se identifican por título (demo). El backend usará ids de TMDB y el frontend los enviará tal cual (`liked`, `duelPicks`… pasan a ser listas de ids).
 

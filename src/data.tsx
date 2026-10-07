@@ -6,7 +6,7 @@ import max from './assets/platforms/Max.jpg';
 import appleTv from './assets/platforms/apple TV.jpg';
 import paramount from './assets/platforms/paramount+.png';
 import mubi from './assets/platforms/mubi.jpg';
-import crunchyroll from './assets/platforms/crunchyroll.png';
+import crunchyroll from './assets/platforms/crunchyroll.jpg';
 import vix from './assets/platforms/Vix.jpg';
 import claroVideo from './assets/platforms/Claro Video.png';
 import pluto from './assets/platforms/Pluto tv.png';

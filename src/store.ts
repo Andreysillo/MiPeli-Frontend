@@ -34,7 +34,7 @@ export const blankSurvey = () => ({
   duelPicks: [] as string[], liked: [] as string[], boosted: [] as string[], disliked: [] as string[], seen: [] as string[],
 });
 
-const freshQuest = (s: State): State => ({ ...s, ...blankSurvey(), questSteps: buildSteps(s.ownedPlatforms), questActive: true, screen: 'quest' });
+const freshQuest = (s: State): State => ({ ...s, ...blankSurvey(), questSteps: buildSteps(), questActive: true, screen: 'quest' });
 
 // Lo que se guarda de una encuesta para poder reabrirla
 const answersOf = (s: State): Run['answers'] => ({

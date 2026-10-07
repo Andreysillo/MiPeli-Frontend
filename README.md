@@ -25,7 +25,7 @@ Este repo es solo el **frontend**. El backend irá en otro repo.
 
 ## Funciones principales
 
-- Encuesta de ~1 minuto: ánimo, contexto (tiempo, con quién, qué evitar), duelos de pósters, hasta 3 favoritas con buscador y plataformas.
+- Encuesta de ~1 minuto: ánimo, contexto (tiempo, con quién, qué evitar), duelos de pósters y hasta 3 favoritas con buscador. Antes de empezar se pregunta dónde quieres verla.
 - Resultados en galería de pósters enmarcados, con director, reparto, nota de IMDb, plataformas y botones para afinar (más como esta, ya la vi, no me interesa).
 - "En cines" como una plataforma más, junto a las de streaming.
 - Inicio de sesión con Google, correo y contraseña, o como invitado.
@@ -36,7 +36,7 @@ Este repo es solo el **frontend**. El backend irá en otro repo.
 
 1. **Landing** (`Welcome`): página informativa. Su único acceso está al final: "¡Entrémosle!" o, con sesión abierta, "Continuar como …".
 2. **Login**: Google, correo y contraseña (crear cuenta, restablecer) o invitado, sobre el mural de pósters.
-3. **Encuesta** (`Quest`): ánimo, contexto, 4 duelos, favoritas y, solo la primera vez, plataformas. Detalle de cada señal en [docs/recomendacion.md](docs/recomendacion.md).
+3. **Encuesta** (`Quest`): plataformas (con "Recomiéndame donde sea"), ánimo, contexto, 4 duelos y favoritas. Detalle de cada señal en [docs/recomendacion.md](docs/recomendacion.md).
 4. **Carga** (`Loading`, simulada) y **Resultados** (`Results`). El número de películas y las plataformas se cambian ahí mismo. En cines no hay enlace ni horarios: TMDB no los da.
 5. **Mi perfil** (`Profile`, `#perfil`, solo con sesión): encuestas guardadas y cierre de sesión. Repetir la encuesta, empezar de cero, borrar una guardada y abrir una con otra a medias piden confirmación.
 

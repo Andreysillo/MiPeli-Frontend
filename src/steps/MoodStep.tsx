@@ -6,12 +6,12 @@ import StepHeader from './StepHeader';
 // Paso 1: una sensación, no un género. Hasta dos tarjetas; al elegir una tercera se suelta la más antigua.
 // Estilo de nk.studio/impact: nombre grande arriba, índice "/ 01", descripción abajo; al pasar el mouse (o elegida) la tarjeta se invierte a clara.
 export default function MoodStep() {
-  const { st, set, t, name } = useApp();
+  const { st, set, t } = useApp();
   const toggle = (key: Mood) => set({ moods: st.moods.includes(key) ? st.moods.filter(k => k !== key) : [...st.moods, key].slice(-MAX_MOODS) });
 
   return (
     <>
-      <StepHeader kicker={t.hi(name)} title={t.moodQ} hint={t.moodHint(MAX_MOODS)} />
+      <StepHeader title={t.moodQ} hint={t.moodHint(MAX_MOODS)} />
       <div className="mp-moods" role="group" aria-label={t.moodQ}>
         {moods.map(({ key, Icon }, i) => {
           const on = st.moods.includes(key);

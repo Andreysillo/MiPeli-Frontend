@@ -43,6 +43,8 @@ if (process.argv.includes('--serve')) {
     await cta.click();
     await page.locator('#auth-email').waitFor({ timeout: 5000 });
     await page.getByRole('button', { name: /invitado/i }).click();
+    await page.locator('.mp-prow').first().waitFor({ timeout: 5000 });
+    await page.getByRole('button', { name: /siguiente/i }).click();
     await page.locator('.mp-mood').first().waitFor({ timeout: 5000 });
   } catch (e) {
     problems.push(`flujo: ${e.message.split('\n')[0]}`);

@@ -40,11 +40,8 @@ export const avoidOptions = [
 ];
 export const runtimeOptions: (number | null)[] = [100, 130, null];
 
-// Plataformas guardadas: el paso de plataformas solo se pregunta la primera vez
-export const buildSteps = (ownedPlatforms: Platform[]): Step[] => {
-  const steps: Step[] = ['mood', 'context', 'duel', 'favorites'];
-  return ownedPlatforms.length ? steps : [...steps, 'platforms'];
-};
+// La encuesta siempre abre con las plataformas (ya marcadas las de la última vez) y sigue con el ánimo
+export const buildSteps = (): Step[] => ['platforms', 'mood', 'context', 'duel', 'favorites'];
 
 // Cuatro duelos curados con contrastes de tono, época y estilo: así cada elección dice algo distinto
 export const duels: [Movie, Movie][] = [['Seven', 'Amélie'], ['Inception', 'The Big Lebowski'], ['Parasite', 'Spirited Away'], ['Heat', 'Before Sunrise']]
