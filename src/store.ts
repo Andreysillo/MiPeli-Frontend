@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { L, type Lang } from './i18n';
 import { CINE, platforms, type Platform } from './data';
-import { buildSteps, type Company, type Mood, type Step } from './survey';
+import { avoidOptions, buildSteps, type Company, type Mood, type Step } from './survey';
 import { authEnabled, firstName, onUserChange } from './auth';
 import { MAX_NAME, MAX_RUNS, loadRuns, storeRuns, type Run } from './history';
 
@@ -56,7 +56,7 @@ function initialState(): State {
     loggedIn: false, user: '', lang: saved.lang || 'es',
     uid: '', email: '', authReady: !authEnabled, // sin Firebase configurado nadie va a responder: no hay nada que esperar
     numMovies: saved.numMovies || 5,
-    avoid: Array.isArray(saved.avoid) ? saved.avoid : [],
+    avoid: Array.isArray(saved.avoid) ? saved.avoid.filter(g => avoidOptions.includes(g)).slice(0, avoidOptions.length - 1) : [],
     // Una plataforma guardada que ya no existe en la lista se descarta (el cine no es una plataforma de streaming, pero se guarda igual)
     ownedPlatforms: Array.isArray(saved.ownedPlatforms) ? saved.ownedPlatforms.filter(p => p in platforms || p === CINE) : [],
     useful: saved.useful || null,
