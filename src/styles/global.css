@@ -546,16 +546,6 @@ span.mp-platform { pointer-events: none; }
 .mp-sug:disabled { opacity: .4; cursor: default; transform: none; border-color: var(--border); box-shadow: none; }
 .mp-chip[aria-pressed='true'] { background: var(--text); border-color: var(--text); color: var(--on-light); }
 
-/* Paso 5 y resultados: logos de las plataformas como interruptores */
-.mp-plats { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 10px; }
-.mp-plat {
-  display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text); font-weight: 500; font-size: .9375rem; text-align: left; cursor: pointer;
-  background: var(--surface); border: 1px solid var(--border); border-radius: 14px; transition: border-color .2s ease, background-color .2s ease;
-}
-.mp-plat-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-.mp-plat:hover { border-color: var(--border-strong); }
-.mp-plat[aria-pressed='true'] { border-color: var(--text); background: #2a2a3d; }
-
 /* Paso 1 de la encuesta: plataformas como lista tipográfica (estilo fontsinmovies.com). Con mouse, la imagen de la plataforma sigue al cursor;
    en pantallas táctiles no hay hover y el logo va a un lado de cada fila. Elegida = fila invertida a clara, como las tarjetas de ánimo. */
 .mp-any {

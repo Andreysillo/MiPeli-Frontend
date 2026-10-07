@@ -6,7 +6,6 @@ import PosterGallery from '../components/PosterGallery';
 import { Imdb, Reasons, WatchOn, countryName, genreName, runtime } from '../components/Movie';
 import { poster } from '../data';
 import { recommend, type Rec } from '../recommend';
-import PlatformPicker from '../steps/PlatformPicker';
 import { useApp } from '../store';
 
 // Extra en formato índice: compacto, sin animación de ficha, pero con lo necesario para decidir
@@ -136,11 +135,6 @@ export default function Results() {
               <ul className="mp-index">{extras.map(m => <IndexRow key={m.title} m={m} />)}</ul>
             </div>
           )}
-
-          <div data-reveal className="mp-card mp-stack" style={{ padding: 24, gap: 16 }}>
-            <h2 className="mp-h3">{t.myPlatforms}</h2>
-            <PlatformPicker label={t.myPlatforms} />
-          </div>
 
           <div data-reveal className="mp-card mp-stack" style={{ padding: 24, gap: 24 }}>
             <div className="mp-stack" style={{ gap: 12 }}>

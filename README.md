@@ -2,9 +2,9 @@
 
 <img src="./src/assets/MiPeli_frontend_logo.png" alt="MiPeli Frontend" width="400">
 
-### Un recomendador de películas que te pregunta en vez de pedirte que busques.
+### A movie recommender that asks you questions instead of making you search.
 
-Responde unas preguntas de un minuto y descubre qué ver esta noche y dónde verlo: en streaming en Costa Rica o, si está en cartelera, en el cine.
+Answer a one-minute survey and find out what to watch tonight and where: on streaming in Costa Rica or, if it's showing, in a cinema.
 
 <br>
 
@@ -13,54 +13,54 @@ Responde unas preguntas de un minuto y descubre qué ver esta noche y dónde ver
 [![esbuild](https://img.shields.io/badge/esbuild-0.28-FFCF00?style=for-the-badge&logo=esbuild&logoColor=black)](https://esbuild.github.io/)
 [![Firebase](https://img.shields.io/badge/Firebase-Auth-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 
-<sub>Encuesta por ánimo · Duelos de pósters · Dónde verla · Encuestas guardadas</sub>
+<sub>Mood survey · Poster duels · Where to watch · Saved surveys</sub>
 
 </div>
 
-## La experiencia
+## The experience
 
-MiPeli convierte la pregunta de cada noche, "¿qué vemos hoy?", en una encuesta corta: tu ánimo (una sensación, nunca un "género"), el contexto, cuatro duelos de pósters, tus favoritas y las plataformas que usas. A cambio recibes una galería de pósters enmarcados donde cada película explica por qué salió y dónde verla.
+MiPeli turns the nightly question, "what do we watch tonight?", into a short survey: where you watch, your mood (a feeling, never a "genre"), the context, four poster duels and your favorites. In return you get a gallery of framed posters where each movie explains why it showed up and where to watch it.
 
-Este repo es solo el **frontend**. El backend irá en otro repo.
+This repo is the **frontend** only. The backend will live in a separate repo.
 
-## Funciones principales
+## Main features
 
-- Encuesta de ~1 minuto: ánimo, contexto (tiempo, con quién, qué evitar), duelos de pósters y hasta 3 favoritas con buscador. Antes de empezar se pregunta dónde quieres verla.
-- Resultados en galería de pósters enmarcados, con director, reparto, nota de IMDb, plataformas y botones para afinar (más como esta, ya la vi, no me interesa).
-- "En cines" como una plataforma más, junto a las de streaming.
-- Inicio de sesión con Google, correo y contraseña, o como invitado.
-- **Mi perfil**: cada encuesta de una cuenta se guarda sola, se puede renombrar, reabrir o borrar. Los invitados no guardan nada.
-- Español e inglés, interfaz oscura y accesible, animaciones que respetan `prefers-reduced-motion`.
+- ~1 minute survey: platforms, mood, context (time, who with, what to avoid), poster duels and up to 3 favorites with search. It opens by asking where you want to watch.
+- Results in a gallery of framed posters, with director, cast, IMDb rating, platforms and buttons to fine-tune (more like this, already seen, not interested).
+- "In theaters" as one more platform, next to the streaming ones.
+- Sign in with Google, email and password, or as a guest.
+- **My profile**: each survey of an account is saved automatically and can be renamed, reopened or deleted. Guests save nothing.
+- Spanish and English, dark and accessible interface, animations that respect `prefers-reduced-motion`.
 
-## Flujo de la app
+## App flow
 
-1. **Landing** (`Welcome`): página informativa. Su único acceso está al final: "¡Entrémosle!" o, con sesión abierta, "Continuar como …".
-2. **Login**: Google, correo y contraseña (crear cuenta, restablecer) o invitado, sobre el mural de pósters.
-3. **Encuesta** (`Quest`): plataformas (con "Recomiéndame donde sea"), ánimo, contexto, 4 duelos y favoritas. Detalle de cada señal en [docs/recomendacion.md](docs/recomendacion.md).
-4. **Carga** (`Loading`, simulada) y **Resultados** (`Results`). El número de películas y las plataformas se cambian ahí mismo. En cines no hay enlace ni horarios: TMDB no los da.
-5. **Mi perfil** (`Profile`, `#perfil`, solo con sesión): encuestas guardadas y cierre de sesión. Repetir la encuesta, empezar de cero, borrar una guardada y abrir una con otra a medias piden confirmación.
+1. **Landing** (`Welcome`): informational page. Its only entry point is at the bottom: "Let's go!" or, with an open session, "Continue as …".
+2. **Login**: Google, email and password (sign up, reset) or guest, over the poster wall.
+3. **Survey** (`Quest`): platforms (with "Recommend me anywhere"), mood, context, 4 duels and favorites. Each signal is detailed in [docs/recomendacion.md](docs/recomendacion.md).
+4. **Loading** (`Loading`, simulated) and **Results** (`Results`). The number of movies is changed right there; platforms are only chosen at the start of the survey. Cinemas have no link or showtimes: TMDB doesn't provide them.
+5. **My profile** (`Profile`, `#perfil`, signed-in only): saved surveys and sign out. Repeating the survey, starting over, deleting a saved one and opening one while another is half-done all ask for confirmation.
 
-FAQ y Contacto son pantallas aparte (`#faq`, `#contacto`). Todo el texto vive en `src/i18n.ts` en español e inglés; cualquier texto nuevo debe llevar las dos versiones.
+FAQ and Contact are separate screens (`#faq`, `#contacto`). All text lives in `src/i18n.ts` in Spanish and English; any new text must carry both versions.
 
-## Tecnologías
+## Tech stack
 
-| Área | Tecnología |
+| Area | Technology |
 | --- | --- |
 | Framework | React 19, TypeScript |
-| Empaquetado | esbuild (`build.mjs`), sin Vite |
-| Animación | GSAP + ScrollTrigger |
-| Íconos y tipografía | Phosphor, Geist, Bodoni Moda (`@fontsource-variable`) |
-| Autenticación | Firebase Authentication (Google, correo y contraseña) |
-| Datos (backend, pendiente) | TMDB, OMDb, JustWatch, TasteDive opcional |
+| Bundling | esbuild (`build.mjs`), no Vite |
+| Animation | GSAP + ScrollTrigger |
+| Icons and type | Phosphor, Geist, Bodoni Moda (`@fontsource-variable`) |
+| Authentication | Firebase Authentication (Google, email and password) |
+| Data (backend, pending) | TMDB, OMDb, JustWatch, optional TasteDive |
 
-## Empezar
+## Getting started
 
-### Requisitos
+### Requirements
 
-- Node.js 20.12 o superior (`build.mjs` usa `process.loadEnvFile`)
+- Node.js 20.12 or newer (`build.mjs` uses `process.loadEnvFile`)
 - npm
 
-### Ejecutar en local
+### Run locally
 
 ```bash
 git clone https://github.com/Andreysillo/MiPeli-Frontend.git
@@ -69,103 +69,102 @@ npm install
 npm run dev
 ```
 
-Abre [http://localhost:8000](http://localhost:8000) (o el siguiente puerto libre). Se recarga solo al guardar y Ctrl+C lo cierra.
+Open [http://localhost:8000](http://localhost:8000) (or the next free port). It reloads on save and Ctrl+C stops it.
 
-## Configuración
+## Configuration
 
-Sin `.env` la app funciona igual y el inicio de sesión solo muestra un aviso. Para activarlo, copia `.env.example` a `.env`:
+Without a `.env` the app still works and sign-in just shows a notice. To enable it, copy `.env.example` to `.env`:
 
 ```dotenv
-# valores de firebaseConfig; build.mjs los inyecta con `define`
+# firebaseConfig values; build.mjs injects them with `define`
 FIREBASE_API_KEY=...
 FIREBASE_AUTH_DOMAIN=...
 FIREBASE_PROJECT_ID=...
 FIREBASE_APP_ID=...
 ```
 
-1. En [console.firebase.google.com](https://console.firebase.google.com) crea un proyecto (plan Spark, gratis y sin tarjeta).
-2. **Authentication → Comenzar → Método de acceso**: habilita **Google** y **Correo electrónico/contraseña**.
-3. **Configuración del proyecto → Tus apps → Web (`</>`)**: registra la app y copia los valores de `firebaseConfig`.
-4. Pégalos en `.env` y reinicia `npm run dev` desde `localhost`. Para `127.0.0.1` u otro dominio, agrégalo en **Authentication → Configuración → Dominios autorizados**.
+1. In [console.firebase.google.com](https://console.firebase.google.com) create a project (Spark plan, free and no card).
+2. **Authentication → Get started → Sign-in method**: enable **Google** and **Email/Password**.
+3. **Project settings → Your apps → Web (`</>`)**: register the app and copy the `firebaseConfig` values.
+4. Paste them into `.env` and restart `npm run dev` from `localhost`. For `127.0.0.1` or another domain, add it under **Authentication → Settings → Authorized domains**.
 
-Las contraseñas las guarda Firebase (cifradas); MiPeli nunca las ve. Cuando exista el backend, el frontend le enviará `user.getIdToken()` y este lo verificará con Firebase Admin.
+Passwords are stored (encrypted) by Firebase; MiPeli never sees them. Once the backend exists, the frontend will send it `user.getIdToken()` and it will verify it with Firebase Admin.
 
-## Calidad
+## Quality
 
 ```bash
-npm run build      # genera dist/
+npm run build      # generates dist/
 npm run typecheck  # tsc --noEmit
-npm run check      # reglas del recomendador de demo (src/recommend.check.ts)
-npm run smoke      # tras el build: sirve dist/ con las cabeceras de vercel.json y recorre landing → login → encuesta
+npm run check      # rules of the demo recommender (src/recommend.check.ts)
+npm run smoke      # after the build: serves dist/ with the vercel.json headers and walks landing → login → survey
 ```
 
-`smoke` usa Chrome (otro navegador: `SMOKE_CHANNEL=msedge npm run smoke`). `npm audit` (solo críticas), `typecheck`, `check`, el build y `smoke` corren en GitHub Actions; Dependabot propone las actualizaciones cada mes.
+`smoke` uses Chrome (another browser: `SMOKE_CHANNEL=msedge npm run smoke`). `npm audit` (critical only), `typecheck`, `check`, the build and `smoke` run in GitHub Actions; Dependabot proposes updates every month.
 
-## Seguridad
+## Security
 
-- **XSS:** sin `innerHTML`, `dangerouslySetInnerHTML` ni `eval`; React escapa todo lo que escribe el usuario. Los enlaces externos llevan `rel="noopener noreferrer"`.
-- **Cabeceras** (`vercel.json`): CSP restrictiva (`default-src 'self'`; solo se abren Google/Firebase para el inicio de sesión), `nosniff`, `frame-ancestors 'none'`, `Referrer-Policy` y `Permissions-Policy`. No se usa `Cross-Origin-Opener-Policy: same-origin` porque rompe el popup de Google. Todo estilo va en CSS (nada de `<style>` inyectado); los `style` en línea están permitidos solo como atributo. **Al conectar el backend hay que sumar a la CSP el host de imágenes de TMDB (`img-src`) y la URL de la API (`connect-src`)**; `npm run smoke` avisa si algo queda bloqueado.
-- **Sin cookies ni CSRF:** la sesión es de Firebase (IndexedDB) y el backend recibirá `Authorization: Bearer`. Las contraseñas las guarda Firebase; el intento repetido lo limita Firebase (`auth/too-many-requests`).
-- **Backend (pendiente):** validar todo con Pydantic, tomar el `uid` solo del token verificado, límite de peticiones por IP en `/recommend` y por usuario en `/surveys`, y CORS solo al dominio de Vercel. Mongo no usa SQL, pero evitar filtros armados con datos crudos (inyección NoSQL).
-- **Dependencias:** `npm audit` marca vulnerabilidades altas en `@grpc/grpc-js` vía Firestore (dependencia de `firebase` que la app no importa); revisar al actualizar Firebase.
+- **XSS:** no `innerHTML`, `dangerouslySetInnerHTML` or `eval`; React escapes everything the user types. External links carry `rel="noopener noreferrer"`.
+- **Headers** (`vercel.json`): restrictive CSP (`default-src 'self'`; only Google/Firebase are opened for sign-in), `nosniff`, `frame-ancestors 'none'`, `Referrer-Policy` and `Permissions-Policy`. `Cross-Origin-Opener-Policy: same-origin` is not used because it breaks the Google popup. All styling lives in CSS (no injected `<style>`); inline `style` is allowed only as an attribute. **When the backend is connected, add the TMDB image host (`img-src`) and the API URL (`connect-src`) to the CSP**; `npm run smoke` warns if something gets blocked.
+- **No cookies or CSRF:** the session is Firebase's (IndexedDB) and the backend will receive `Authorization: Bearer`. Passwords are stored by Firebase; repeated attempts are rate-limited by Firebase (`auth/too-many-requests`).
+- **Backend (pending):** validate everything with Pydantic, take the `uid` only from the verified token, rate-limit by IP on `/recommend` and by user on `/surveys`, and CORS only to the Vercel domain. Mongo doesn't use SQL, but avoid filters built from raw data (NoSQL injection).
+- **Dependencies:** `npm audit` flags high vulnerabilities in `@grpc/grpc-js` via Firestore (a dependency of `firebase` that the app doesn't import); review when updating Firebase.
 
-## Estado y pendientes
+## Status and to-do
 
-- Hecho: toda la interfaz, el inicio de sesión real (Firebase), las encuestas guardadas y un catálogo de demo con recomendador local (`src/data.tsx`, `src/recommend.ts`).
-- Falta el **backend** (otro repo): catálogo, pósters y reparto desde TMDB (TasteDive como refuerzo opcional), plataformas (atribuidas a JustWatch) y notas de IMDb desde OMDb. El contrato, el algoritmo y la prueba para decidir sobre TasteDive están en [docs/recomendacion.md](docs/recomendacion.md). Al conectarlo hay que reemplazar `recommend()` y `data.tsx`, enviar `user.getIdToken()` y actualizar el texto de privacidad de FAQ y Contacto si se guardan datos.
-- Las encuestas guardadas viven solo en el navegador de cada cuenta (`src/history.ts`) y no se sincronizan entre dispositivos. El cine, hoy dato de demo, saldrá de TMDB (sección "Cine" de `docs/recomendacion.md`).
-- Privacidad: la app no usa cookies (verificado en el navegador) y no tiene analítica. Si se agrega analítica, publicidad o contenido de terceros, hace falta un aviso de consentimiento antes de cargarlos y actualizar `privacyPoints` y la FAQ.
-- En Google Cloud, restringir la API key de Firebase a los dominios de la app antes de publicar.
+- Done: the whole interface, real sign-in (Firebase), saved surveys and a demo catalog with a local recommender (`src/data.tsx`, `src/recommend.ts`).
+- Missing: the **backend** (another repo): catalog, posters and cast from TMDB (TasteDive as an optional booster), platforms (credited to JustWatch) and IMDb ratings from OMDb. The contract, the algorithm and the test to decide on TasteDive are in [docs/recomendacion.md](docs/recomendacion.md). When connecting it, replace `recommend()` and `data.tsx`, send `user.getIdToken()` and update the privacy text in FAQ and Contact if data gets stored.
+- Saved surveys live only in each account's browser (`src/history.ts`) and aren't synced across devices. Cinema, demo data today, will come from TMDB (the "Cine" section of `docs/recomendacion.md`).
+- Privacy: the app uses no cookies (verified in the browser) and has no analytics. If analytics, ads or third-party content are added, a consent notice is needed before loading them, along with updating `privacyPoints` and the FAQ.
+- In Google Cloud, restrict the Firebase API key to the app's domains before publishing.
 
-## Estructura
+## Structure
 
 ```
-index.html            HTML de entrada (esbuild lo copia a dist/)
-build.mjs             build y servidor de desarrollo (esbuild; lee .env e inyecta Firebase con define)
-vercel.json           build de Vercel y cabeceras de seguridad (CSP, nosniff, frame-ancestors…)
-scripts/smoke.mjs     prueba de humo con las cabeceras de vercel.json (npm run smoke)
+index.html            entry HTML (esbuild copies it to dist/)
+build.mjs             build and dev server (esbuild; reads .env and injects Firebase with define)
+vercel.json           Vercel build and security headers (CSP, nosniff, frame-ancestors…)
+scripts/smoke.mjs     smoke test with the vercel.json headers (npm run smoke)
 src/
-  main.tsx            monta <App />
-  App.tsx             shell: header (nav, Mi perfil, idioma), pantalla actual, avisos de confirmación, toast
-  auth.ts             Firebase Authentication: Google, correo/contraseña, restablecer, cerrar sesión, escuchar la sesión
-  words.ts            splitWords: palabras con clave estable (titulares animados)
-  useGoogleSignIn.ts  hook del botón de Google (estado de carga y avisos), compartido por Welcome y Login
-  assets/             logos de MiPeli (frontend y backend) y, en platforms/, los de las plataformas de streaming y del cine (PNG/JPG, esbuild los copia con hash a dist/)
-  store.ts            estado global (pantalla, respuestas, sesión, encuestas guardadas, persistencia en localStorage, rutas #hash)
-  history.ts          encuestas guardadas de cada cuenta (hoy en el navegador, una lista por uid); la costura que reemplazará el backend
-  i18n.ts             textos es/en
-  data.tsx            catálogo de demo con forma de TMDB y arte de póster en canvas; lo reemplazará el backend
-  survey.ts           configuración de la encuesta: pasos, moods, compañía, qué evitar, duelos, sugerencias y búsqueda de favoritas
-  recommend.ts        recomendador local (demo): puntaje, razones y marcas por película; la costura que reemplazará el backend
-  recommend.check.ts  comprobación rápida de esas reglas (npm run check)
-  steps/              un archivo por paso de la encuesta, StepHeader y PlatformPicker
-  screens/            una pantalla por archivo (Welcome, Login, Quest, Loading, Results, Profile, Faq, Contact)
+  main.tsx            mounts <App />
+  App.tsx             shell: header (nav, My profile, language), current screen, confirmation notices, toast
+  auth.ts             Firebase Authentication: Google, email/password, reset, sign out, session listener
+  words.ts            splitWords: words with stable keys (animated headlines)
+  useGoogleSignIn.ts  Google button hook (loading state and notices), shared by Welcome and Login
+  assets/             MiPeli logos (frontend and backend) and, in platforms/, those of the streaming platforms and cinema (PNG/JPG, esbuild copies them with a hash to dist/)
+  store.ts            global state (screen, answers, session, saved surveys, localStorage persistence, #hash routes)
+  history.ts          each account's saved surveys (in the browser today, one list per uid); the seam the backend will replace
+  i18n.ts             es/en text
+  data.tsx            TMDB-shaped demo catalog with canvas poster art; the backend will replace it
+  survey.ts           survey config: steps, moods, company, what to avoid, duels, suggestions and favorites search
+  recommend.ts        local recommender (demo): score, reasons and flags per movie; the seam the backend will replace
+  recommend.check.ts  quick check of those rules (npm run check)
+  steps/              one file per survey step, plus StepHeader
+  screens/            one screen per file (Welcome, Login, Quest, Loading, Results, Profile, Faq, Contact)
   components/         Button, Reveal, PosterGallery, Movie, PosterWall, ConfirmDialog, SiteNav, Ambient, Rise, CountUp, GoogleG,
-                      Credits (atribuciones de TMDB, JustWatch y OMDb), DriftWall (mural de React Bits, .jsx)
-  styles/global.css   tokens de diseño (color, radios, tipografía) y clases mp-*
+                      Credits (TMDB, JustWatch and OMDb attributions), DriftWall (React Bits wall, .jsx)
+  styles/global.css   design tokens (color, radii, type) and mp-* classes
 ```
 
-## Convenciones del proyecto
+## Project conventions
 
-- Los commits los hago yo a mano, en inglés y con Conventional Commits (`feat(ui): …`, `fix(auth): …`).
-- Código pensado para pasar SonarQube: manejadores solo en `<button>` nativos, sin JSX dentro de arreglos, sin índices como `key`, sin ternarios anidados y props con `Readonly<{…}>`.
-- Un solo sistema visual para todas las pantallas (mismo header, tipografía, tarjetas y botones).
-- Las atribuciones de TMDB, JustWatch y OMDb son obligatorias y no se quitan.
-- `graphify-out/` (grafo de código para navegar el repo) es local y no se sube; se refresca con `graphify update .`.
+- I make the commits by hand, in English and with Conventional Commits (`feat(ui): …`, `fix(auth): …`).
+- Code written to pass SonarQube: handlers only on native `<button>`s, no JSX inside arrays, no indexes as `key`, no nested ternaries and `Readonly<{…}>` props.
+- A single visual system for all screens (same header, typography, cards and buttons).
+- The TMDB, JustWatch and OMDb attributions are mandatory and are not removed.
+- `graphify-out/` (code graph for navigating the repo) is local and not pushed; refresh it with `graphify update .`.
 
-## Paleta (regla 60-30-10)
+## Palette (60-30-10 rule)
 
-- **60 %** fondo de sala de cine `#0F0F14`.
-- **30 %** texto `#F4F4F4`, grises, bordes y tarjetas `#1F1F2E`. Selección, foco y progreso van en blanco.
-- **10 %** rojo `#E50914`, solo en el botón de acción principal (`.btn-primary`); con texto blanco da 4.8:1 (WCAG AA).
+- **60%** movie-theater background `#0F0F14`.
+- **30%** text `#F4F4F4`, grays, borders and cards `#1F1F2E`. Selection, focus and progress are white.
+- **10%** red `#E50914`, only on the primary action button (`.btn-primary`); with white text it reaches 4.8:1 (WCAG AA).
 
-El botón de Google sigue el tema oscuro de las [guías de marca de Sign in with Google](https://developers.google.com/identity/branding-guidelines). Los pósters conservan sus colores: son contenido, no interfaz.
+The Google button follows the dark theme of the [Sign in with Google brand guidelines](https://developers.google.com/identity/branding-guidelines). Posters keep their colors: they are content, not interface.
 
-## Créditos de datos
+## Data credits
 
-TMDB exige mostrar su logo y el aviso "This product uses the TMDB API but is not endorsed or certified by TMDB", además de atribuir a JustWatch los datos de plataformas; OMDb pide citar su licencia CC BY-NC 4.0. Todo eso está en la sección Créditos de Contacto (`src/components/Credits.tsx`) y **no debe quitarse** al conectar el backend.
+TMDB requires showing its logo and the notice "This product uses the TMDB API but is not endorsed or certified by TMDB", plus crediting JustWatch for platform data; OMDb asks to cite its CC BY-NC 4.0 license. All of that is in the Credits section of Contact (`src/components/Credits.tsx`) and **must not be removed** when connecting the backend.
 
+## Author
 
-## Autor
-
-Andrey Jiménez, estudiante avanzado de Ingeniería en Computación del Tecnológico de Costa Rica (TEC). [GitHub](https://github.com/Andreysillo)
+Andrey Jiménez, advanced Computer Engineering student at the Costa Rica Institute of Technology (TEC). [GitHub](https://github.com/Andreysillo)

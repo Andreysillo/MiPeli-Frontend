@@ -2,11 +2,12 @@ import { useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useApp } from '../store';
 
-type Item = { href: string; label: string; resume?: boolean };
+type Item = { href: string; label: string; resume?: boolean; signin?: boolean };
 
-// Un enlace del menú; "resume" es el botón que retoma la encuesta a medias (no es un enlace de la página)
+// Un enlace del menú; "resume" retoma la encuesta a medias y "signin" lleva a iniciar sesión y volver a ella (son botones, no enlaces de la página)
 function NavItem({ item, onPick }: Readonly<{ item: Item; onPick?: () => void }>) {
-  const { st, go } = useApp();
+  const { st, set, go } = useApp();
+  if (item.signin) return <button onClick={() => { onPick?.(); set({ returnTo: 'quest', screen: 'login' }); }}>{item.label}</button>;
   if (item.resume) return <button onClick={() => { onPick?.(); go('quest'); }}>{item.label}</button>;
   return <a href={item.href} onClick={onPick} aria-current={item.href === `#${st.screen}` ? 'page' : undefined}>{item.label}</a>;
 }
@@ -28,6 +29,8 @@ export default function SiteNav({ children }: Readonly<{ children: ReactNode }>)
     ? [{ href: '#how', label: howLabel }, { href: '#numbers', label: statsLabel }, lastLanding]
     : [{ href: '#home', label: t.navHome }, { href: '#faq', label: 'FAQ' }, { href: '#contacto', label: t.navContact }];
   if (!landing && resume) links.push(resumeItem);
+  // Un invitado a media encuesta ve, tras Contacto, cómo iniciar sesión sin perder lo respondido
+  if (st.screen === 'quest' && !st.loggedIn) links.push({ href: '#login', label: t.navSignIn, signin: true });
   const home = landing ? '#top' : '#home';
   const close = () => menu.current?.close();
 

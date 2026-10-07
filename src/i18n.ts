@@ -2,7 +2,7 @@
 export type Fate = 'survey' | 'saved' | 'unsaved';
 
 const es = {
-  langHint: 'Cambiar idioma', navHome: 'Inicio', navContact: 'Contacto',
+  langHint: 'Cambiar idioma', navHome: 'Inicio', navContact: 'Contacto', navSignIn: '¡Inicia sesión!',
   google: 'Continuar con Google', guest: 'Entrar como invitado', guestName: 'invitado', faq: 'Preguntas frecuentes',
   continueAs: (user: string) => `Continuar como ${user}`, signOut: 'Cerrar sesión',
   loginTitle: 'Inicia sesión', registerTitle: 'Crea tu cuenta', tabLogin: 'Iniciar sesión', tabRegister: 'Crear cuenta', submitLogin: 'Entrar', submitRegister: 'Crear cuenta',
@@ -109,7 +109,7 @@ const es = {
   platformsQ: '¿Dónde quieres verla?', platformsHint: 'Marca las que tengas y solo te mostraremos lo que puedas ver, en streaming o en el cine. Se guardan para la próxima vez.',
   platformsAny: 'Recomiéndame donde sea', platformsAnyHint: 'Me da igual dónde verla: mándame lo mejor.',
   inTheaters: 'En cines',
-  numMoviesLabel: '¿Cuántas películas quieres ver?', myPlatforms: 'Tus plataformas',
+  numMoviesLabel: '¿Cuántas películas quieres ver?',
   next: 'Siguiente', skip: 'Omitir', seeResult: 'Ver mis resultados', back: 'Atrás',
 
   loadingTitle: 'Calculando tu perfil…', loadingDone: (n: number) => (n === 1 ? 'Listo, encontramos tu película' : `Listo, encontramos ${n} películas`), loadingSteps: ['Analizando tus respuestas', 'Buscando películas parecidas', 'Comprobando dónde verlas'],
@@ -168,7 +168,7 @@ export type Strings = typeof es;
 export type Lang = 'es' | 'en';
 
 const en: Strings = {
-  langHint: 'Switch language', navHome: 'Home', navContact: 'Contact',
+  langHint: 'Switch language', navHome: 'Home', navContact: 'Contact', navSignIn: 'Sign in!',
   google: 'Continue with Google', guest: 'Continue as guest', guestName: 'guest', faq: 'FAQ',
   continueAs: (user: string) => `Continue as ${user}`, signOut: 'Sign out',
   loginTitle: 'Sign in', registerTitle: 'Create your account', tabLogin: 'Sign in', tabRegister: 'Create account', submitLogin: 'Sign in', submitRegister: 'Create account',
@@ -274,7 +274,7 @@ const en: Strings = {
   platformsQ: 'Where do you want to watch it?', platformsHint: 'Pick the ones you have and we’ll only show what you can watch, streaming or in theaters. They’re saved for next time.',
   platformsAny: 'Recommend me anywhere', platformsAnyHint: 'I don’t mind where I watch it: just send me the best.',
   inTheaters: 'In theaters',
-  numMoviesLabel: 'How many movies do you want to see?', myPlatforms: 'Your platforms',
+  numMoviesLabel: 'How many movies do you want to see?',
   next: 'Next', skip: 'Skip', seeResult: 'See my results', back: 'Back',
 
   loadingTitle: 'Computing your profile…', loadingDone: (n: number) => (n === 1 ? 'Done, we found your movie' : `Done, we found ${n} movies`), loadingSteps: ['Analyzing your answers', 'Finding similar movies', 'Checking where to watch'],

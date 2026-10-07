@@ -5,9 +5,9 @@ import gsap from 'gsap';
 import { CINE, cinemaLogo, platforms, type Platform } from '../data';
 import { platformName } from '../components/Movie';
 import { useApp } from '../store';
-import { allPlatforms } from './PlatformPicker';
 import StepHeader from './StepHeader';
 
+const allPlatforms: Platform[] = [...(Object.keys(platforms) as Platform[]), CINE]; // el cine va al final
 const logoOf = (p: Platform) => (p === CINE ? cinemaLogo : platforms[p].logo);
 
 // Paso 1: dónde ve películas. Lista tipográfica al estilo de fontsinmovies.com: al pasar el mouse por una plataforma, su imagen sigue al cursor.

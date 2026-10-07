@@ -35,7 +35,7 @@ if (process.argv.includes('--serve')) {
     const page = await browser.newPage();
     page.on('pageerror', e => problems.push(`pageerror: ${e.message}`));
     page.on('console', m => {
-      if (m.type() === 'error' && !m.location().url.endsWith('/favicon.ico')) problems.push(`console: ${m.text()}`);
+      if (m.type() === 'error' && !m.location().url.endsWith('/favicon.ico')) problems.push(`console: ${m.text()} (${m.location().url})`);
     });
     await page.goto(base);
     const cta = page.locator('.lp-cta-btn').first();
